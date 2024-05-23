@@ -3,7 +3,7 @@ package gr.athtech.balas.klondikesolitaireminigame;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-public class HelloController {
+public class KlondikeSolitaireController {
     @FXML
     private Label welcomeText;
 
