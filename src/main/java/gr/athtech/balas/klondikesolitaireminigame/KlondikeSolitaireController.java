@@ -1,10 +1,17 @@
 package gr.athtech.balas.klondikesolitaireminigame;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class KlondikeSolitaireController {
 
@@ -17,58 +24,16 @@ public class KlondikeSolitaireController {
     @FXML
     private StackPane targetStackPane;
 
-    private double mouseX, mouseY; // Store initial mouse coordinates
+    @FXML
+    private HBox containerHBox;
 
+    private Map<StackPane, Bounds> stackPaneBoundsMap = new HashMap<>();
+    private double mouseX, mouseY; // Store initial mouse coordinates
+    private boolean isThereADragOperation;
 
     public void initialize() {
-
-        // Set up drag gesture detection on the source image view
-//        imageView.setOnDragDetected(new EventHandler<MouseEvent>() {
-//            public void handle(MouseEvent event) {
-//
-//                mouseX = event.getSceneX();
-//                mouseY = event.getSceneY();
-//                System.out.println(mouseX);
-//                System.out.println(mouseY);
-//                //sneaky,we get only the reference here not the creation... or actually both
-//                //drag and drop actually creates the dragboard...which we here
-//                Dragboard db = imageView.startDragAndDrop(TransferMode.MOVE);
-//
-//                //so heres the thing...if there's no clipboard then there's nothing to drop
-//                //later in order to trigger the drop method...and then ask for the getGestureSource
-//                //which started the drag event ;...dourios ipos diladi... kai to view part ; isos
-//                //in case of image...
-//                ClipboardContent content = new ClipboardContent();
-//                content.putString("why ... why they have to make it so hard?");
-//
-//                db.setContent(content);
-//                dragFirst=true;
-//            }
-//        });
-//
-//        // Set up drag event handling on the target stack pane
-//        targetStackPane.setOnDragOver(new EventHandler<DragEvent>() {
-//            public void handle(DragEvent event) {
-//               if (event.getGestureSource() != targetStackPane) {
-//                    event.acceptTransferModes(TransferMode.MOVE);//enables in the target node to accept TransferMode
-//               }
-//                event.consume();
-//            }
-//        });
-//
-//        // Handle the drop event on the target stack pane
-//        targetStackPane.setOnDragDropped(new EventHandler<DragEvent>() {
-//            public void handle(DragEvent event) {
-//                ImageView droppedImageView = (ImageView) event.getGestureSource();//you target the one that started the drag
-//                targetStackPane.getChildren().add(droppedImageView);
-////                droppedImageView.setLayoutX(event.getX());
-////                droppedImageView.setLayoutY(event.getY());
-//                event.setDropCompleted(true);
-//                event.consume();
-//            }
-//        });
-
-
+        // Populate the map with the initial bounds after the layout pass
+        Platform.runLater(this::updateStackPaneBounds);
         imageView.setOnMousePressed(event -> {
             mouseX = event.getSceneX();
             mouseY = event.getSceneY();
@@ -76,6 +41,7 @@ public class KlondikeSolitaireController {
 
         // Event handler for mouse dragged (during drag)
         imageView.setOnMouseDragged(event -> {
+            isThereADragOperation=true;
             double offsetX = event.getSceneX() - mouseX;
             double offsetY = event.getSceneY() - mouseY;
 
@@ -111,32 +77,142 @@ public class KlondikeSolitaireController {
 //            mouseY = 0;
 //            event.consume();
 //        });
+
         //a level over...
+//        imageView.setOnMouseReleased(event -> {
+//            // Calculate the final position of imageView after dragging based on translation
+//            Bounds targetBoundsRelativeToVBox = targetStackPane.getBoundsInParent();
+//            double targetXRelativeToVBox = targetBoundsRelativeToVBox.getMinX() + targetStackPane.getParent().getLayoutX();
+//            double targetYRelativeToVBox = targetBoundsRelativeToVBox.getMinY() + targetStackPane.getParent().getLayoutY();
+//
+//            if (imageView.getBoundsInParent().intersects(targetXRelativeToVBox, targetYRelativeToVBox, targetBoundsRelativeToVBox.getWidth(), targetBoundsRelativeToVBox.getHeight())) {
+//                // Remove imageView from sourceStackPane and add it to targetStackPane
+//                sourceStackPane.getChildren().remove(imageView);
+//                targetStackPane.getChildren().add(imageView);
+//
+//                // Reset translation to (0, 0) since it is now a child of targetStackPane
+//                imageView.setTranslateX(0);
+//                imageView.setTranslateY(0);
+//            } else {
+//                // Reset translation to (0, 0) if not intersecting (optional)
+//                imageView.setTranslateX(0);
+//                imageView.setTranslateY(0);
+//            }
+//            isThereADragOperation=false;
+//
+//
+//        });
+
+
+//        imageView.setOnMouseReleased(event -> {
+//            // Calculate the final position of imageView after dragging based on translation
+//            Bounds imageViewBoundsInScene = imageView.localToScene(imageView.getBoundsInLocal());
+//            System.out.println("this come from source: "+imageViewBoundsInScene);
+//
+////            double finalX = imageViewBoundsInScene.getMinX() + imageView.getTranslateX();
+////            double finalY = imageViewBoundsInScene.getMinY() + imageView.getTranslateY();
+//            double finalX = imageViewBoundsInScene.getMinX();
+//            double finalY = imageViewBoundsInScene.getMinY();
+//            for (Map.Entry<StackPane, Bounds> entry : stackPaneBoundsMap.entrySet()) {
+//                StackPane stackPane = entry.getKey();
+//                Bounds bounds = entry.getValue();
+//                System.out.println(bounds);
+//                if (bounds.contains(finalX, finalY)) {
+//                    // Move imageView to the target stackPane
+//                    sourceStackPane.getChildren().remove(imageView);
+//                    stackPane.getChildren().add(imageView);
+//
+//                    // Reset translation to (0, 0) since it is now a child of targetStackPane
+//                    imageView.setTranslateX(0);
+//                    imageView.setTranslateY(0);
+//
+//                    // Update the map after moving the imageView
+//                    updateStackPaneBounds();
+//                    break;
+//                }
+//            }
+//
+//            // Reset translation if not intersecting any target StackPane (optional)
+//            imageView.setTranslateX(0);
+//            imageView.setTranslateY(0);
+//
+//            mouseX = 0;
+//            mouseY = 0;
+//            event.consume();
+//        });
+//    }
+
         imageView.setOnMouseReleased(event -> {
-            // Calculate the final position of imageView after dragging based on translation
-            Bounds targetBoundsRelativeToVBox = targetStackPane.getBoundsInParent();
-            double targetXRelativeToVBox = targetBoundsRelativeToVBox.getMinX() + targetStackPane.getParent().getLayoutX();
-            double targetYRelativeToVBox = targetBoundsRelativeToVBox.getMinY() + targetStackPane.getParent().getLayoutY();
+            // Get the bounds of imageView in the scene coordinate space
+            Bounds imageViewBoundsInScene = imageView.localToScene(imageView.getBoundsInLocal());
 
-            if (imageView.getBoundsInParent().intersects(targetXRelativeToVBox, targetYRelativeToVBox, targetBoundsRelativeToVBox.getWidth(), targetBoundsRelativeToVBox.getHeight())) {
-                // Remove imageView from sourceStackPane and add it to targetStackPane
-                sourceStackPane.getChildren().remove(imageView);
-                targetStackPane.getChildren().add(imageView);
+            boolean intersected = false;
+            for (Map.Entry<StackPane, Bounds> entry : stackPaneBoundsMap.entrySet()) {
+                StackPane stackPane = entry.getKey();
+                Bounds bounds = entry.getValue();
 
-                // Reset translation to (0, 0) since it is now a child of targetStackPane
-                imageView.setTranslateX(0);
-                imageView.setTranslateY(0);
-            } else {
-                // Reset translation to (0, 0) if not intersecting (optional)
+                // Check for intersection using the actual scene coordinates
+                if (bounds.intersects(imageViewBoundsInScene)) {
+                    // Move imageView to the target stackPane
+                    sourceStackPane.getChildren().remove(imageView);
+                    stackPane.getChildren().add(imageView);
+
+                    // Reset translation to (0, 0) since it is now a child of the new StackPane
+                    imageView.setTranslateX(0);
+                    imageView.setTranslateY(0);
+
+                    // Update the bounds after moving the imageView
+                    Platform.runLater(this::updateStackPaneBounds);
+                    intersected = true;
+                    break;
+                }
+            }
+
+            if (!intersected) {
+                // Reset translation if not intersecting any target StackPane
                 imageView.setTranslateX(0);
                 imageView.setTranslateY(0);
             }
+
+            mouseX = 0;
+            mouseY = 0;
+            event.consume();
         });
+    }
 
 
+    private void updateStackPaneBounds() {
+        stackPaneBoundsMap.clear();
 
+        for (Node vboxNode : containerHBox.getChildren()) {
+            if (vboxNode instanceof VBox) {
+                for (Node stackPaneNode : ((VBox) vboxNode).getChildren()) {
+                    if (stackPaneNode instanceof StackPane) {
+                        StackPane stackPane = (StackPane) stackPaneNode;
+
+                        if (!stackPane.getChildren().isEmpty()) {
+                            Node lastImageView = stackPane.getChildren().get(stackPane.getChildren().size() - 1);
+                            Bounds bounds = lastImageView.localToScene(lastImageView.getBoundsInLocal());
+                            stackPaneBoundsMap.put(stackPane, bounds);
+                            System.out.println(bounds);
+                        } else {
+                            Bounds bounds = stackPane.localToScene(stackPane.getBoundsInLocal());
+                            System.out.println(bounds);
+                            stackPaneBoundsMap.put(stackPane, bounds);
+                        }
+                    }
+                }
+            }
+        }
 
     }
+
+
+
+
+
+
+
 
 
 }

@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox alignment="TOP_CENTER" maxHeight="698.0" maxWidth="-Infinity" minHeight="698.0" minWidth="-Infinity" prefHeight="698.0" prefWidth="1077.0" style="-fx-background-color: green;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gr.athtech.balas.klondikesolitaireminigame.KlondikeSolitaireController">
+<HBox fx:id="containerHBox" alignment="TOP_CENTER" maxHeight="698.0" maxWidth="-Infinity" minHeight="698.0" minWidth="-Infinity" prefHeight="698.0" prefWidth="1077.0" style="-fx-background-color: green;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gr.athtech.balas.klondikesolitaireminigame.KlondikeSolitaireController">
    <children>
       <VBox maxHeight="678.0" maxWidth="100.0" minHeight="678.0" minWidth="100.0" prefHeight="678.0" prefWidth="100.0">
          <HBox.margin>
@@ -28,7 +28,7 @@
       </VBox>
       <VBox alignment="TOP_CENTER" maxHeight="678.0" maxWidth="100.0" minHeight="678.0" minWidth="100.0" prefHeight="678.0" prefWidth="100.0">
          <children>
-            <StackPane fx:id="sourceStackPane" alignment="TOP_CENTER" maxWidth="100.0" minWidth="100.0" prefHeight="150.0" prefWidth="100.0" style="-fx-background-color: purple;">
+            <StackPane fx:id="sourceStackPane" alignment="TOP_CENTER" maxWidth="100.0" minHeight="150.0" minWidth="100.0" prefHeight="150.0" prefWidth="100.0" style="-fx-background-color: purple;">
                <children>
                   <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
                   <ImageView fx:id="imageView" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
@@ -48,7 +48,7 @@
       </VBox>
       <VBox maxHeight="678.0" maxWidth="100.0" minHeight="678.0" minWidth="100.0" prefHeight="678.0" prefWidth="100.0">
          <children>
-            <StackPane fx:id="targetStackPane" prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: orange;" />
+            <StackPane fx:id="targetStackPane" maxWidth="100.0" minWidth="100.0" prefHeight="150.0" prefWidth="100.0" style="-fx-background-color: orange;" />
          </children>
       </VBox>
       <VBox maxHeight="678.0" maxWidth="100.0" minHeight="678.0" minWidth="100.0" prefHeight="678.0" prefWidth="100.0">
