@@ -58,14 +58,14 @@ public class KlondikeSolitaireController {
         imageView.setOnMouseReleased(event -> {
             // Get the bounds of imageView in the scene coordinate space
             Bounds imageViewBoundsInScene = imageView.localToScene(imageView.getBoundsInLocal());
-
+            StackPane parentOfMoveable = (StackPane) imageView.getParent();
             boolean intersected = false;
             for (Map.Entry<StackPane, Bounds> entry : stackPaneBoundsMap.entrySet()) {
                 StackPane stackPane = entry.getKey();
                 Bounds bounds = entry.getValue();
 
                 // Check for intersection using the actual scene coordinates
-                if (bounds.intersects(imageViewBoundsInScene)) {
+                if (bounds.intersects(imageViewBoundsInScene) && stackPane!=parentOfMoveable ) {
                     // Move imageView to the target stackPane
                     sourceStackPane.getChildren().remove(imageView);
                     stackPane.getChildren().add(imageView);

@@ -63,7 +63,7 @@
                         <Image url="@daniel2.jpg" />
                      </image>
                      <StackPane.margin>
-                        <Insets top="70.0" />
+                        <Insets />
                      </StackPane.margin>
                   </ImageView>
                   <ImageView fx:id="imageView12" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
@@ -71,7 +71,7 @@
                         <Image url="@daniel2.jpg" />
                      </image>
                      <StackPane.margin>
-                        <Insets top="500.0" />
+                        <Insets />
                      </StackPane.margin>
                   </ImageView>
                </children></StackPane>
