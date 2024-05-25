@@ -34,6 +34,7 @@ public class KlondikeSolitaireController {
     public void initialize() {
         // Populate the map with the initial bounds after the layout pass
         Platform.runLater(this::updateStackPaneBounds);
+
         imageView.setOnMousePressed(event -> {
             mouseX = event.getSceneX();
             mouseY = event.getSceneY();
@@ -53,94 +54,6 @@ public class KlondikeSolitaireController {
             mouseY = event.getSceneY();
             event.consume();
         });
-//a non level
-//        imageView.setOnMouseReleased(event -> {
-//
-//
-//            if (imageView.getBoundsInParent().intersects(targetStackPane.getBoundsInParent())) {
-//
-//
-//                // Move the imageView to the targetStackPane
-//                sourceStackPane.getChildren().remove(imageView);
-//                targetStackPane.getChildren().add(imageView);
-//
-//                // Reset translation to (0, 0) since it is now a child of targetStackPane
-//                imageView.setTranslateX(0);
-//                imageView.setTranslateY(0);
-//            } else {
-//                // Reset translation to (0, 0) if not intersecting (optional)
-//                imageView.setTranslateX(0);
-//                imageView.setTranslateY(0);
-//            }
-//            // Reset stored mouse coordinates
-//            mouseX = 0;
-//            mouseY = 0;
-//            event.consume();
-//        });
-
-        //a level over...
-//        imageView.setOnMouseReleased(event -> {
-//            // Calculate the final position of imageView after dragging based on translation
-//            Bounds targetBoundsRelativeToVBox = targetStackPane.getBoundsInParent();
-//            double targetXRelativeToVBox = targetBoundsRelativeToVBox.getMinX() + targetStackPane.getParent().getLayoutX();
-//            double targetYRelativeToVBox = targetBoundsRelativeToVBox.getMinY() + targetStackPane.getParent().getLayoutY();
-//
-//            if (imageView.getBoundsInParent().intersects(targetXRelativeToVBox, targetYRelativeToVBox, targetBoundsRelativeToVBox.getWidth(), targetBoundsRelativeToVBox.getHeight())) {
-//                // Remove imageView from sourceStackPane and add it to targetStackPane
-//                sourceStackPane.getChildren().remove(imageView);
-//                targetStackPane.getChildren().add(imageView);
-//
-//                // Reset translation to (0, 0) since it is now a child of targetStackPane
-//                imageView.setTranslateX(0);
-//                imageView.setTranslateY(0);
-//            } else {
-//                // Reset translation to (0, 0) if not intersecting (optional)
-//                imageView.setTranslateX(0);
-//                imageView.setTranslateY(0);
-//            }
-//            isThereADragOperation=false;
-//
-//
-//        });
-
-
-//        imageView.setOnMouseReleased(event -> {
-//            // Calculate the final position of imageView after dragging based on translation
-//            Bounds imageViewBoundsInScene = imageView.localToScene(imageView.getBoundsInLocal());
-//            System.out.println("this come from source: "+imageViewBoundsInScene);
-//
-////            double finalX = imageViewBoundsInScene.getMinX() + imageView.getTranslateX();
-////            double finalY = imageViewBoundsInScene.getMinY() + imageView.getTranslateY();
-//            double finalX = imageViewBoundsInScene.getMinX();
-//            double finalY = imageViewBoundsInScene.getMinY();
-//            for (Map.Entry<StackPane, Bounds> entry : stackPaneBoundsMap.entrySet()) {
-//                StackPane stackPane = entry.getKey();
-//                Bounds bounds = entry.getValue();
-//                System.out.println(bounds);
-//                if (bounds.contains(finalX, finalY)) {
-//                    // Move imageView to the target stackPane
-//                    sourceStackPane.getChildren().remove(imageView);
-//                    stackPane.getChildren().add(imageView);
-//
-//                    // Reset translation to (0, 0) since it is now a child of targetStackPane
-//                    imageView.setTranslateX(0);
-//                    imageView.setTranslateY(0);
-//
-//                    // Update the map after moving the imageView
-//                    updateStackPaneBounds();
-//                    break;
-//                }
-//            }
-//
-//            // Reset translation if not intersecting any target StackPane (optional)
-//            imageView.setTranslateX(0);
-//            imageView.setTranslateY(0);
-//
-//            mouseX = 0;
-//            mouseY = 0;
-//            event.consume();
-//        });
-//    }
 
         imageView.setOnMouseReleased(event -> {
             // Get the bounds of imageView in the scene coordinate space
@@ -206,13 +119,6 @@ public class KlondikeSolitaireController {
         }
 
     }
-
-
-
-
-
-
-
 
 
 }
