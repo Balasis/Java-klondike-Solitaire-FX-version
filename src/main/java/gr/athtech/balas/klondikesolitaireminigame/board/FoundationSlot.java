@@ -74,4 +74,11 @@ public class FoundationSlot extends CardsSlot implements BoardCardsSlot {
         return getCards().size()==13;
     }
 
+    @Override
+    public String toString() {
+        return "FoundationSlot{" +
+                "slotType=" + slotType +
+                ", foundationSuit=" + foundationSuit +
+                '}';
+    }
 }

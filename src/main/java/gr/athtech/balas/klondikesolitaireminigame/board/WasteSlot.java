@@ -38,4 +38,11 @@ public class WasteSlot extends CardsSlot implements BoardCardsSlot{
         c.add(getCards().get(0));
         return c;
     }
+
+    @Override
+    public String toString() {
+        return "WasteSlot{" +
+                "slotType=" + slotType +
+                '}';
+    }
 }

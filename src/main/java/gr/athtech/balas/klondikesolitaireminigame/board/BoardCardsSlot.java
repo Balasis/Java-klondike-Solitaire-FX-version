@@ -14,6 +14,7 @@ public interface BoardCardsSlot {
     ArrayList<Card> getMultipleCardsFromTop(int numOfCards);
     ArrayList<Card> getMultipleCardsFromBottom(int numberOfCards);
     ArrayList<Card> takeCards(int numberOfCards) throws MultipleInvalidRemoval, ColorsBlocksRemoval, RanksBlocksRemoval, HiddenCardBlocksRemoval;
+    ArrayList<Card> getCards();
     void addCards(ArrayList<Card> cards);
     void addCardsNoRestrictions(ArrayList<Card> cards);
     void revealLastCard();
