@@ -44,6 +44,10 @@ public class FoundationSlot extends CardsSlot implements BoardCardsSlot {
         return c;
     }
 
+    public Suit getFoundationSuit() {
+        return foundationSuit;
+    }
+
     private boolean isAddCardAcceptable(Card card) {
         if (!isItTheRightSuit(card)){
             return false;

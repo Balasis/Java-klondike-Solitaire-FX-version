@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
@@ -14,12 +12,12 @@
          <children>
             <VBox maxHeight="900.0" maxWidth="100.0" minHeight="678.0" minWidth="100.0" prefHeight="900.0" prefWidth="100.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
                <children>
-                  <StackPane maxWidth="100.0" minWidth="100.0" prefHeight="150.0" prefWidth="100.0">
+                  <StackPane fx:id="deckSlot" maxWidth="100.0" minWidth="100.0" prefHeight="150.0" prefWidth="100.0">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
                   </StackPane>
-                  <StackPane maxWidth="100.0" minWidth="100.0" prefHeight="150.0" prefWidth="100.0">
+                  <StackPane fx:id="wasteSlot" maxWidth="100.0" minWidth="100.0" prefHeight="150.0" prefWidth="100.0">
                      <VBox.margin>
                         <Insets top="20.0" />
                      </VBox.margin>
@@ -28,21 +26,7 @@
             </VBox>
             <VBox alignment="TOP_CENTER" maxHeight="900.0" maxWidth="100.0" minHeight="678.0" minWidth="100.0" prefHeight="900.0" prefWidth="100.0" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="20.0">
                <children>
-                  <StackPane fx:id="sourceStackPane" alignment="TOP_CENTER" maxWidth="100.0" minHeight="150.0" minWidth="100.0" prefHeight="150.0" prefWidth="100.0">
-                     <children>
-                        <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../images/cards/CLUBS13.png" />
-                           </image></ImageView>
-                        <ImageView fx:id="imageView" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
-                           <StackPane.margin>
-                              <Insets />
-                           </StackPane.margin>
-                           <image>
-                              <Image url="@../../../../images/cards/CLUBS1.png" />
-                           </image>
-                        </ImageView>
-                     </children>
+                  <StackPane fx:id="tableSlot1" alignment="TOP_CENTER" maxWidth="100.0" minHeight="150.0" minWidth="100.0" prefHeight="150.0" prefWidth="100.0">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
@@ -51,147 +35,40 @@
             </VBox>
             <VBox maxHeight="900.0" maxWidth="100.0" minHeight="678.0" minWidth="100.0" prefHeight="900.0" prefWidth="100.0" AnchorPane.leftAnchor="325.0" AnchorPane.topAnchor="20.0">
                <children>
-                  <StackPane fx:id="targetStackPane" alignment="TOP_CENTER" maxWidth="100.0" minWidth="100.0" prefHeight="150.0" prefWidth="100.0">
-                     <children>
-                        <ImageView fx:id="imageView1" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../images/cards/HEARTS13.png" />
-                           </image>
-                           <StackPane.margin>
-                              <Insets />
-                           </StackPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="imageView11" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../images/cards/DIAMONDS8.png" />
-                           </image>
-                           <StackPane.margin>
-                              <Insets />
-                           </StackPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="imageView12" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../images/cards/DIAMONDS3.png" />
-                           </image>
-                           <StackPane.margin>
-                              <Insets />
-                           </StackPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="imageView121" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../images/cards/DIAMONDS3.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView fx:id="imageView122" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../images/cards/DIAMONDS3.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView fx:id="imageView123" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../images/cards/DIAMONDS3.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView fx:id="imageView124" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../images/cards/DIAMONDS3.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView fx:id="imageView125" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../images/cards/DIAMONDS3.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView fx:id="imageView126" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../images/cards/DIAMONDS3.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView fx:id="imageView127" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../images/cards/DIAMONDS3.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView fx:id="imageView128" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../images/cards/DIAMONDS3.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView fx:id="imageView129" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../images/cards/DIAMONDS3.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView fx:id="imageView1210" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../images/cards/DIAMONDS3.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView fx:id="imageView1211" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../images/cards/DIAMONDS3.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView fx:id="imageView1212" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../images/cards/DIAMONDS3.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView fx:id="imageView1213" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../images/cards/DIAMONDS3.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView fx:id="imageView1214" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../images/cards/DIAMONDS3.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView fx:id="imageView1215" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../images/cards/DIAMONDS3.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView fx:id="imageView1216" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../images/cards/DIAMONDS3.png" />
-                           </image>
-                        </ImageView>
-                     </children>
-                  </StackPane>
+                  <StackPane fx:id="tableSlot2" alignment="TOP_CENTER" maxWidth="100.0" minWidth="100.0" prefHeight="150.0" prefWidth="100.0" />
                </children>
             </VBox>
             <VBox maxHeight="900.0" maxWidth="100.0" minHeight="678.0" minWidth="100.0" prefHeight="900.0" prefWidth="100.0" AnchorPane.leftAnchor="450.0" AnchorPane.topAnchor="20.0">
                <children>
-                  <StackPane prefHeight="150.0" prefWidth="200.0" />
+                  <StackPane fx:id="tableSlot3" prefHeight="150.0" prefWidth="200.0" />
                </children>
             </VBox>
             <VBox maxHeight="900.0" maxWidth="100.0" minHeight="678.0" minWidth="100.0" prefHeight="900.0" prefWidth="100.0" AnchorPane.leftAnchor="575.0" AnchorPane.topAnchor="20.0">
                <children>
-                  <StackPane prefHeight="150.0" prefWidth="200.0" />
+                  <StackPane fx:id="tableSlot4" prefHeight="150.0" prefWidth="200.0" />
                </children>
             </VBox>
             <VBox maxHeight="900.0" maxWidth="100.0" minHeight="678.0" minWidth="100.0" prefHeight="900.0" prefWidth="100.0" AnchorPane.leftAnchor="600.0" AnchorPane.topAnchor="20.0">
                <children>
-                  <StackPane prefHeight="150.0" prefWidth="200.0" />
+                  <StackPane fx:id="tableSlot5" prefHeight="150.0" prefWidth="200.0" />
                </children>
             </VBox>
             <VBox maxHeight="900.0" maxWidth="100.0" minHeight="678.0" minWidth="100.0" prefHeight="900.0" prefWidth="100.0" AnchorPane.leftAnchor="725.0" AnchorPane.topAnchor="20.0">
                <children>
-                  <StackPane prefHeight="150.0" prefWidth="200.0" />
+                  <StackPane fx:id="tableSlot6" prefHeight="150.0" prefWidth="200.0" />
                </children>
             </VBox>
             <VBox maxHeight="900.0" maxWidth="100.0" minHeight="678.0" minWidth="100.0" prefHeight="900.0" prefWidth="100.0" AnchorPane.leftAnchor="850.0" AnchorPane.topAnchor="20.0">
                <children>
-                  <StackPane prefHeight="150.0" prefWidth="200.0" />
+                  <StackPane fx:id="tableSlot7" prefHeight="150.0" prefWidth="200.0" />
                </children>
             </VBox>
             <VBox alignment="CENTER" maxHeight="900.0" maxWidth="100.0" minHeight="678.0" minWidth="100.0" prefHeight="891.0" prefWidth="100.0" spacing="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
                <children>
-                  <StackPane prefHeight="150.0" prefWidth="200.0" />
-                  <StackPane prefHeight="150.0" prefWidth="200.0" />
-                  <StackPane prefHeight="150.0" prefWidth="200.0" />
-                  <StackPane prefHeight="150.0" prefWidth="200.0" />
+                  <StackPane fx:id="clubsFoundation" prefHeight="150.0" prefWidth="200.0" />
+                  <StackPane fx:id="diamondsFoundation" prefHeight="150.0" prefWidth="200.0" />
+                  <StackPane fx:id="heartsFoundation" prefHeight="150.0" prefWidth="200.0" />
+                  <StackPane fx:id="spadesFoundation" prefHeight="150.0" prefWidth="200.0" />
                </children>
             </VBox>
          </children>

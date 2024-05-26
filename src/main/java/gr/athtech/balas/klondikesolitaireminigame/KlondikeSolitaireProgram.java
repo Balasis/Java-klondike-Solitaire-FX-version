@@ -46,6 +46,46 @@ public class KlondikeSolitaireProgram {
         }
     }
 
+    public FoundationSlot getClubsFoundationSlot(){
+        FoundationSlot theClubOne=null;
+        for(FoundationSlot f:foundationSlots){
+            if(f.getFoundationSuit()== CLUBS){
+                theClubOne=f;
+            }
+        }
+        return theClubOne;
+    }
+
+    public FoundationSlot getDiamondsFoundationSlot(){
+        FoundationSlot theDiamondsOne=null;
+        for(FoundationSlot f:foundationSlots){
+            if(f.getFoundationSuit()== DIAMONDS){
+                theDiamondsOne=f;
+            }
+        }
+        return theDiamondsOne;
+    }
+
+    public FoundationSlot getHeartsFoundationSlot(){
+        FoundationSlot theHeartsOne=null;
+        for(FoundationSlot f:foundationSlots){
+            if(f.getFoundationSuit()== HEARTS){
+                theHeartsOne=f;
+            }
+        }
+        return theHeartsOne;
+    }
+
+    public FoundationSlot getSpadesFoundationSlot(){
+        FoundationSlot theSpadesOne=null;
+        for(FoundationSlot f:foundationSlots){
+            if(f.getFoundationSuit()== SPADES){
+                theSpadesOne=f;
+            }
+        }
+        return theSpadesOne;
+    }
+
     public Deck getDeck() {
         return deck;
     }
@@ -107,15 +147,35 @@ public class KlondikeSolitaireProgram {
         deckSlot.addCardsNoRestrictions(deck.takeAllCurrentCards());
     }
 
+
+
+
+
     public void dragCardsFromBoardCardSlot(BoardCardsSlot bcs, int numberOfCards){
         try {
             this.draggedCards.addAll(bcs.takeCards(numberOfCards));
         } catch (InvalidRemoval e) {
             System.out.println(e);
             clearTheDragFields();
-            return;
         }
         this.draggedByCardSlotType=bcs;
+    }
+
+    public boolean addCardsToBoardSlot(BoardCardsSlot to){
+        BoardCardsSlot from=draggedByCardSlotType;
+        if(from==null){
+            draggedCards.clear();
+            return false;
+        }
+        if(!isTransferAmongSlotsTypesAllowed(from,to) || !to.isAddCardsValid(draggedCards)){
+            draggedByCardSlotType.addCardsNoRestrictions(draggedCards);
+            draggedByCardSlotType=null;
+            draggedCards.clear();
+            return false;
+        }else{
+            to.addCards(draggedCards);
+            return true;
+        }
     }
 
     private void clearTheDragFields(){
@@ -127,24 +187,6 @@ public class KlondikeSolitaireProgram {
         draggedByCardSlotType.addCardsNoRestrictions(draggedCards);
         draggedByCardSlotType=null;
         draggedCards.clear();
-    }
-
-
-    //moving cards during the game is always done by taking by the
-    // top side of the CardSlot (last indexes of ArrayList<Card>)
-    public void addCardsToBoardSlot(BoardCardsSlot to){
-        BoardCardsSlot from=draggedByCardSlotType;
-        if(from==null){
-            draggedCards.clear();
-            return;
-        }
-       if(!isTransferAmongSlotsTypesAllowed(from,to) || !to.isAddCardsValid(draggedCards)){
-           draggedByCardSlotType.addCardsNoRestrictions(draggedCards);
-           draggedByCardSlotType=null;
-           draggedCards.clear();
-       }else{
-           to.addCards(draggedCards);
-       }
     }
 
     public void moveCardsFromWasteToDeckSlot(){

@@ -1,8 +1,10 @@
 package gr.athtech.balas.klondikesolitaireminigame;
 
 import gr.athtech.balas.klondikesolitaireminigame.board.BoardCardsSlot;
+import gr.athtech.balas.klondikesolitaireminigame.board.FoundationSlot;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Card;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Deck;
+import gr.athtech.balas.klondikesolitaireminigame.thedeck.Suit;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,67 +18,101 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class KlondikeSolitaireController {
-
+    //Card Slots
     @FXML
-    private ImageView imageView;
-
+    private StackPane deckSlot;
     @FXML
-    private StackPane sourceStackPane;
-
+    private StackPane wasteSlot;
     @FXML
-    private StackPane targetStackPane;
+    private StackPane clubsFoundation;
+    @FXML
+    private StackPane diamondsFoundation;
+    @FXML
+    private StackPane heartsFoundation;
+    @FXML
+    private StackPane spadesFoundation;
+    @FXML
+    private StackPane tableSlot1;
+    @FXML
+    private StackPane tableSlot2;
+    @FXML
+    private StackPane tableSlot3;
+    @FXML
+    private StackPane tableSlot4;
+    @FXML
+    private StackPane tableSlot5;
+    @FXML
+    private StackPane tableSlot6;
+    @FXML
+    private StackPane tableSlot7;
 
     @FXML
     private AnchorPane containerAnchor;
 
+    //The rest( the cards) are dynamically created due to their cardinality (52 cards)
+    //an array just for loop convenience all over the controller...
+    StackPane[] tablesArray = {tableSlot1, tableSlot2, tableSlot3, tableSlot4, tableSlot5, tableSlot6, tableSlot7};
 
     private KlondikeSolitaireProgram theGame;
     //Map Cards to the CardViews(class which extend ImageView) that represents them.
-    private Map<Card,CardView> cardsMap;
+    private Map<Card, CardView> cardsMap;
     //Map the BoardCardSlots to a StackPane
-    private Map<BoardCardsSlot, StackPane> boardSlotsMap= new HashMap<>();
+    private Map<BoardCardsSlot, StackPane> boardSlotsMap = new HashMap<>();
     //Holds the Bountry of the last Card of each StackPane(used in order to check intercept->Drag And Drop->Find desired Drop Stack)
     private final Map<StackPane, Bounds> boundryOfLastImageViewInStacks = new HashMap<>();
     //Location of the mouse related to scene, used in fake dragging process /change of translate x,y
     private double mouseX, mouseY;
 
 
-    public KlondikeSolitaireController(){
+    public KlondikeSolitaireController() {
         //Starting a new Game
-        theGame=new KlondikeSolitaireProgram();
+        theGame = new KlondikeSolitaireProgram();
         //get The deck(deck is no longer in use after setting up the game;All cards get to the board)
-        Deck deck=theGame.getDeck();
+        Deck deck = theGame.getDeck();
         //Removing the jokers from the deck since we don't need them.
         deck.removeTheJokers();
         //Map a CardView (extends ImageView) for each card of the game left(no Jokers).
-        cardsMap=new HashMap<>();
-        for(Card c:deck.getCards()){
-        //Card view class holds only image info depending on card given, also a method to update it(hidden or revealed)
-            cardsMap.put(c,new CardView(c));
+        cardsMap = new HashMap<>();
+        for (Card c : deck.getCards()) {
+            //Card view class holds only image info depending on card given, also a method to update it(hidden or revealed)
+            cardsMap.put(c, new CardView(c));
         }
     }
 
     public void initialize() {
-
-        // Populate the map with the initial bounds after the layout pass
+        boardSlotsMap.put(theGame.getDeckSlot(), deckSlot);
+        boardSlotsMap.put(theGame.getWasteSlot(), wasteSlot);
+        boardSlotsMap.put(theGame.getClubsFoundationSlot(), clubsFoundation);
+        boardSlotsMap.put(theGame.getDiamondsFoundationSlot(), diamondsFoundation);
+        boardSlotsMap.put(theGame.getHeartsFoundationSlot(), heartsFoundation);
+        boardSlotsMap.put(theGame.getSpadesFoundationSlot(), spadesFoundation);
+        for (int i = 0; i < tablesArray.length; i++) {
+            //tableSlots are also an array in model from 1 to 7
+            boardSlotsMap.put(theGame.getATableSlot(i), tablesArray[i]);
+        }
+        //   Populate the map with the initial bounds after the layout pass
         Platform.runLater(this::updateStackPaneBounds);
 
+        for(Map.Entry<Card,CardView> c:cardsMap.entrySet()){
+          CardView cV=c.getValue();
 
-        imageView.setOnMousePressed(event -> {
+
+
+            cV.setOnMousePressed(event -> {
             mouseX = event.getSceneX();
             mouseY = event.getSceneY();
-            ImageView theDragger =(ImageView) event.getSource();
-            VBox theDraggerParentsParent=(VBox) theDragger.getParent().getParent();
+            ImageView theDragger = (ImageView) event.getSource();
+            VBox theDraggerParentsParent = (VBox) theDragger.getParent().getParent();
             theDraggerParentsParent.toFront();
         });
 
         // Event handler for mouse dragged (during drag)
-        imageView.setOnMouseDragged(event -> {
+            cV.setOnMouseDragged(event -> {
             double offsetX = event.getSceneX() - mouseX;
             double offsetY = event.getSceneY() - mouseY;
 
-            imageView.setTranslateX(imageView.getTranslateX()+offsetX);
-            imageView.setTranslateY(imageView.getTranslateY()+offsetY);
+                cV.setTranslateX(cV.getTranslateX() + offsetX);
+                cV.setTranslateY(cV.getTranslateY() + offsetY);
 
             // Update stored mouse coordinates for the next drag event
             mouseX = event.getSceneX();
@@ -84,8 +120,8 @@ public class KlondikeSolitaireController {
             event.consume();
         });
 
-        imageView.setOnMouseReleased(event -> {
-            ImageView theDragger=(ImageView) event.getSource();
+            cV.setOnMouseReleased(event -> {
+            ImageView theDragger = (ImageView) event.getSource();
             // Get the bounds of imageView in the scene coordinate space
             Bounds imageViewBoundsInScene = theDragger.localToScene(theDragger.getBoundsInLocal());
             StackPane parentOfMoveable = (StackPane) theDragger.getParent();
@@ -97,7 +133,7 @@ public class KlondikeSolitaireController {
                 Bounds bounds = entry.getValue();
 
                 // Check for intersection using the actual scene coordinates
-                if (bounds.intersects(imageViewBoundsInScene) && stackPane!=parentOfMoveable ) {
+                if (bounds.intersects(imageViewBoundsInScene) && stackPane != parentOfMoveable) {
                     // Move imageView to the target stackPane
                     parentOfMoveable.getChildren().remove(theDragger);
                     stackPane.getChildren().add(theDragger);
@@ -126,8 +162,8 @@ public class KlondikeSolitaireController {
             mouseY = 0;
             event.consume();
         });
+     }
     }
-
 
 
     //record the bounds of the last card of each stack and reforms a full Map of them. (used for interception comparison)
@@ -154,22 +190,36 @@ public class KlondikeSolitaireController {
 
     }
 
-    private void setMarginOnStackPaneChildrens(StackPane stackPane){
-        ObservableList<Node> stacksPanelChildren=stackPane.getChildren();
-        if(stacksPanelChildren.isEmpty()){
+
+    private void updateStackStatus() {
+
+    }
+
+    private void setMarginOnStackPaneChildrens(StackPane stackPane) {
+        ObservableList<Node> stacksPanelChildren = stackPane.getChildren();
+        if (stacksPanelChildren.isEmpty()) {
             return;
         }
         ImageView lastImageViewOfStack = (ImageView) stacksPanelChildren.getLast();
         double actualHeightOfTheLastCard = lastImageViewOfStack.getBoundsInLocal().getHeight();
         double marginPerCard = actualHeightOfTheLastCard * 0.25;
         for (int i = 0; i < stacksPanelChildren.size(); i++) {
-            Node currentChild=stacksPanelChildren.get(i);
-          if(currentChild instanceof  ImageView){
-             // static method to apply margin!!! ok javaFX... I didn't see that coming...
-                StackPane.setMargin(currentChild,new Insets(i * marginPerCard,0,0,0));
-          }
+            Node currentChild = stacksPanelChildren.get(i);
+            if (currentChild instanceof ImageView) {
+                // static method to apply margin!!! ok javaFX... I didn't see that coming...
+                StackPane.setMargin(currentChild, new Insets(i * marginPerCard, 0, 0, 0));
+            }
         }
 
     }
 
+    private void updateCardRevealsStatus() {
+        for (Map.Entry<Card, CardView> e : cardsMap.entrySet()) {
+            CardView cardView = e.getValue();
+            cardView.updateImage();
+        }
+    }
+
+
 }
+
