@@ -4,11 +4,8 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,11 +22,12 @@ public class KlondikeSolitaireController {
     private StackPane targetStackPane;
 
     @FXML
-    private HBox containerHBox;
+    private AnchorPane containerAnchor;
 
     private Map<StackPane, Bounds> stackPaneBoundsMap = new HashMap<>();
     private double mouseX, mouseY; // Store initial mouse coordinates
-    private boolean isThereADragOperation;
+
+
 
     public void initialize() {
         // Populate the map with the initial bounds after the layout pass
@@ -38,11 +36,11 @@ public class KlondikeSolitaireController {
         imageView.setOnMousePressed(event -> {
             mouseX = event.getSceneX();
             mouseY = event.getSceneY();
+            ImageView theDragger =(ImageView) event.getSource();
         });
 
         // Event handler for mouse dragged (during drag)
         imageView.setOnMouseDragged(event -> {
-            isThereADragOperation=true;
             double offsetX = event.getSceneX() - mouseX;
             double offsetY = event.getSceneY() - mouseY;
 
@@ -56,9 +54,10 @@ public class KlondikeSolitaireController {
         });
 
         imageView.setOnMouseReleased(event -> {
+            ImageView theDragger=(ImageView) event.getSource();
             // Get the bounds of imageView in the scene coordinate space
-            Bounds imageViewBoundsInScene = imageView.localToScene(imageView.getBoundsInLocal());
-            StackPane parentOfMoveable = (StackPane) imageView.getParent();
+            Bounds imageViewBoundsInScene = theDragger.localToScene(theDragger.getBoundsInLocal());
+            StackPane parentOfMoveable = (StackPane) theDragger.getParent();
             boolean intersected = false;
             for (Map.Entry<StackPane, Bounds> entry : stackPaneBoundsMap.entrySet()) {
                 StackPane stackPane = entry.getKey();
@@ -67,12 +66,12 @@ public class KlondikeSolitaireController {
                 // Check for intersection using the actual scene coordinates
                 if (bounds.intersects(imageViewBoundsInScene) && stackPane!=parentOfMoveable ) {
                     // Move imageView to the target stackPane
-                    sourceStackPane.getChildren().remove(imageView);
-                    stackPane.getChildren().add(imageView);
+                    sourceStackPane.getChildren().remove(theDragger);
+                    stackPane.getChildren().add(theDragger);
 
                     // Reset translation to (0, 0) since it is now a child of the new StackPane
-                    imageView.setTranslateX(0);
-                    imageView.setTranslateY(0);
+                    theDragger.setTranslateX(0);
+                    theDragger.setTranslateY(0);
 
                     // Update the bounds after moving the imageView
                     Platform.runLater(this::updateStackPaneBounds);
@@ -83,8 +82,8 @@ public class KlondikeSolitaireController {
 
             if (!intersected) {
                 // Reset translation if not intersecting any target StackPane
-                imageView.setTranslateX(0);
-                imageView.setTranslateY(0);
+                theDragger.setTranslateX(0);
+                theDragger.setTranslateY(0);
             }
 
             mouseX = 0;
@@ -97,7 +96,7 @@ public class KlondikeSolitaireController {
     private void updateStackPaneBounds() {
         stackPaneBoundsMap.clear();
 
-        for (Node vboxNode : containerHBox.getChildren()) {
+        for (Node vboxNode : containerAnchor.getChildren()) {
             if (vboxNode instanceof VBox) {
                 for (Node stackPaneNode : ((VBox) vboxNode).getChildren()) {
                     if (stackPaneNode instanceof StackPane) {
@@ -107,10 +106,10 @@ public class KlondikeSolitaireController {
                             Node lastImageView = stackPane.getChildren().get(stackPane.getChildren().size() - 1);
                             Bounds bounds = lastImageView.localToScene(lastImageView.getBoundsInLocal());
                             stackPaneBoundsMap.put(stackPane, bounds);
-                            System.out.println(bounds);
+
                         } else {
                             Bounds bounds = stackPane.localToScene(stackPane.getBoundsInLocal());
-                            System.out.println(bounds);
+
                             stackPaneBoundsMap.put(stackPane, bounds);
                         }
                     }

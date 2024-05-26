@@ -10,8 +10,8 @@ import java.io.IOException;
 public class KlondikeSolitaireApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(KlondikeSolitaireApp.class.getResource("klondike-Solitaire-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1300, 800);
+        FXMLLoader fxmlLoader = new FXMLLoader(KlondikeSolitaireApp.class.getResource("klondikeSolitaireView.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Klondike Solitaire by John Balasis!");
         stage.setScene(scene);
         stage.show();
