@@ -79,7 +79,6 @@ public class KlondikeSolitaireController {
                     theDragger.setTranslateX(0);
                     theDragger.setTranslateY(0);
 
-
                     setMarginOnStackPaneChildrens(parentOfMoveable);
                     setMarginOnStackPaneChildrens(stackPane);
 
@@ -135,7 +134,7 @@ public class KlondikeSolitaireController {
         }
         ImageView lastImageViewOfStack = (ImageView) stacksPanelChildren.getLast();
         double actualHeightOfTheLastCard = lastImageViewOfStack.getBoundsInLocal().getHeight();
-        double marginPerCard = actualHeightOfTheLastCard * 0.30;
+        double marginPerCard = actualHeightOfTheLastCard * 0.25;
         for (int i = 0; i < stacksPanelChildren.size(); i++) {
             Node currentChild=stacksPanelChildren.get(i);
           if(currentChild instanceof  ImageView){

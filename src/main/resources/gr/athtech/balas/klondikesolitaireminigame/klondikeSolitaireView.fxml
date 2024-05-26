@@ -10,7 +10,7 @@
 
 <Pane maxHeight="900.0" maxWidth="1300.0" minHeight="900.0" minWidth="1300.0" prefHeight="900.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gr.athtech.balas.klondikesolitaireminigame.KlondikeSolitaireController">
    <children>
-      <AnchorPane fx:id="containerAnchor" maxHeight="900.0" maxWidth="1300.0" minHeight="900.0" minWidth="1300.0" prefHeight="900.0" prefWidth="1300.0">
+      <AnchorPane fx:id="containerAnchor" maxHeight="900.0" maxWidth="1300.0" minHeight="900.0" minWidth="1300.0" prefHeight="900.0" prefWidth="1300.0" style="-fx-background-color: green;">
          <children>
             <VBox maxHeight="900.0" maxWidth="100.0" minHeight="678.0" minWidth="100.0" prefHeight="900.0" prefWidth="100.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
                <children>
@@ -28,18 +28,18 @@
             </VBox>
             <VBox alignment="TOP_CENTER" maxHeight="900.0" maxWidth="100.0" minHeight="678.0" minWidth="100.0" prefHeight="900.0" prefWidth="100.0" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="20.0">
                <children>
-                  <StackPane fx:id="sourceStackPane" alignment="TOP_CENTER" maxWidth="100.0" minHeight="150.0" minWidth="100.0" prefHeight="150.0" prefWidth="100.0" style="-fx-background-color: purple;">
+                  <StackPane fx:id="sourceStackPane" alignment="TOP_CENTER" maxWidth="100.0" minHeight="150.0" minWidth="100.0" prefHeight="150.0" prefWidth="100.0">
                      <children>
                         <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@daniel2.jpg" />
+                              <Image url="@images/cards/CLUBS13.png" />
                            </image></ImageView>
                         <ImageView fx:id="imageView" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                            <StackPane.margin>
                               <Insets />
                            </StackPane.margin>
                            <image>
-                              <Image url="@daniel2.jpg" />
+                              <Image url="@images/cards/CLUBS1.png" />
                            </image>
                         </ImageView>
                      </children>
@@ -51,11 +51,11 @@
             </VBox>
             <VBox maxHeight="900.0" maxWidth="100.0" minHeight="678.0" minWidth="100.0" prefHeight="900.0" prefWidth="100.0" AnchorPane.leftAnchor="325.0" AnchorPane.topAnchor="20.0">
                <children>
-                  <StackPane fx:id="targetStackPane" alignment="TOP_CENTER" maxWidth="100.0" minWidth="100.0" prefHeight="150.0" prefWidth="100.0" style="-fx-background-color: orange;">
+                  <StackPane fx:id="targetStackPane" alignment="TOP_CENTER" maxWidth="100.0" minWidth="100.0" prefHeight="150.0" prefWidth="100.0">
                      <children>
                         <ImageView fx:id="imageView1" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@daniel2.jpg" />
+                              <Image url="@images/cards/HEARTS13.png" />
                            </image>
                            <StackPane.margin>
                               <Insets />
@@ -63,19 +63,99 @@
                         </ImageView>
                         <ImageView fx:id="imageView11" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@daniel2.jpg" />
+                              <Image url="@images/cards/DIAMONDS8.png" />
                            </image>
                            <StackPane.margin>
-                              <Insets top="150.0" />
+                              <Insets />
                            </StackPane.margin>
                         </ImageView>
                         <ImageView fx:id="imageView12" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@daniel2.jpg" />
+                              <Image url="@images/cards/DIAMONDS3.png" />
                            </image>
                            <StackPane.margin>
-                              <Insets top="400.0" />
+                              <Insets />
                            </StackPane.margin>
+                        </ImageView>
+                        <ImageView fx:id="imageView121" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/cards/DIAMONDS3.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="imageView122" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/cards/DIAMONDS3.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="imageView123" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/cards/DIAMONDS3.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="imageView124" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/cards/DIAMONDS3.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="imageView125" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/cards/DIAMONDS3.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="imageView126" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/cards/DIAMONDS3.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="imageView127" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/cards/DIAMONDS3.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="imageView128" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/cards/DIAMONDS3.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="imageView129" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/cards/DIAMONDS3.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="imageView1210" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/cards/DIAMONDS3.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="imageView1211" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/cards/DIAMONDS3.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="imageView1212" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/cards/DIAMONDS3.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="imageView1213" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/cards/DIAMONDS3.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="imageView1214" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/cards/DIAMONDS3.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="imageView1215" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/cards/DIAMONDS3.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="imageView1216" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/cards/DIAMONDS3.png" />
+                           </image>
                         </ImageView>
                      </children>
                   </StackPane>
