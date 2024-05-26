@@ -14,7 +14,6 @@ import javafx.scene.layout.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Stack;
 
 public class KlondikeSolitaireController {
 
@@ -37,7 +36,7 @@ public class KlondikeSolitaireController {
     //Map the BoardCardSlots to a StackPane
     private Map<BoardCardsSlot, StackPane> boardSlotsMap= new HashMap<>();
     //Holds the Bountry of the last Card of each StackPane(used in order to check intercept->Drag And Drop->Find desired Drop Stack)
-    private final Map<StackPane, Bounds> boundryOflastImageViewInStacks = new HashMap<>();
+    private final Map<StackPane, Bounds> boundryOfLastImageViewInStacks = new HashMap<>();
     //Location of the mouse related to scene, used in fake dragging process /change of translate x,y
     private double mouseX, mouseY;
 
@@ -93,7 +92,7 @@ public class KlondikeSolitaireController {
             boolean intersected = false;
             //ok...this for each was recommended was taken by the web... I read a bit about the Map.Entry and entrySet()
             //but I am not that familiar with it... logic seems simple enough so let it be.
-            for (Map.Entry<StackPane, Bounds> entry : boundryOflastImageViewInStacks.entrySet()) {
+            for (Map.Entry<StackPane, Bounds> entry : boundryOfLastImageViewInStacks.entrySet()) {
                 StackPane stackPane = entry.getKey();
                 Bounds bounds = entry.getValue();
 
@@ -133,7 +132,7 @@ public class KlondikeSolitaireController {
 
     //record the bounds of the last card of each stack and reforms a full Map of them. (used for interception comparison)
     private void updateStackPaneBounds() {
-        boundryOflastImageViewInStacks.clear();
+        boundryOfLastImageViewInStacks.clear();
         for (Node vboxNode : containerAnchor.getChildren()) {
             if (vboxNode instanceof VBox) {
                 for (Node stackPaneNode : ((VBox) vboxNode).getChildren()) {
@@ -142,11 +141,11 @@ public class KlondikeSolitaireController {
                         if (!stackPane.getChildren().isEmpty()) {
                             Node lastImageView = stackPane.getChildren().getLast();
                             Bounds bounds = lastImageView.localToScene(lastImageView.getBoundsInLocal());
-                            boundryOflastImageViewInStacks.put(stackPane, bounds);
+                            boundryOfLastImageViewInStacks.put(stackPane, bounds);
                         } else {
                             Bounds bounds = stackPane.localToScene(stackPane.getBoundsInLocal());
 
-                            boundryOflastImageViewInStacks.put(stackPane, bounds);
+                            boundryOfLastImageViewInStacks.put(stackPane, bounds);
                         }
                     }
                 }
