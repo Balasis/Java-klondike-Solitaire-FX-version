@@ -30,7 +30,10 @@
                <children>
                   <StackPane fx:id="sourceStackPane" alignment="TOP_CENTER" maxWidth="100.0" minHeight="150.0" minWidth="100.0" prefHeight="150.0" prefWidth="100.0" style="-fx-background-color: purple;">
                      <children>
-                        <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@daniel2.jpg" />
+                           </image></ImageView>
                         <ImageView fx:id="imageView" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                            <StackPane.margin>
                               <Insets />

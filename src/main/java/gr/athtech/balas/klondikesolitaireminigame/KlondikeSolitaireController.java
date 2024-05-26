@@ -1,8 +1,10 @@
 package gr.athtech.balas.klondikesolitaireminigame;
 
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -31,12 +33,14 @@ public class KlondikeSolitaireController {
 
     public void initialize() {
         // Populate the map with the initial bounds after the layout pass
-        Platform.runLater(this::updateStackPaneBounds);
 
+        Platform.runLater(this::updateStackPaneBounds);
         imageView.setOnMousePressed(event -> {
             mouseX = event.getSceneX();
             mouseY = event.getSceneY();
             ImageView theDragger =(ImageView) event.getSource();
+            VBox theDraggerParentsParent=(VBox) theDragger.getParent().getParent();
+            theDraggerParentsParent.toFront();
         });
 
         // Event handler for mouse dragged (during drag)
@@ -72,6 +76,8 @@ public class KlondikeSolitaireController {
                     // Reset translation to (0, 0) since it is now a child of the new StackPane
                     theDragger.setTranslateX(0);
                     theDragger.setTranslateY(0);
+
+                    setMarginOnStackPaneChildrens(stackPane);
 
                     // Update the bounds after moving the imageView
                     Platform.runLater(this::updateStackPaneBounds);
@@ -119,5 +125,32 @@ public class KlondikeSolitaireController {
 
     }
 
+    private void setMarginOnStackPaneChildrens(StackPane stackPane){
+        ObservableList<Node> stacksPanelChildren=stackPane.getChildren();
+        if(stacksPanelChildren.isEmpty()){
+            return;
+        }
+        ImageView lastImageViewOfStack = (ImageView) stacksPanelChildren.getLast();
+        double actualHeightOfTheLastCard = lastImageViewOfStack.getBoundsInLocal().getHeight();
+        double marginPerCard = actualHeightOfTheLastCard * 0.30;
+        for (int i = 0; i < stacksPanelChildren.size(); i++) {
+            Node currentChild=stacksPanelChildren.get(i);
+          if(currentChild instanceof  ImageView){
+             // static method to apply margin!!! ok javaFX... I didn't see that coming...
+                StackPane.setMargin(currentChild,new Insets(i * marginPerCard,0,0,0));
+          }
+        }
+
+    }
 
 }
+
+
+//        double allCardsMarginsCombined=0.0;
+//        for (Node iV:stacksPanelChildren){
+//            if(iV instanceof ImageView){
+//                //static method to apply margin!!! ok javaFX... I didn't see that coming...
+//                StackPane.setMargin(iV,new Insets(marginPerCard+allCardsMarginsCombined,0,0,0));
+//                allCardsMarginsCombined+=marginPerCard;
+//            }
+//        }
