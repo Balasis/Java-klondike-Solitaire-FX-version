@@ -70,13 +70,13 @@ public class KlondikeSolitaireController {
                 // Check for intersection using the actual scene coordinates
                 if (bounds.intersects(imageViewBoundsInScene) && stackPane!=parentOfMoveable ) {
                     // Move imageView to the target stackPane
-                    sourceStackPane.getChildren().remove(theDragger);
+                    parentOfMoveable.getChildren().remove(theDragger);
                     stackPane.getChildren().add(theDragger);
 
                     // Reset translation to (0, 0) since it is now a child of the new StackPane
                     theDragger.setTranslateX(0);
                     theDragger.setTranslateY(0);
-
+                    setMarginOnStackPaneChildrens(parentOfMoveable);
                     setMarginOnStackPaneChildrens(stackPane);
 
                     // Update the bounds after moving the imageView
