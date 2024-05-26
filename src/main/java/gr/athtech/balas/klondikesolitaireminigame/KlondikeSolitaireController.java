@@ -1,5 +1,8 @@
 package gr.athtech.balas.klondikesolitaireminigame;
 
+import gr.athtech.balas.klondikesolitaireminigame.board.BoardCardsSlot;
+import gr.athtech.balas.klondikesolitaireminigame.thedeck.Card;
+import gr.athtech.balas.klondikesolitaireminigame.thedeck.Deck;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -11,6 +14,7 @@ import javafx.scene.layout.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 public class KlondikeSolitaireController {
 
@@ -26,12 +30,36 @@ public class KlondikeSolitaireController {
     @FXML
     private AnchorPane containerAnchor;
 
-    private Map<StackPane, Bounds> boundryOflastImageViewInStacks = new HashMap<>();
-    private double mouseX, mouseY; // Store initial mouse coordinates
+
+    private KlondikeSolitaireProgram theGame;
+    //Map Cards to the CardViews(class which extend ImageView) that represents them.
+    private Map<Card,CardView> cardsMap;
+    //Map the BoardCardSlots to a StackPane
+    private Map<BoardCardsSlot, StackPane> boardSlotsMap= new HashMap<>();
+    //Holds the Bountry of the last Card of each StackPane(used in order to check intercept->Drag And Drop->Find desired Drop Stack)
+    private final Map<StackPane, Bounds> boundryOflastImageViewInStacks = new HashMap<>();
+    //Location of the mouse related to scene, used in fake dragging process /change of translate x,y
+    private double mouseX, mouseY;
+
+
+    public KlondikeSolitaireController(){
+        //Starting a new Game
+        theGame=new KlondikeSolitaireProgram();
+        //get The deck(deck is no longer in use after setting up the game;All cards get to the board)
+        Deck deck=theGame.getDeck();
+        //Removing the jokers from the deck since we don't need them.
+        deck.removeTheJokers();
+        //Map a CardView (extends ImageView) for each card of the game left(no Jokers).
+        cardsMap=new HashMap<>();
+        for(Card c:deck.getCards()){
+        //Card view class holds only image info depending on card given, also a method to update it(hidden or revealed)
+            cardsMap.put(c,new CardView(c));
+        }
+    }
 
     public void initialize() {
-        // Populate the map with the initial bounds after the layout pass
 
+        // Populate the map with the initial bounds after the layout pass
         Platform.runLater(this::updateStackPaneBounds);
 
 

@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Deck {
-    private final ArrayList<Card> theDeck;
+    private final ArrayList<Card> cards;
     private int jokersCounter=0;
 
     public Deck(){
-        theDeck=new ArrayList<>();
+        cards =new ArrayList<>();
         populateDeck();
     }
 
@@ -27,9 +27,9 @@ public class Deck {
             if (areAllJokerCardsLoadedIntoDeck()){
                 return;
             }
-            theDeck.add(new Card(null,suit));
+            cards.add(new Card(null,suit));
         }else{
-            theDeck.add(new Card(rank,suit));
+            cards.add(new Card(rank,suit));
         }
     }
 
@@ -40,19 +40,19 @@ public class Deck {
 
 
     public void shuffle(int numberOfShuffles){
-        if (theDeck.size()<2){
+        if (cards.size()<2){
             return;
         }//we grab each card of the deck(remove it from deck),and reEnter into it in a random index
         for (int i = 0; i < numberOfShuffles; i++) {//we also repeat this for numberOfShuffles Given
-            for (int k = 0; k < theDeck.size(); k++) {
-                Card grabbedCard=theDeck.remove( Operations.getRandomNumber( 0 , theDeck.size() ) );
-                theDeck.add(Operations.getRandomNumber( 0 , theDeck.size() ) , grabbedCard);
+            for (int k = 0; k < cards.size(); k++) {
+                Card grabbedCard= cards.remove( Operations.getRandomNumber( 0 , cards.size() ) );
+                cards.add(Operations.getRandomNumber( 0 , cards.size() ) , grabbedCard);
             }
         }
     }
 
     public void removeTheJokers() {
-        Iterator<Card> iterator = theDeck.iterator();
+        Iterator<Card> iterator = cards.iterator();
         while (iterator.hasNext()) {
             Card card = iterator.next();
             if (card.getSuit() == Suit.JOKER) {
@@ -61,36 +61,36 @@ public class Deck {
         }
     }
 
-    public ArrayList<Card> getTheDeck(){
-        return this.theDeck;
+    public ArrayList<Card> getCards(){
+        return this.cards;
     }
 
     public boolean isEmpty(){
-       return theDeck.isEmpty();
+       return cards.isEmpty();
     }
 
     public ArrayList<Card> takeAllCurrentCards(){
-        ArrayList<Card> cardsToBeReturned=new ArrayList<>(theDeck);
-        theDeck.clear();
+        ArrayList<Card> cardsToBeReturned=new ArrayList<>(cards);
+        cards.clear();
         return cardsToBeReturned;
     }
 
     public ArrayList<Card> takeCards(int numberOfCards){
         ArrayList<Card> cardsToBeGiven=new ArrayList<>();
-        for (int i = 0; i < theDeck.size(); i++) {
+        for (int i = 0; i < cards.size(); i++) {
             if (i>=numberOfCards){//counters starts from 0...
                 break;
             }
-            cardsToBeGiven.addFirst(theDeck.remove( (theDeck.size()-i)-1) );
+            cardsToBeGiven.addFirst(cards.remove( (cards.size()-i)-1) );
         }
         return cardsToBeGiven;
     }
 
     public String toString(){
         StringBuilder s= new StringBuilder();
-        if (!theDeck.isEmpty()) {
-            for (Card c : theDeck) {
-                s.append(theDeck.indexOf(c)).append(")Rank: ").append(c.getRank()).append(" Suit: ").append(c.getSuit()).append("\n");
+        if (!cards.isEmpty()) {
+            for (Card c : cards) {
+                s.append(cards.indexOf(c)).append(")Rank: ").append(c.getRank()).append(" Suit: ").append(c.getSuit()).append("\n");
             }
         }else{
             s.append("Deck is empty");

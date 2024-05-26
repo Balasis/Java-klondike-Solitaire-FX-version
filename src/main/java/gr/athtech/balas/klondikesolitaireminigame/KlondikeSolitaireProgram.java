@@ -50,6 +50,10 @@ public class KlondikeSolitaireProgram {
         return deck;
     }
 
+    public ArrayList<Card> getTheDecksCards(){
+        return deck.getCards();
+    }
+
     public DeckSlot getDeckSlot() {
         return deckSlot;
     }
