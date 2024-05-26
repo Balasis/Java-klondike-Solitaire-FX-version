@@ -32,10 +32,11 @@ public class KlondikeSolitaireController {
     @FXML private StackPane tableSlot6;
     @FXML private StackPane tableSlot7;
     @FXML private AnchorPane containerAnchor;
-    //+52 Dynamically created ImageViews, as superclass of CardViews.(Cardviews extend ImageView)
+    //+52 Dynamically created ImageViews, as superclasses of CardViews.( Cardview extends ImageView)
+
     //Each CardView has a "Card"(model class) field to have info on updating its image.
 
-    //Main game program, Maps to map view with model, mouse X|Y for drag and drop info, an array for loop convenience
+    //Main game program, Maps to for info from model to view, mouse X|Y for drag and drop info, an array for loop convenience.
     private KlondikeSolitaireProgram theGame;
     private final Map<Card, CardView> cardsMap;
     private final Map<BoardCardsSlot, StackPane> boardSlotsMap = new HashMap<>();
@@ -44,7 +45,7 @@ public class KlondikeSolitaireController {
     StackPane[] tablesArray = {tableSlot1, tableSlot2, tableSlot3, tableSlot4, tableSlot5, tableSlot6, tableSlot7};
 
     public KlondikeSolitaireController() {
-        //Init the gameProgram, get cardDeck, removing the jokers cards, populate cardMaps.
+        //Init the gameProgram, get cards from a deck, removing the jokers cards, populate "cardMaps".
         theGame = new KlondikeSolitaireProgram();
         Deck deck = theGame.getDeck();
         deck.removeTheJokers();
@@ -55,15 +56,17 @@ public class KlondikeSolitaireController {
     }
 
     public void initialize() {
-        //populate boardSlotsMap,adding mouse listeners for drag and drop operations,
+        //populate "boardSlotsMap", adding mouse listeners for drag and drop operations,
         //adding a Bountry to be intercepted at each StackPane using the last childs(CardView) Bountry of it
+        //in order to get the destination(drop) StackPane
         populateTheBoardSlotMap();
         addListenersToCardViews();
         Platform.runLater(this::updateStackPaneBounds);
     }
 
     private void populateTheBoardSlotMap(){
-        //sadly couldn't think of a shortcut or a loop due to many differences
+        //(sadly couldn't think of a shortcut or a loop due to many differences)
+        //population of "boardSlotMap". Maps BoardCardsSlot to StackPane elements.
         boardSlotsMap.put(theGame.getDeckSlot(), deckSlot);
         boardSlotsMap.put(theGame.getWasteSlot(), wasteSlot);
         boardSlotsMap.put(theGame.getClubsFoundationSlot(), clubsFoundation);
@@ -71,7 +74,6 @@ public class KlondikeSolitaireController {
         boardSlotsMap.put(theGame.getHeartsFoundationSlot(), heartsFoundation);
         boardSlotsMap.put(theGame.getSpadesFoundationSlot(), spadesFoundation);
         for (int i = 0; i < tablesArray.length; i++) {
-            //tableSlots are also an array in model from 1 to 7
             boardSlotsMap.put(theGame.getATableSlot(i), tablesArray[i]);
         }
     }
@@ -83,19 +85,20 @@ public class KlondikeSolitaireController {
         }
     }
 
+
     private void addMouseListenersForDragAndDrop(CardView cV){
         addSetOnMouseClickListener(cV);
         addSetOnMouseDraggedListener(cV);
-        addSetOnMouseReleased(cV);
+        addSetOnMouseReleased(cV);//checks inter
     }
 
-    //Click on card...
+    //gets x|y mouse location ,change z-order at Parent of parent so the upcoming
+    //"dragged" element won't get hidden by z-order issues.
+    // (Required AnchorPane use because z-order would change the position of it)
+    //(AnchorPane->Vbox->StackPane->CardView)
     private void addSetOnMouseClickListener(CardView cV){
         cV.setOnMousePressed(event -> {
-            //getMouseLocation of click to set the starting point of drag(used later for translate x,y)
             setMouseCurrentLocation(event);
-            //changing the Z-order of Vbox (Anchor>Vbox>StackPane>CardView)  so the potential drag item(ImageView)
-            // won't be hidden by other stackpane. Used anchor so they won't affect view(absolute position)
             cardViewParentOfParentInFront(event);
         });
     }
@@ -111,20 +114,26 @@ public class KlondikeSolitaireController {
         theDraggerParentsParent.toFront();
     }
 
-    //...start moving mouse while holding click (drag)
+
+
+
+
+    //update and sum to x|y mouse loc, changes translate x|y (fake drag)
     private void addSetOnMouseDraggedListener(CardView cV){
         cV.setOnMouseDragged(event -> {
-            double offsetX = event.getSceneX() - mouseX;
-            double offsetY = event.getSceneY() - mouseY;
-
-            cV.setTranslateX(cV.getTranslateX() + offsetX);
-            cV.setTranslateY(cV.getTranslateY() + offsetY);
-
+            updateTranslateXYtoCardView(event);
             // Update stored mouse coordinates for the next drag event
-            mouseX = event.getSceneX();
-            mouseY = event.getSceneY();
+            setMouseCurrentLocation(event);
             event.consume();
         });
+    }
+
+    private void updateTranslateXYtoCardView(MouseEvent e){
+        CardView cV=(CardView) e.getSource();
+        double offsetX = e.getSceneX() - mouseX;
+        double offsetY = e.getSceneY() - mouseY;
+        cV.setTranslateX(cV.getTranslateX() + offsetX);
+        cV.setTranslateY(cV.getTranslateY() + offsetY);
     }
 
     //...release the mouse
