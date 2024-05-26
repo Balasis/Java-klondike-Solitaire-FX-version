@@ -26,15 +26,15 @@ public class KlondikeSolitaireController {
     @FXML
     private AnchorPane containerAnchor;
 
-    private Map<StackPane, Bounds> stackPaneBoundsMap = new HashMap<>();
+    private Map<StackPane, Bounds> boundryOflastImageViewInStacks = new HashMap<>();
     private double mouseX, mouseY; // Store initial mouse coordinates
-
-
 
     public void initialize() {
         // Populate the map with the initial bounds after the layout pass
 
         Platform.runLater(this::updateStackPaneBounds);
+
+
         imageView.setOnMousePressed(event -> {
             mouseX = event.getSceneX();
             mouseY = event.getSceneY();
@@ -63,7 +63,9 @@ public class KlondikeSolitaireController {
             Bounds imageViewBoundsInScene = theDragger.localToScene(theDragger.getBoundsInLocal());
             StackPane parentOfMoveable = (StackPane) theDragger.getParent();
             boolean intersected = false;
-            for (Map.Entry<StackPane, Bounds> entry : stackPaneBoundsMap.entrySet()) {
+            //ok...this for each was recommended was taken by the web... I read a bit about the Map.Entry and entrySet()
+            //but I am not that familiar with it... logic seems simple enough so let it be.
+            for (Map.Entry<StackPane, Bounds> entry : boundryOflastImageViewInStacks.entrySet()) {
                 StackPane stackPane = entry.getKey();
                 Bounds bounds = entry.getValue();
 
@@ -76,6 +78,8 @@ public class KlondikeSolitaireController {
                     // Reset translation to (0, 0) since it is now a child of the new StackPane
                     theDragger.setTranslateX(0);
                     theDragger.setTranslateY(0);
+
+
                     setMarginOnStackPaneChildrens(parentOfMoveable);
                     setMarginOnStackPaneChildrens(stackPane);
 
@@ -99,24 +103,23 @@ public class KlondikeSolitaireController {
     }
 
 
-    private void updateStackPaneBounds() {
-        stackPaneBoundsMap.clear();
 
+    //record the bounds of the last card of each stack and reforms a full Map of them. (used for interception comparison)
+    private void updateStackPaneBounds() {
+        boundryOflastImageViewInStacks.clear();
         for (Node vboxNode : containerAnchor.getChildren()) {
             if (vboxNode instanceof VBox) {
                 for (Node stackPaneNode : ((VBox) vboxNode).getChildren()) {
                     if (stackPaneNode instanceof StackPane) {
                         StackPane stackPane = (StackPane) stackPaneNode;
-
                         if (!stackPane.getChildren().isEmpty()) {
-                            Node lastImageView = stackPane.getChildren().get(stackPane.getChildren().size() - 1);
+                            Node lastImageView = stackPane.getChildren().getLast();
                             Bounds bounds = lastImageView.localToScene(lastImageView.getBoundsInLocal());
-                            stackPaneBoundsMap.put(stackPane, bounds);
-
+                            boundryOflastImageViewInStacks.put(stackPane, bounds);
                         } else {
                             Bounds bounds = stackPane.localToScene(stackPane.getBoundsInLocal());
 
-                            stackPaneBoundsMap.put(stackPane, bounds);
+                            boundryOflastImageViewInStacks.put(stackPane, bounds);
                         }
                     }
                 }
@@ -144,13 +147,3 @@ public class KlondikeSolitaireController {
     }
 
 }
-
-
-//        double allCardsMarginsCombined=0.0;
-//        for (Node iV:stacksPanelChildren){
-//            if(iV instanceof ImageView){
-//                //static method to apply margin!!! ok javaFX... I didn't see that coming...
-//                StackPane.setMargin(iV,new Insets(marginPerCard+allCardsMarginsCombined,0,0,0));
-//                allCardsMarginsCombined+=marginPerCard;
-//            }
-//        }
