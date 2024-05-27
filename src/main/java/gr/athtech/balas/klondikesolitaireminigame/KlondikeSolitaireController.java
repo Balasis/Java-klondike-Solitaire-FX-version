@@ -61,7 +61,7 @@ public class KlondikeSolitaireController {
     private ArrayList<StackPane> tableStacks;
     int numberOfCardsWeTryToPick=0;
     StackPane stackPaneChosenAsSource;
-    boolean isCardSetDragged;
+    boolean isThereADraggingGoingOn;
 
 
     public KlondikeSolitaireController() {
@@ -136,9 +136,8 @@ public class KlondikeSolitaireController {
     private void addSetOnMouseClickListener(CardView cV){
         cV.setOnMousePressed(event -> {
             numberOfCardsWeTryToPick =getNumberOfCardViewsUnderIt(cV);
-            System.out.println(numberOfCardsWeTryToPick);
             stackPaneChosenAsSource =(StackPane) cV.getParent();
-            System.out.println(stackPaneChosenAsSource.getId());
+            isThereADraggingGoingOn=false;
             setMouseCurrentLocation(event);
             cardViewParentOfParentInFront(event);
             event.consume();
@@ -164,14 +163,21 @@ public class KlondikeSolitaireController {
     //update and sum to x|y mouse loc, changes translate x|y (fake drag)
     private void addSetOnMouseDraggedListener(CardView cV){
         cV.setOnMouseDragged(event -> {
-            if (!isCardSetDragged){
-              //  theGame.dragCardsFromBoardCardSlot(boardSlotsMap.get( cV.getParent() ), );
+            if (stackPaneChosenAsSource==null || numberOfCardsWeTryToPick==0){
+                System.out.println("no card dragged");
+                event.consume();
+                return;
             }
-
-
-            updateTranslateXYtoCardView(event);
-            // Update stored mouse coordinates for the next drag event
-            setMouseCurrentLocation(event);
+            if (!isThereADraggingGoingOn) {
+                System.out.println("no dragging going on");
+                theGame.dragCardsFromBoardCardSlot(boardSlotsMap.get(stackPaneChosenAsSource), numberOfCardsWeTryToPick);
+            }
+            isThereADraggingGoingOn=true;
+                if (theGame.isThereDragCards()){
+                    updateTranslateXYtoCardView(event);
+                    // Update stored mouse coordinates for the next drag event
+                    setMouseCurrentLocation(event);
+                }
             event.consume();
         });
     }
@@ -188,11 +194,13 @@ public class KlondikeSolitaireController {
     private void addSetOnMouseReleased(CardView cV){
         cV.setOnMouseReleased(event -> {
             updateStackPaneBounds();
+
+
+
             CardView theDragger = (CardView) event.getSource();
             // Get the bounds of imageView in the scene coordinate space
             Bounds imageViewBoundsInScene = theDragger.localToScene(theDragger.getBoundsInLocal());
             StackPane parentOfMoveable = (StackPane) theDragger.getParent();
-            boolean intersected = false;
             //ok...this for each was recommended was taken by the web... I read a bit about the Map.Entry and entrySet()
             //but I am not that familiar with it... logic seems simple enough so let it be.
 
@@ -202,39 +210,44 @@ public class KlondikeSolitaireController {
 
                 // Check for intersection using the actual scene coordinates
                 if (bounds.intersects(imageViewBoundsInScene) && stackPane != parentOfMoveable) {
-
-                    // Move imageView to the target stackPane
-                    parentOfMoveable.getChildren().remove(theDragger);
-                    stackPane.getChildren().add(theDragger);
-
-                    // Reset translation to (0, 0) since it is now a child of the new StackPane
-                    theDragger.setTranslateX(0);
-                    theDragger.setTranslateY(0);
-
-                    setMarginOnStackPaneChildrens(parentOfMoveable);
-                    setMarginOnStackPaneChildrens(stackPane);
-
-                    // Update the bounds after moving the imageView
-
-
-                    intersected = true;
+                    if(!theGame.addCardsToBoardSlot( boardSlotsMap.get(stackPane) )){
+                        System.out.println("wasn't Approved");
+                        break;
+                    }
+                    moveImageViewsBetweenPanels(parentOfMoveable,stackPane,theDragger);
+                    setMarginsOnAffectedPanels(parentOfMoveable,stackPane);
                     break;
                 }
             }
-            if (!intersected) {
-                // Reset translation if not intersecting any target StackPane
-                theDragger.setTranslateX(0);
-                theDragger.setTranslateY(0);
-            }
-            mouseX = 0;
-            mouseY = 0;
-            numberOfCardsWeTryToPick=0;
-            stackPaneChosenAsSource=null;
-            isCardSetDragged =false;
-            updateStackPaneBounds();
-
+            resetDraggingProperties(theDragger);
+            updateBoardProperties();
             event.consume();
         });
+    }
+
+    private void moveImageViewsBetweenPanels(StackPane source,StackPane target,ImageView imageView){
+        source.getChildren().remove(imageView);
+        target.getChildren().add(imageView);
+    }
+
+    private void setMarginsOnAffectedPanels(StackPane source,StackPane target){
+        setMarginOnStackPaneChildrens(source);
+        setMarginOnStackPaneChildrens(target);
+    }
+
+    private void resetDraggingProperties(CardView theDragger){
+        mouseX = 0;
+        mouseY = 0;
+        numberOfCardsWeTryToPick=0;
+        stackPaneChosenAsSource=null;
+        isThereADraggingGoingOn =true;
+        theDragger.setTranslateX(0);
+        theDragger.setTranslateY(0);
+    }
+
+    private void updateBoardProperties(){
+        updateStackPaneBounds();
+        updateCardRevealsStatus();
     }
 
     //record the bounds of the last card of each stack and reforms a full Map of them. (used for interception comparison)

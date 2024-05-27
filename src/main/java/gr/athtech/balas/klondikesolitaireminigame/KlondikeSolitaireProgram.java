@@ -118,6 +118,10 @@ public class KlondikeSolitaireProgram {
         return draggedCards;
     }
 
+    public boolean isThereDragCards(){
+        return draggedCards!=null && draggedByCardSlotType!=null;
+    }
+
     public BoardCardsSlot getDraggedByCardSlotType() {
         return draggedByCardSlotType;
     }
