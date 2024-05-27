@@ -39,6 +39,8 @@ public class DeckSlot extends CardsSlot implements BoardCardsSlot{
         return c;
     }
 
+
+
     @Override
     public String toString() {
         return this.slotType+" "+super.toString();

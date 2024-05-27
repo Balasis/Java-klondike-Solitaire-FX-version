@@ -19,6 +19,7 @@ public interface BoardCardsSlot {
     void addCardsNoRestrictions(ArrayList<Card> cards);
     void revealLastCard();
     boolean isAddCardsValid(ArrayList<Card> cards);
+    //boolean isDragFeaseable;
     boolean isCardsSlotEmpty();
     SlotType getSlotType();
 }
