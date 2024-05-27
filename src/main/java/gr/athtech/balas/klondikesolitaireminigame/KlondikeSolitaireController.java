@@ -55,13 +55,13 @@ public class KlondikeSolitaireController {
     //Main game program, Maps to for info from model to view, mouse X|Y for drag and drop info, an array for loop convenience.
     private KlondikeSolitaireProgram theGame;
     private final Map<Card, CardView> cardsMap;
-    private final Map<BoardCardsSlot, StackPane> boardSlotsMap = new HashMap<>();
+    private final Map<StackPane,BoardCardsSlot > boardSlotsMap = new HashMap<>();
     private final Map<StackPane, Bounds> boundryOfLastImageViewInStacks = new HashMap<>();
     private double mouseX, mouseY;
     private ArrayList<StackPane> tableStacks;
-    int counterCalled=0;
-    int setMarginCalled=0;
-    int setBountryCalled=0;
+    int numberOfCardsWeTryToPick=0;
+    StackPane stackPaneChosenAsSource;
+    boolean isCardSetDragged;
 
 
     public KlondikeSolitaireController() {
@@ -74,6 +74,7 @@ public class KlondikeSolitaireController {
             CardView cV=new CardView(c);
             cV.setFitWidth(95);
             cV.setFitHeight(150);
+            cV.setPreserveRatio(false);
             cardsMap.put(c, new CardView(c));
         }
     }
@@ -103,14 +104,14 @@ public class KlondikeSolitaireController {
     private void populateTheBoardSlotMap(){
         //(sadly couldn't think of a shortcut or a loop due to many differences)
         //population of "boardSlotMap". Maps BoardCardsSlot to StackPane elements.
-        boardSlotsMap.put(theGame.getDeckSlot(), deckSlot);
-        boardSlotsMap.put(theGame.getWasteSlot(), wasteSlot);
-        boardSlotsMap.put(theGame.getClubsFoundationSlot(), clubsFoundation);
-        boardSlotsMap.put(theGame.getDiamondsFoundationSlot(), diamondsFoundation);
-        boardSlotsMap.put(theGame.getHeartsFoundationSlot(), heartsFoundation);
-        boardSlotsMap.put(theGame.getSpadesFoundationSlot(), spadesFoundation);
+        boardSlotsMap.put(deckSlot,theGame.getDeckSlot() );
+        boardSlotsMap.put(wasteSlot,theGame.getWasteSlot() );
+        boardSlotsMap.put(clubsFoundation,theGame.getClubsFoundationSlot() );
+        boardSlotsMap.put(diamondsFoundation,theGame.getDiamondsFoundationSlot());
+        boardSlotsMap.put( heartsFoundation,theGame.getHeartsFoundationSlot());
+        boardSlotsMap.put(spadesFoundation,theGame.getSpadesFoundationSlot());
         for (int i = 0; i < tableStacks.size(); i++) {
-            boardSlotsMap.put(theGame.getATableSlot(i),tableStacks.get(i));
+            boardSlotsMap.put(tableStacks.get(i) ,theGame.getATableSlot(i));
         }
     }
 
@@ -134,10 +135,19 @@ public class KlondikeSolitaireController {
     //(AnchorPane->Vbox->StackPane->CardView)
     private void addSetOnMouseClickListener(CardView cV){
         cV.setOnMousePressed(event -> {
+            numberOfCardsWeTryToPick =getNumberOfCardViewsUnderIt(cV);
+            System.out.println(numberOfCardsWeTryToPick);
+            stackPaneChosenAsSource =(StackPane) cV.getParent();
+            System.out.println(stackPaneChosenAsSource.getId());
             setMouseCurrentLocation(event);
             cardViewParentOfParentInFront(event);
             event.consume();
         });
+    }
+
+    private int getNumberOfCardViewsUnderIt(CardView cV){
+        StackPane theParent=(StackPane) cV.getParent();
+        return  theParent.getChildren().size()-theParent.getChildren().indexOf(cV);
     }
 
     private void setMouseCurrentLocation(MouseEvent e){
@@ -151,13 +161,14 @@ public class KlondikeSolitaireController {
         theDraggerParentsParent.toFront();
     }
 
-
-
-
-
     //update and sum to x|y mouse loc, changes translate x|y (fake drag)
     private void addSetOnMouseDraggedListener(CardView cV){
         cV.setOnMouseDragged(event -> {
+            if (!isCardSetDragged){
+              //  theGame.dragCardsFromBoardCardSlot(boardSlotsMap.get( cV.getParent() ), );
+            }
+
+
             updateTranslateXYtoCardView(event);
             // Update stored mouse coordinates for the next drag event
             setMouseCurrentLocation(event);
@@ -174,32 +185,20 @@ public class KlondikeSolitaireController {
     }
 
     //...release the mouse
-    private void addSetOnMouseReleased(ImageView cV){
+    private void addSetOnMouseReleased(CardView cV){
         cV.setOnMouseReleased(event -> {
-
-            ImageView theDragger = (ImageView) event.getSource();
+            updateStackPaneBounds();
+            CardView theDragger = (CardView) event.getSource();
             // Get the bounds of imageView in the scene coordinate space
             Bounds imageViewBoundsInScene = theDragger.localToScene(theDragger.getBoundsInLocal());
             StackPane parentOfMoveable = (StackPane) theDragger.getParent();
             boolean intersected = false;
             //ok...this for each was recommended was taken by the web... I read a bit about the Map.Entry and entrySet()
             //but I am not that familiar with it... logic seems simple enough so let it be.
-            System.out.println("source: "+boundryOfLastImageViewInStacks.get(cV.getParent()));
-            System.out.println("destination"+boundryOfLastImageViewInStacks.get(tableSlot2));
-            Bounds bound =boundryOfLastImageViewInStacks.get(tableSlot2);
-            if (bound.intersects( imageViewBoundsInScene)){
-                System.out.println("correct");
-            }
-            else{
-                System.out.println("no in!");
-            }
 
             for (Map.Entry<StackPane, Bounds> entry : boundryOfLastImageViewInStacks.entrySet()) {
                 StackPane stackPane = entry.getKey();
                 Bounds bounds = entry.getValue();
-                    if (!bounds.intersects(imageViewBoundsInScene)){
-                        System.out.println("the intersects");
-                    }
 
                 // Check for intersection using the actual scene coordinates
                 if (bounds.intersects(imageViewBoundsInScene) && stackPane != parentOfMoveable) {
@@ -216,7 +215,7 @@ public class KlondikeSolitaireController {
                     setMarginOnStackPaneChildrens(stackPane);
 
                     // Update the bounds after moving the imageView
-                    Platform.runLater(this::updateStackPaneBounds);
+
 
                     intersected = true;
                     break;
@@ -229,6 +228,11 @@ public class KlondikeSolitaireController {
             }
             mouseX = 0;
             mouseY = 0;
+            numberOfCardsWeTryToPick=0;
+            stackPaneChosenAsSource=null;
+            isCardSetDragged =false;
+            updateStackPaneBounds();
+
             event.consume();
         });
     }
@@ -240,15 +244,17 @@ public class KlondikeSolitaireController {
         for (Node vboxNode : containerAnchor.getChildren()) {
             if (vboxNode instanceof VBox) {
                 for (Node stackPaneNode : ((VBox) vboxNode).getChildren()) {
+
                     if (stackPaneNode instanceof StackPane) {
+
                         StackPane stackPane = (StackPane) stackPaneNode;
                         if (!stackPane.getChildren().isEmpty()) {
                             Node lastImageView = stackPane.getChildren().getLast();
                             Bounds bounds = lastImageView.localToScene(lastImageView.getBoundsInLocal());
                             boundryOfLastImageViewInStacks.put(stackPane, bounds);
                         } else {
+//                            System.out.println("The" +stackPane.getId()+" is empty !!!");
                             Bounds bounds = stackPane.localToScene(stackPane.getBoundsInLocal());
-
                             boundryOfLastImageViewInStacks.put(stackPane, bounds);
                         }
                     }
@@ -258,8 +264,6 @@ public class KlondikeSolitaireController {
     }
 
     private void setMarginOnStackPaneChildrens(StackPane stackPane) {
-
-        setMarginCalled++;
         if (!tableStacks.contains(stackPane)){
             ObservableList<Node> stacksPanelChildren = stackPane.getChildren();
             for (Node child : stacksPanelChildren) {
@@ -272,7 +276,7 @@ public class KlondikeSolitaireController {
             }
             ImageView lastImageViewOfStack = (ImageView) stacksPanelChildren.getLast();
             double actualHeightOfTheLastCard = lastImageViewOfStack.getBoundsInLocal().getHeight();
-            double marginPerCard = actualHeightOfTheLastCard * 0.25;
+            double marginPerCard = actualHeightOfTheLastCard * 0.23;
 
             for (int i = 0; i < stacksPanelChildren.size(); i++) {
                 Node currentChild = stacksPanelChildren.get(i);
@@ -297,9 +301,9 @@ public class KlondikeSolitaireController {
     }
 
     private void updateStackPaneStatus(){
-        for (Map.Entry<BoardCardsSlot, StackPane> e : boardSlotsMap.entrySet()) {
-            BoardCardsSlot boardCardsSlot=e.getKey();
-            StackPane stackPane = e.getValue();
+        for (Map.Entry<StackPane,BoardCardsSlot> e : boardSlotsMap.entrySet()) {
+            StackPane stackPane =e.getKey();
+            BoardCardsSlot boardCardsSlot= e.getValue();
             for (Card c:boardCardsSlot.getCards()){
                 stackPane.getChildren().add( cardsMap.get(c) );
             }

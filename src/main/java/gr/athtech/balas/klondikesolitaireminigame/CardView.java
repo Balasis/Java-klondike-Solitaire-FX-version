@@ -26,4 +26,8 @@ public class CardView extends ImageView {
         }
     }
 
+    public Card getCard(){
+        return card;
+    }
+
 }
