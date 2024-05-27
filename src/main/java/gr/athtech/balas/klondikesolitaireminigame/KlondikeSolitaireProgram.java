@@ -1,8 +1,8 @@
 package gr.athtech.balas.klondikesolitaireminigame;
 
 import gr.athtech.balas.klondikesolitaireminigame.board.*;
-import gr.athtech.balas.klondikesolitaireminigame.exceptions.InvalidRemoval;
-import gr.athtech.balas.klondikesolitaireminigame.exceptions.MultipleInvalidRemoval;
+import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.InvalidTakeCardsException;
+import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.MultipleCardsRemovalException;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Card;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Deck;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Suit;
@@ -159,7 +159,7 @@ public class KlondikeSolitaireProgram {
     public void dragCardsFromBoardCardSlot(BoardCardsSlot bcs, int numberOfCards){
         try {
             this.draggedCards.addAll(bcs.takeCards(numberOfCards));
-        } catch (InvalidRemoval e) {
+        } catch (InvalidTakeCardsException e) {
             System.out.println(e);
             clearTheDragFields();
         }
@@ -201,7 +201,7 @@ public class KlondikeSolitaireProgram {
                 c.setIsFaceUp(true);
             }
             wasteSlot.addCards(cardsFromDeck);
-        } catch (MultipleInvalidRemoval e) {
+        } catch (MultipleCardsRemovalException e) {
             throw new RuntimeException(e);
         }
     }

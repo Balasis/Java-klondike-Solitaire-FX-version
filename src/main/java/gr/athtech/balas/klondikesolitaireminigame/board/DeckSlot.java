@@ -1,6 +1,6 @@
 package gr.athtech.balas.klondikesolitaireminigame.board;
 
-import gr.athtech.balas.klondikesolitaireminigame.exceptions.MultipleInvalidRemoval;
+import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.MultipleCardsRemovalException;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Card;
 
 import java.util.ArrayList;
@@ -20,8 +20,9 @@ public class DeckSlot extends CardsSlot implements BoardCardsSlot{
     @Override
     public void addCards(ArrayList<Card> cards){
         if (isAddCardsValid(cards)){
-            getCards().addAll(cards);
+
         }
+        getCards().addAll(cards);
     }
 
     @Override
@@ -30,10 +31,10 @@ public class DeckSlot extends CardsSlot implements BoardCardsSlot{
     }
 
     @Override
-    public ArrayList<Card> takeCards(int numberOfCards) throws MultipleInvalidRemoval {
+    public ArrayList<Card> takeCards(int numberOfCards) throws MultipleCardsRemovalException {
         ArrayList<Card> c=new ArrayList<>();
         if(numberOfCards>1){
-            throw new MultipleInvalidRemoval("Specific type of BoardCardSlot doesnt support multiRemoval");
+            throw new MultipleCardsRemovalException("Specific type of BoardCardSlot doesnt support multiRemoval");
         }
         c.add(getCards().get(0));
         return c;
@@ -41,7 +42,7 @@ public class DeckSlot extends CardsSlot implements BoardCardsSlot{
 
    // @Override
     public boolean isTakeCardsValid(int numberOfCards) {
-        return false;
+        return numberOfCards==1;
     }
 
 

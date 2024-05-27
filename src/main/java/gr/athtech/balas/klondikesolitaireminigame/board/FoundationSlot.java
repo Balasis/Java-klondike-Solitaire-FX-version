@@ -1,6 +1,6 @@
 package gr.athtech.balas.klondikesolitaireminigame.board;
 
-import gr.athtech.balas.klondikesolitaireminigame.exceptions.MultipleInvalidRemoval;
+import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.MultipleCardsRemovalException;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Card;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Rank;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Suit;
@@ -35,13 +35,18 @@ public class FoundationSlot extends CardsSlot implements BoardCardsSlot {
     }
 
     @Override
-    public ArrayList<Card> takeCards(int numberOfCards) throws MultipleInvalidRemoval {
+    public ArrayList<Card> takeCards(int numberOfCards) throws MultipleCardsRemovalException {
         ArrayList<Card> c=new ArrayList<>();
         if(numberOfCards>1){
-            throw new MultipleInvalidRemoval("Specific Card Slot doesnt support multi-removal");
+            throw new MultipleCardsRemovalException("Specific Card Slot doesnt support multi-removal");
         }
         c.add(getCards().getFirst());
         return c;
+    }
+
+    @Override
+    public boolean isTakeCardsValid(int numberOfCards) {
+        return numberOfCards==1;
     }
 
     public Suit getFoundationSuit() {

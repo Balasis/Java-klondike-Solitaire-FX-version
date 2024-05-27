@@ -1,8 +1,8 @@
 package gr.athtech.balas.klondikesolitaireminigame.board;
 
-import gr.athtech.balas.klondikesolitaireminigame.exceptions.ColorsBlocksRemoval;
-import gr.athtech.balas.klondikesolitaireminigame.exceptions.HiddenCardBlocksRemoval;
-import gr.athtech.balas.klondikesolitaireminigame.exceptions.RanksBlocksRemoval;
+import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.ColorsOutOfOrderException;
+import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.HiddenCardRemovalException;
+import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.RanksOutOfOrderException;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Card;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.CardColor;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Rank;
@@ -64,20 +64,28 @@ public class TableSlot extends CardsSlot implements BoardCardsSlot{
     //Before I remove them from the list I first create a dummy
     //array to check removal capability according to game rules
     @Override
-    public ArrayList<Card> takeCards(int numberOfCards) throws ColorsBlocksRemoval, RanksBlocksRemoval, HiddenCardBlocksRemoval {
+    public ArrayList<Card> takeCards(int numberOfCards) throws ColorsOutOfOrderException, RanksOutOfOrderException, HiddenCardRemovalException {
         ArrayList<Card> listForTakeabilityCheck=formAListToBeChecked(numberOfCards);
         if (!areTheColorsCorrect(listForTakeabilityCheck)){
-            throw new ColorsBlocksRemoval("Incorrect combination of colors");
+            throw new ColorsOutOfOrderException("Incorrect combination of colors");
         }
         if(!areTheRanksCorrect(listForTakeabilityCheck)){
-            throw new RanksBlocksRemoval("Incorrect combination of Ranks");
+            throw new RanksOutOfOrderException("Incorrect combination of Ranks");
         }
         if(!areAllTheCardsRevealed(listForTakeabilityCheck)){
-            throw new HiddenCardBlocksRemoval("Hidden Cards block removal");
+            throw new HiddenCardRemovalException("Hidden Cards block removal");
         }
         ArrayList<Card> cardsToBeReturned=new ArrayList<>();
         populateCardsToBeReturned(cardsToBeReturned,numberOfCards);
         return cardsToBeReturned;
+    }
+
+    @Override
+    public boolean isTakeCardsValid(int numberOfCards) {
+        ArrayList<Card> listForTakeabilityCheck=formAListToBeChecked(numberOfCards);
+        return areTheColorsCorrect(listForTakeabilityCheck) &&
+                areTheRanksCorrect(listForTakeabilityCheck) &&
+                areAllTheCardsRevealed(listForTakeabilityCheck);
     }
 
     private void populateCardsToBeReturned(ArrayList<Card> cardsToBeReturnedList, int toTakeCardsFromTableSlot){

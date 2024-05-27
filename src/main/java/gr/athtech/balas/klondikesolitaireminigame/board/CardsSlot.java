@@ -11,6 +11,14 @@ public class CardsSlot {
         cards=new ArrayList<>();
     }
 
+    //API
+    public ArrayList<Card> takeAllCardsNoRestrictions(){
+        ArrayList<Card> c=new ArrayList<>(cards);
+        cards.clear();
+        return c;
+    }
+
+    //Overrides
     public Card getLastCard() {
         return cards.getLast();
     }
@@ -19,40 +27,34 @@ public class CardsSlot {
         return cards.getFirst();
     }
 
-    //first card of the Top is index card.size() - 1
-    //we to the first always because we pick from the last
-    //otherwise the order will be reversed
     public ArrayList<Card> getMultipleCardsFromTop(int numberOfCards) {
         ArrayList<Card> cardsToBeGiven=new ArrayList<>();
         for (int i = 0; i < cards.size(); i++) {
             if (i>=numberOfCards){
                 break;
-            }
+            }   //first card of the Top is index card.size() - 1
             cardsToBeGiven.addFirst(cards.get( (cards.size()-i)-1) );
         }
         return cardsToBeGiven;
     }
 
-    //first card of the bottom is the index 0
     public ArrayList<Card> getMultipleCardsFromBottom(int numberOfCards) {
         ArrayList<Card> cardsToBeGiven=new ArrayList<>();
         for (int i = 0; i < cards.size(); i++) {
             if (i>=numberOfCards){
                 break;
-            }
+            }//first card of the bottom is the index 0
             cardsToBeGiven.add(cards.get(i));
         }
         return cardsToBeGiven;
     }
 
-    public void addCardsNoRestrictions(ArrayList<Card> cards) {
-        this.cards.addAll(cards);
+    public boolean isCardInSlot(Card card){
+        return cards.contains(card);
     }
 
-    public ArrayList<Card> takeAllCardsNoRestrictions(){
-        ArrayList<Card> c=new ArrayList<>(cards);
-        cards.clear();
-        return c;
+    public void addCardsNoRestrictions(ArrayList<Card> cards) {
+        this.cards.addAll(cards);
     }
 
     public boolean isCardsSlotEmpty(){
@@ -76,4 +78,5 @@ public class CardsSlot {
                 "cards=" + cards +
                 '}';
     }
+
 }
