@@ -2,7 +2,7 @@ package gr.athtech.balas.klondikesolitaireminigame;
 
 import gr.athtech.balas.klondikesolitaireminigame.board.*;
 import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.InvalidTakeCardsException;
-import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.MultipleCardsRemovalException;
+import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.IncorrNumOfCardsRemovalException;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Card;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Deck;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Suit;
@@ -19,15 +19,11 @@ public class KlondikeSolitaireProgram {
     private TableSlot[] tableSlots;
     private MoveCardsSlotTypeValidator moveCardsSlotTypeValidator;
 
-    private ArrayList<Card> draggedCards;
-    private BoardCardsSlot  draggedByCardSlotType;
-
     public KlondikeSolitaireProgram(){
         deck=new Deck();
         deckSlot=new DeckSlot();
         wasteSlot=new WasteSlot();
         moveCardsSlotTypeValidator=new MoveCardsSlotTypeValidator();
-        draggedCards=new ArrayList<>();
         createFoundationSlotPerSuit();
         createTableSlots();
     }
@@ -115,18 +111,6 @@ public class KlondikeSolitaireProgram {
         return tableSlots[index];
     }
 
-    public ArrayList<Card> getDraggedCards() {
-        return draggedCards;
-    }
-
-    public boolean isThereDragCards(){
-        return draggedCards!=null && draggedByCardSlotType!=null;
-    }
-
-    public BoardCardsSlot getDraggedByCardSlotType() {
-        return draggedByCardSlotType;
-    }
-
     public void setUpTheGame(){
         if (deck.isEmpty()){
             return;
@@ -152,48 +136,6 @@ public class KlondikeSolitaireProgram {
         deckSlot.addCardsNoRestrictions(deck.takeAllDeckCards());
     }
 
-
-
-
-
-    public void dragCardsFromBoardCardSlot(BoardCardsSlot bcs, int numberOfCards){
-        try {
-            this.draggedCards.addAll(bcs.takeCards(numberOfCards));
-        } catch (InvalidTakeCardsException e) {
-            System.out.println(e);
-            clearTheDragFields();
-        }
-        this.draggedByCardSlotType=bcs;
-    }
-
-    public boolean addCardsToBoardSlot(BoardCardsSlot to){
-        BoardCardsSlot from=draggedByCardSlotType;
-        if(from==null){
-            draggedCards.clear();
-            return false;
-        }
-        if(!isTransferAmongSlotsTypesAllowed(from,to) || !to.isAddCardsValid(draggedCards)){
-            draggedByCardSlotType.addCardsNoRestrictions(draggedCards);
-            draggedByCardSlotType=null;
-            draggedCards.clear();
-            return false;
-        }else{
-            to.addCards(draggedCards);
-            return true;
-        }
-    }
-
-    private void clearTheDragFields(){
-        this.draggedCards.clear();
-        this.draggedByCardSlotType=null;
-    }
-
-    public void putBackDraggedCards(){
-        draggedByCardSlotType.addCardsNoRestrictions(draggedCards);
-        draggedByCardSlotType=null;
-        draggedCards.clear();
-    }
-
     public void addCardFromDeckToWaste(int numberOfCards){
         try {
             ArrayList<Card> cardsFromDeck=deckSlot.takeCards(numberOfCards);
@@ -201,7 +143,7 @@ public class KlondikeSolitaireProgram {
                 c.setIsFaceUp(true);
             }
             wasteSlot.addCards(cardsFromDeck);
-        } catch (MultipleCardsRemovalException e) {
+        } catch (IncorrNumOfCardsRemovalException e) {
             throw new RuntimeException(e);
         }
     }

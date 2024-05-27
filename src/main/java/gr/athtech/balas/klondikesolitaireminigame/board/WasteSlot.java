@@ -1,6 +1,7 @@
 package gr.athtech.balas.klondikesolitaireminigame.board;
 
-import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.MultipleCardsRemovalException;
+import gr.athtech.balas.klondikesolitaireminigame.exceptions.addcardsexceptions.IncorrNumOfCardsAdditionException;
+import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.IncorrNumOfCardsRemovalException;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Card;
 
 import java.util.ArrayList;
@@ -18,10 +19,13 @@ public class WasteSlot extends CardsSlot implements BoardCardsSlot{
     }
 
     @Override
-    public void addCards(ArrayList<Card> cards) {
+    public void addCards(ArrayList<Card> cards) throws IncorrNumOfCardsAdditionException {
         if (isAddCardsValid(cards)){
-            getCards().add(cards.get(0));
+            if (cards.size()==1){
+                throw new IncorrNumOfCardsAdditionException("Foundation slot can have only 1 card added per time");
+            }
         }
+        getCards().add(cards.getFirst());
     }
 
     @Override
@@ -30,10 +34,10 @@ public class WasteSlot extends CardsSlot implements BoardCardsSlot{
     }
 
     @Override
-    public ArrayList<Card> takeCards(int numberOfCards) throws MultipleCardsRemovalException {
+    public ArrayList<Card> takeCards(int numberOfCards) throws IncorrNumOfCardsRemovalException {
         ArrayList<Card> c=new ArrayList<>();
         if(numberOfCards>1){
-            throw new MultipleCardsRemovalException("Specific Card Slot doesnt support multi-removal");
+            throw new IncorrNumOfCardsRemovalException("Specific Card Slot doesnt support multi-removal");
         }
         c.add(getCards().get(0));
         return c;

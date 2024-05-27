@@ -1,5 +1,6 @@
 package gr.athtech.balas.klondikesolitaireminigame.board;
 
+import gr.athtech.balas.klondikesolitaireminigame.exceptions.addcardsexceptions.InvalidAddCardsException;
 import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.InvalidTakeCardsException;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Card;
 
@@ -18,7 +19,7 @@ public interface BoardCardsSlot {
 
  // On subclasses (different implementation)
 
-    void addCards(ArrayList<Card> cards);
+    void addCards(ArrayList<Card> cards) throws InvalidAddCardsException;
     boolean isAddCardsValid(ArrayList<Card> cards);
 
     ArrayList<Card> takeCards(int numberOfCards) throws InvalidTakeCardsException;
