@@ -62,7 +62,7 @@ public class CardsSlot {
 
     public void revealLastCard(){
         if (!cards.isEmpty()){
-            cards.getLast().reveal();
+            cards.getLast().setIsFaceUp();
         }
 
     }

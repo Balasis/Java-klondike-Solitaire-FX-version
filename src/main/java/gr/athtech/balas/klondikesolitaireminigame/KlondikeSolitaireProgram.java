@@ -145,11 +145,11 @@ public class KlondikeSolitaireProgram {
     }
 
     private void giveSettingUpCardsToTableSlots(int i){
-        tableSlots[i].addCardsNoRestrictions(deck.takeCards(i+1));
+        tableSlots[i].addCardsNoRestrictions(deck.takeNumberOfDeckCards(i+1));
     }
 
     private void addRemainingCardsIntoDeckslot(){
-        deckSlot.addCardsNoRestrictions(deck.takeAllCurrentCards());
+        deckSlot.addCardsNoRestrictions(deck.takeAllDeckCards());
     }
 
 
@@ -198,7 +198,7 @@ public class KlondikeSolitaireProgram {
         try {
             ArrayList<Card> cardsFromDeck=deckSlot.takeCards(numberOfCards);
             for(Card c:cardsFromDeck){
-                c.reveal();
+                c.setIsFaceUp();
             }
             wasteSlot.addCards(cardsFromDeck);
         } catch (MultipleInvalidRemoval e) {

@@ -44,8 +44,8 @@ public class TableSlot extends CardsSlot implements BoardCardsSlot{
     }
 
     private boolean isTheFirstCardColorCorrect(ArrayList<Card> cards){
-        String incomingCardColor=cards.getFirst().getColor();
-        String lastCardOfTheSlotColor=getCards().getLast().getColor();
+        String incomingCardColor=cards.getFirst().getCardColor();
+        String lastCardOfTheSlotColor=getCards().getLast().getCardColor();
 
        return !incomingCardColor.equals(lastCardOfTheSlotColor);
     }
@@ -103,7 +103,7 @@ public class TableSlot extends CardsSlot implements BoardCardsSlot{
         String currentColor=null;
         for (int i = 0; i < cards.size(); i++) {
             Card c=cards.get(i);
-            String cColor=c.getColor();
+            String cColor=c.getCardColor();
             if (currentColor!=null){
                 if(cColor.equals(currentColor)){
                     return false;
@@ -134,7 +134,7 @@ public class TableSlot extends CardsSlot implements BoardCardsSlot{
     private boolean areAllTheCardsRevealed(ArrayList<Card> cards){
         for (int i = 0; i <cards.size() ; i++) {
             Card c=cards.get(i);
-           if(!c.getIsRevealed()){
+           if(!c.getIsFaceUp()){
                return false;
            }
         }

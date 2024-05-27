@@ -3,20 +3,17 @@ package gr.athtech.balas.klondikesolitaireminigame.thedeck;
 public class Card{
     private Rank rank;
     private final Suit suit;
-    private Boolean isRevealed;
-    private String color;
+    private Boolean isFaceUp;
+    private final CardColor cardColor;
 
     public Card(Rank rank, Suit suit) {
         this.rank = rank;
         this.suit = suit;
-        this.isRevealed =false;
-        if(this.suit==Suit.HEARTS || this.suit==Suit.DIAMONDS){
-            this.color="red";
-        }else{
-            this.color="black";
-        }
+        this.isFaceUp =false;
+        this.cardColor=(this.suit==Suit.HEARTS || this.suit==Suit.DIAMONDS) ? CardColor.RED : CardColor.BLACK;
     }
 
+    // Getters
     public Rank getRank() {
         return rank;
     }
@@ -25,29 +22,29 @@ public class Card{
         return suit;
     }
 
-    public String getColor(){
-        return color;
+    public Boolean getIsFaceUp() {
+        return isFaceUp;
     }
 
-    public Boolean getIsRevealed() {
-        return isRevealed;
+    public CardColor getCardColor(){
+        return cardColor;
     }
 
-    public void reveal() {
-        this.isRevealed = true;
-    }
-
-    public void hide() {
-        this.isRevealed = false;
-    }
-
-    //Do not remove the setRank; used at setting joker cards rank later on.
+    // Setters
     public void setRank(Rank rank) {
         this.rank = rank;
     }
 
+    public void setIsFaceUp(Boolean b) {
+        this.isFaceUp = b;
+    }
+
+    //Overrides
+    @Override
     public String toString() {
         return " Rank: " + this.rank + ", Suit: " + this.suit
-                + (isRevealed ? " Revealed" : " Hidden");
+                + (isFaceUp ? " Revealed" : " Hidden" +" Card color: "
+                + this.cardColor);
     }
+
 }

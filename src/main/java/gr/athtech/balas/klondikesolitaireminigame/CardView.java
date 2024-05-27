@@ -19,7 +19,7 @@ public class CardView extends ImageView {
     }
 
     public void updateImage() {
-        if (card.getIsRevealed()) {
+        if (card.getIsFaceUp()) {
             setImage(revealedImage);
         } else {
             setImage(hiddenImage);
