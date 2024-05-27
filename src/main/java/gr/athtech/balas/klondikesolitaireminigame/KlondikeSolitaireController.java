@@ -59,6 +59,11 @@ public class KlondikeSolitaireController {
     private final Map<StackPane, Bounds> boundryOfLastImageViewInStacks = new HashMap<>();
     private double mouseX, mouseY;
     private ArrayList<StackPane> tableStacks;
+    int counterCalled=0;
+    int setMarginCalled=0;
+    int setBountryCalled=0;
+
+
     public KlondikeSolitaireController() {
         //Init the gameProgram, get cards from a deck, removing the jokers cards, populate "cardMaps".
         theGame = new KlondikeSolitaireProgram();
@@ -66,6 +71,9 @@ public class KlondikeSolitaireController {
         deck.removeTheJokers();
         cardsMap = new HashMap<>();
         for (Card c : deck.getCards()) {
+            CardView cV=new CardView(c);
+            cV.setFitWidth(95);
+            cV.setFitHeight(150);
             cardsMap.put(c, new CardView(c));
         }
     }
@@ -128,6 +136,7 @@ public class KlondikeSolitaireController {
         cV.setOnMousePressed(event -> {
             setMouseCurrentLocation(event);
             cardViewParentOfParentInFront(event);
+            event.consume();
         });
     }
 
@@ -167,6 +176,7 @@ public class KlondikeSolitaireController {
     //...release the mouse
     private void addSetOnMouseReleased(ImageView cV){
         cV.setOnMouseReleased(event -> {
+
             ImageView theDragger = (ImageView) event.getSource();
             // Get the bounds of imageView in the scene coordinate space
             Bounds imageViewBoundsInScene = theDragger.localToScene(theDragger.getBoundsInLocal());
@@ -174,12 +184,26 @@ public class KlondikeSolitaireController {
             boolean intersected = false;
             //ok...this for each was recommended was taken by the web... I read a bit about the Map.Entry and entrySet()
             //but I am not that familiar with it... logic seems simple enough so let it be.
+            System.out.println("source: "+boundryOfLastImageViewInStacks.get(cV.getParent()));
+            System.out.println("destination"+boundryOfLastImageViewInStacks.get(tableSlot2));
+            Bounds bound =boundryOfLastImageViewInStacks.get(tableSlot2);
+            if (bound.intersects( imageViewBoundsInScene)){
+                System.out.println("correct");
+            }
+            else{
+                System.out.println("no in!");
+            }
+
             for (Map.Entry<StackPane, Bounds> entry : boundryOfLastImageViewInStacks.entrySet()) {
                 StackPane stackPane = entry.getKey();
                 Bounds bounds = entry.getValue();
+                    if (!bounds.intersects(imageViewBoundsInScene)){
+                        System.out.println("the intersects");
+                    }
 
                 // Check for intersection using the actual scene coordinates
                 if (bounds.intersects(imageViewBoundsInScene) && stackPane != parentOfMoveable) {
+
                     // Move imageView to the target stackPane
                     parentOfMoveable.getChildren().remove(theDragger);
                     stackPane.getChildren().add(theDragger);
@@ -193,6 +217,7 @@ public class KlondikeSolitaireController {
 
                     // Update the bounds after moving the imageView
                     Platform.runLater(this::updateStackPaneBounds);
+
                     intersected = true;
                     break;
                 }
@@ -210,6 +235,7 @@ public class KlondikeSolitaireController {
 
     //record the bounds of the last card of each stack and reforms a full Map of them. (used for interception comparison)
     private void updateStackPaneBounds() {
+
         boundryOfLastImageViewInStacks.clear();
         for (Node vboxNode : containerAnchor.getChildren()) {
             if (vboxNode instanceof VBox) {
@@ -232,6 +258,8 @@ public class KlondikeSolitaireController {
     }
 
     private void setMarginOnStackPaneChildrens(StackPane stackPane) {
+
+        setMarginCalled++;
         if (!tableStacks.contains(stackPane)){
             ObservableList<Node> stacksPanelChildren = stackPane.getChildren();
             for (Node child : stacksPanelChildren) {
@@ -272,7 +300,6 @@ public class KlondikeSolitaireController {
         for (Map.Entry<BoardCardsSlot, StackPane> e : boardSlotsMap.entrySet()) {
             BoardCardsSlot boardCardsSlot=e.getKey();
             StackPane stackPane = e.getValue();
-            System.out.println(stackPane);
             for (Card c:boardCardsSlot.getCards()){
                 stackPane.getChildren().add( cardsMap.get(c) );
             }
