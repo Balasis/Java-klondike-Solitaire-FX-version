@@ -2,9 +2,11 @@ package gr.athtech.balas.klondikesolitaireminigame.board;
 
 import gr.athtech.balas.klondikesolitaireminigame.exceptions.addcardsexceptions.RequiredEmptyListException;
 import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.IncorrNumOfCardsRemovalException;
+import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.NoCardsToTakeException;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Card;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class DeckSlot extends CardsSlot implements BoardCardsSlot{
     private final SlotType slotType;
@@ -32,20 +34,20 @@ public class DeckSlot extends CardsSlot implements BoardCardsSlot{
     }
 
     @Override
-    public ArrayList<Card> takeCards(int numberOfCards) throws IncorrNumOfCardsRemovalException {
-        ArrayList<Card> c=new ArrayList<>();
+    public ArrayList<Card> takeCards(int numberOfCards) throws IncorrNumOfCardsRemovalException, NoCardsToTakeException {
+        if(getCards().isEmpty()){
+            throw new NoCardsToTakeException("No cards to take");
+        }
         if(numberOfCards>1){
             throw new IncorrNumOfCardsRemovalException("Specific type of BoardCardSlot doesnt support multiRemoval");
         }
-        c.add(getCards().get(0));
-        return c;
+        return new ArrayList<Card>(Collections.singletonList(getCards().getFirst()));
     }
 
-   // @Override
+    @Override
     public boolean isTakeCardsValid(int numberOfCards) {
         return numberOfCards==1;
     }
-
 
     @Override
     public String toString() {

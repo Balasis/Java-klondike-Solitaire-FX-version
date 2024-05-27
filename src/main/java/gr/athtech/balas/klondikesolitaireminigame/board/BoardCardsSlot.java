@@ -11,8 +11,8 @@ public interface BoardCardsSlot {
  // On CardSlot superclass(shared cored)
     Card getLastCard();
     Card getFirstCard();
-    ArrayList<Card> getMultipleCardsFromTop(int numOfCards);
-    ArrayList<Card> getMultipleCardsFromBottom(int numberOfCards);
+//    ArrayList<Card> getMultipleCardsFromTop(int numOfCards);
+//    ArrayList<Card> getMultipleCardsFromBottom(int numberOfCards);
     ArrayList<Card> getCards();
     boolean isCardInSlot(Card card);
     boolean isCardsSlotEmpty();

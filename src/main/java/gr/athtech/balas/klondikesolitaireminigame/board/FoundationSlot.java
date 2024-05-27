@@ -4,11 +4,14 @@ import gr.athtech.balas.klondikesolitaireminigame.exceptions.addcardsexceptions.
 import gr.athtech.balas.klondikesolitaireminigame.exceptions.addcardsexceptions.IncorrNumOfCardsAdditionException;
 import gr.athtech.balas.klondikesolitaireminigame.exceptions.addcardsexceptions.NoCardsToAddException;
 import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.IncorrNumOfCardsRemovalException;
+import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.NoCardsToTakeException;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Card;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Rank;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Suit;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class FoundationSlot extends CardsSlot implements BoardCardsSlot {
     private final SlotType slotType;
@@ -17,6 +20,11 @@ public class FoundationSlot extends CardsSlot implements BoardCardsSlot {
     public FoundationSlot(Suit s){
         foundationSuit=s;
         slotType=SlotType.FOUNDATION;
+    }
+
+    // API
+    public boolean isFoundationSuitSetComplete(){
+        return getCards().size()==13;
     }
 
     @Override
@@ -32,7 +40,7 @@ public class FoundationSlot extends CardsSlot implements BoardCardsSlot {
         if (cards.size()==1){
             throw new IncorrNumOfCardsAdditionException("Foundation slot can have only 1 card added per time");
         }
-        checkingFoundationCritiria(cards);
+        checkingFoundationCritiria(cards);//throws a critiria exception with the according message depending on violation
         getCards().add(cards.getFirst());
     }
 
@@ -42,13 +50,14 @@ public class FoundationSlot extends CardsSlot implements BoardCardsSlot {
     }
 
     @Override
-    public ArrayList<Card> takeCards(int numberOfCards) throws IncorrNumOfCardsRemovalException {
-        ArrayList<Card> c=new ArrayList<>();
+    public ArrayList<Card> takeCards(int numberOfCards) throws IncorrNumOfCardsRemovalException, NoCardsToTakeException {
+        if(getCards().isEmpty()){
+            throw new NoCardsToTakeException("No cards to take");
+        }
         if(numberOfCards>1){
             throw new IncorrNumOfCardsRemovalException("Specific Card Slot doesnt support multi-removal");
         }
-        c.add(getCards().getFirst());
-        return c;
+        return new ArrayList<Card>(Collections.singletonList(getCards().getFirst()));
     }
 
     @Override
@@ -56,10 +65,7 @@ public class FoundationSlot extends CardsSlot implements BoardCardsSlot {
         return numberOfCards==1;
     }
 
-    public Suit getFoundationSuit() {
-        return foundationSuit;
-    }
-
+    // Privates
     private boolean isAddCardAcceptable(Card card) {
         if (!isItTheRightSuit(card)){
             return false;
@@ -88,20 +94,21 @@ public class FoundationSlot extends CardsSlot implements BoardCardsSlot {
         }
     }
 
-    private boolean isFirstCardAnAceIfEmpty(Card card){
-        return !getCards().isEmpty() || card.getRank() == Rank.ACE;
-    }
-
     private boolean isItTheRightSuit(Card card){
         return card.getSuit()==foundationSuit;
+    }
+
+    private boolean isFirstCardAnAceIfEmpty(Card card){
+        return !getCards().isEmpty() || card.getRank() == Rank.ACE;
     }
 
     private boolean isTheRankLowerThanLast(Card card){
         return getCards().getLast().getRank().getValue() < card.getRank().getValue();
     }
 
-    public boolean isFoundationSuitSetComplete(){
-        return getCards().size()==13;
+    // Getters
+    public Suit getFoundationSuit() {
+        return foundationSuit;
     }
 
     @Override

@@ -2,6 +2,7 @@ package gr.athtech.balas.klondikesolitaireminigame.board;
 
 import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.ColorsOutOfOrderException;
 import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.HiddenCardRemovalException;
+import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.NoCardsToTakeException;
 import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.RanksOutOfOrderException;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Card;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.CardColor;
@@ -40,32 +41,15 @@ public class TableSlot extends CardsSlot implements BoardCardsSlot{
         return isTheFirstCardColorCorrect(cards) && isTheFirstCardRankCorrect(cards);
     }
 
-    private boolean isAKingOnEmptySlot(ArrayList<Card> cards){
-       return  (cards.getFirst().getRank()== Rank.KING);
-    }
-
-    private boolean isTheFirstCardColorCorrect(ArrayList<Card> cards){
-        CardColor incomingCardColor=cards.getFirst().getCardColor();
-        CardColor lastCardOfTheSlotColor=getCards().getLast().getCardColor();
-
-       return !incomingCardColor.equals(lastCardOfTheSlotColor);
-    }
-
-    private boolean isTheFirstCardRankCorrect(ArrayList<Card> cards){
-        int rankValueOfFirstIncomingCard=cards.getFirst().getRank().getValue();
-        int rankValueOfLastCardInSlot=getCards().getLast().getRank().getValue();
-
-        System.out.println(rankValueOfFirstIncomingCard);
-        System.out.println(rankValueOfLastCardInSlot);
-
-        return  rankValueOfFirstIncomingCard+1 == rankValueOfLastCardInSlot;
-    }
-
-    //Before I remove them from the list I first create a dummy
-    //array to check removal capability according to game rules
     @Override
-    public ArrayList<Card> takeCards(int numberOfCards) throws ColorsOutOfOrderException, RanksOutOfOrderException, HiddenCardRemovalException {
+    public ArrayList<Card> takeCards(int numberOfCards) throws ColorsOutOfOrderException,
+                 RanksOutOfOrderException, HiddenCardRemovalException, NoCardsToTakeException {
+
         ArrayList<Card> listForTakeabilityCheck=formAListToBeChecked(numberOfCards);
+        ArrayList<Card> cardsToBeReturned=new ArrayList<>();
+        if(getCards().isEmpty()){
+            throw new NoCardsToTakeException("No cards to take");
+        }
         if (!areTheColorsCorrect(listForTakeabilityCheck)){
             throw new ColorsOutOfOrderException("Incorrect combination of colors");
         }
@@ -75,7 +59,6 @@ public class TableSlot extends CardsSlot implements BoardCardsSlot{
         if(!areAllTheCardsRevealed(listForTakeabilityCheck)){
             throw new HiddenCardRemovalException("Hidden Cards block removal");
         }
-        ArrayList<Card> cardsToBeReturned=new ArrayList<>();
         populateCardsToBeReturned(cardsToBeReturned,numberOfCards);
         return cardsToBeReturned;
     }
@@ -86,6 +69,27 @@ public class TableSlot extends CardsSlot implements BoardCardsSlot{
         return areTheColorsCorrect(listForTakeabilityCheck) &&
                 areTheRanksCorrect(listForTakeabilityCheck) &&
                 areAllTheCardsRevealed(listForTakeabilityCheck);
+    }
+
+    private boolean isAKingOnEmptySlot(ArrayList<Card> cards){
+        return  (cards.getFirst().getRank()== Rank.KING);
+    }
+
+    private boolean isTheFirstCardColorCorrect(ArrayList<Card> cards){
+        CardColor incomingCardColor=cards.getFirst().getCardColor();
+        CardColor lastCardOfTheSlotColor=getCards().getLast().getCardColor();
+
+        return !incomingCardColor.equals(lastCardOfTheSlotColor);
+    }
+
+    private boolean isTheFirstCardRankCorrect(ArrayList<Card> cards){
+        int rankValueOfFirstIncomingCard=cards.getFirst().getRank().getValue();
+        int rankValueOfLastCardInSlot=getCards().getLast().getRank().getValue();
+
+        System.out.println(rankValueOfFirstIncomingCard);
+        System.out.println(rankValueOfLastCardInSlot);
+
+        return  rankValueOfFirstIncomingCard+1 == rankValueOfLastCardInSlot;
     }
 
     private void populateCardsToBeReturned(ArrayList<Card> cardsToBeReturnedList, int toTakeCardsFromTableSlot){
@@ -131,12 +135,10 @@ public class TableSlot extends CardsSlot implements BoardCardsSlot{
             int curCardRankVal=cards.get(i).getRank().getValue();
             int validRankValueForNextCard=curCardRankVal-1;
             int nextCardRankVal=cards.get(i+1).getRank().getValue() ;
-
             if (!(validRankValueForNextCard==nextCardRankVal)) {
                 return false;
             }
         }
-
         return true;
     }
 
@@ -154,4 +156,5 @@ public class TableSlot extends CardsSlot implements BoardCardsSlot{
     public String toString() {
         return this.slotType+" "+super.toString();
     }
+
 }

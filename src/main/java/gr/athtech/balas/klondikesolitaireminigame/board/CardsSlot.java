@@ -27,6 +27,40 @@ public class CardsSlot {
         return cards.getFirst();
     }
 
+    public boolean isCardInSlot(Card card){
+        return cards.contains(card);
+    }
+
+    public void addCardsNoRestrictions(ArrayList<Card> cards) {
+        this.cards.addAll(cards);
+    }
+
+    public boolean isCardsSlotEmpty(){
+        return cards.isEmpty();
+    }
+
+    public void revealLastCard(){
+        if (!cards.isEmpty()){
+            cards.getLast().setIsFaceUp(true);
+        }
+    }
+
+    public ArrayList<Card> getCards() {
+        return cards;
+    }
+
+    @Override
+    public String toString() {
+        return "CardsSlot{" +
+                "cards=" + cards +
+                '}';
+    }
+
+}
+
+
+
+/*
     public ArrayList<Card> getMultipleCardsFromTop(int numberOfCards) {
         ArrayList<Card> cardsToBeGiven=new ArrayList<>();
         for (int i = 0; i < cards.size(); i++) {
@@ -48,35 +82,4 @@ public class CardsSlot {
         }
         return cardsToBeGiven;
     }
-
-    public boolean isCardInSlot(Card card){
-        return cards.contains(card);
-    }
-
-    public void addCardsNoRestrictions(ArrayList<Card> cards) {
-        this.cards.addAll(cards);
-    }
-
-    public boolean isCardsSlotEmpty(){
-        return cards.isEmpty();
-    }
-
-    public void revealLastCard(){
-        if (!cards.isEmpty()){
-            cards.getLast().setIsFaceUp(true);
-        }
-
-    }
-
-    public ArrayList<Card> getCards() {
-        return cards;
-    }
-
-    @Override
-    public String toString() {
-        return "CardsSlot{" +
-                "cards=" + cards +
-                '}';
-    }
-
-}
+ */
