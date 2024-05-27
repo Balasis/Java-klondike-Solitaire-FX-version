@@ -45,8 +45,8 @@ public class TableSlot extends CardsSlot implements BoardCardsSlot{
     }
 
     private boolean isTheFirstCardColorCorrect(ArrayList<Card> cards){
-        String incomingCardColor=cards.getFirst().getCardColor();
-        String lastCardOfTheSlotColor=getCards().getLast().getCardColor();
+        CardColor incomingCardColor=cards.getFirst().getCardColor();
+        CardColor lastCardOfTheSlotColor=getCards().getLast().getCardColor();
 
        return !incomingCardColor.equals(lastCardOfTheSlotColor);
     }

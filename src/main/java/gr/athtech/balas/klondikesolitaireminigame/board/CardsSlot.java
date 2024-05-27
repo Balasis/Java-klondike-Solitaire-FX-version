@@ -15,7 +15,6 @@ public class CardsSlot {
         return cards.getLast();
     }
 
-
     public Card getFirstCard() {
         return cards.getFirst();
     }
