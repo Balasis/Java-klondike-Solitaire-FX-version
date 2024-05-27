@@ -85,10 +85,12 @@ public class KlondikeSolitaireController {
         //adding a Bountry to be intercepted at each StackPane using the last childs(CardView) Bountry of it
         //in order to get the destination(drop) StackPane
         populateTheBoardSlotMap();
-        addListenersToCardViews();
+
         theGame.setUpTheGame();
 
+
         updateStackPaneStatus();
+        addListenersToCardViews();
         setMarginToAllTables();
         updateCardRevealsStatus();
         Platform.runLater(this::updateStackPaneBounds);
@@ -118,10 +120,26 @@ public class KlondikeSolitaireController {
     private void addListenersToCardViews(){
         for(Map.Entry<Card,CardView> c:cardsMap.entrySet()){
             CardView cV=c.getValue();
-            addMouseListenersForDragAndDrop(cV);
+            if(cV.getParent().getId().equals("deckSlot")){
+                addMouseListenerForDeckToWaste(cV);
+            }else{
+                addMouseListenersForDragAndDrop(cV);
+            }
+
         }
     }
 
+    private void addMouseListenerForDeckToWaste(CardView cV){
+        cV.setOnMousePressed(event -> {
+            StackPane parentOfcV=(StackPane) cV.getParent();
+            theGame.addCardFromDeckToWaste(1);
+            parentOfcV.getChildren().remove(cV);
+            wasteSlot.getChildren().add(cV);
+            cV.updateImage();
+            updateCardRevealsStatus();
+            event.consume();
+        });
+    }
 
     private void addMouseListenersForDragAndDrop(CardView cV){
         addSetOnMouseClickListener(cV);
@@ -194,15 +212,9 @@ public class KlondikeSolitaireController {
     private void addSetOnMouseReleased(CardView cV){
         cV.setOnMouseReleased(event -> {
             updateStackPaneBounds();
-
-
-
             CardView theDragger = (CardView) event.getSource();
-            // Get the bounds of imageView in the scene coordinate space
             Bounds imageViewBoundsInScene = theDragger.localToScene(theDragger.getBoundsInLocal());
             StackPane parentOfMoveable = (StackPane) theDragger.getParent();
-            //ok...this for each was recommended was taken by the web... I read a bit about the Map.Entry and entrySet()
-            //but I am not that familiar with it... logic seems simple enough so let it be.
 
             for (Map.Entry<StackPane, Bounds> entry : boundryOfLastImageViewInStacks.entrySet()) {
                 StackPane stackPane = entry.getKey();
