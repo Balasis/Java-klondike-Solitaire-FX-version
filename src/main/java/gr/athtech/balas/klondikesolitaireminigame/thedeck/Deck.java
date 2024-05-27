@@ -26,11 +26,11 @@ public class Deck {
         }
     }
 
-    public void shuffle(int numberOfShuffles){
+    public void shuffle(){
         if (cards.size() < 2){
             return;
         }// We grab each card of the deck( remove it from deck ), and reEnter into it in a random index
-        for (int i = 0; i < numberOfShuffles; i++) {// We also repeat this for numberOfShuffles given
+        for (int i = 0; i < 10; i++) {// Increase i<Counter if you want better shuffle
             for (int k = 0; k < cards.size(); k++){
                 Card grabbedCard= cards.remove( random.nextInt(cards.size()) );
                 cards.add( random.nextInt( cards.size() ) , grabbedCard);
@@ -40,6 +40,10 @@ public class Deck {
 
     public boolean isEmpty(){
         return cards.isEmpty();
+    }
+
+    public boolean isThereAJokerInDeck(){// Ok need to study more about streams...but seems a nice simple way.
+        return cards.stream().anyMatch(card -> card.getSuit() == Suit.JOKER);
     }
 
     public ArrayList<Card> takeAllDeckCards(){
@@ -57,6 +61,24 @@ public class Deck {
             cardsToBeGiven.addFirst(cards.remove( (cards.size()-i)-1) );
         }
         return cardsToBeGiven;
+    }
+
+    public Card takeSpecificCard(Suit s, Rank r){
+        for (int i = 0; i < cards.size(); i++) {
+            if (cards.get(i).getSuit() == s && cards.get(i).getRank() == r){
+                return cards.remove(i);
+            }
+        }
+        return null;
+    }
+
+    public Card takeAnUnrankedJokerCard(){
+        for (int i = 0; i < cards.size(); i++) {
+            if (cards.get(i).getSuit() == Suit.JOKER && cards.get(i).getRank() == null){
+                return cards.remove(i);
+            }
+        }
+        return null;
     }
 
 
