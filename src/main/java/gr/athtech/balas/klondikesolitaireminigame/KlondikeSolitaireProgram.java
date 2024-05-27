@@ -198,7 +198,7 @@ public class KlondikeSolitaireProgram {
         try {
             ArrayList<Card> cardsFromDeck=deckSlot.takeCards(numberOfCards);
             for(Card c:cardsFromDeck){
-                c.setIsFaceUp();
+                c.setIsFaceUp(true);
             }
             wasteSlot.addCards(cardsFromDeck);
         } catch (MultipleInvalidRemoval e) {
@@ -213,7 +213,7 @@ public class KlondikeSolitaireProgram {
 
     public void turnToHiddenAllCardsDeckSlot(){
         for (Card s:deckSlot.getCards()){
-            s.hide();
+            s.setIsFaceUp(false);
         }
     }
 

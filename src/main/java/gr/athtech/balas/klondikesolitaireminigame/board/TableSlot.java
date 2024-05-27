@@ -4,6 +4,7 @@ import gr.athtech.balas.klondikesolitaireminigame.exceptions.ColorsBlocksRemoval
 import gr.athtech.balas.klondikesolitaireminigame.exceptions.HiddenCardBlocksRemoval;
 import gr.athtech.balas.klondikesolitaireminigame.exceptions.RanksBlocksRemoval;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Card;
+import gr.athtech.balas.klondikesolitaireminigame.thedeck.CardColor;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Rank;
 
 import java.util.ArrayList;
@@ -100,10 +101,10 @@ public class TableSlot extends CardsSlot implements BoardCardsSlot{
     }
 
     private boolean areTheColorsCorrect(ArrayList<Card> cards){
-        String currentColor=null;
+        CardColor currentColor=null;
         for (int i = 0; i < cards.size(); i++) {
             Card c=cards.get(i);
-            String cColor=c.getCardColor();
+            CardColor cColor=c.getCardColor();
             if (currentColor!=null){
                 if(cColor.equals(currentColor)){
                     return false;
