@@ -15,6 +15,7 @@ public class WasteSlot extends CardsSlot implements BoardCardsSlot{
         this.slotType = SlotType.WASTE;
     }
 
+    // API /Overrides...
     @Override
     public SlotType getSlotType() {
         return slotType;

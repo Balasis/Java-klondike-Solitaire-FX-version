@@ -45,6 +45,7 @@ public class CardsSlot {
         }
     }
 
+    // Getters
     public ArrayList<Card> getCards() {
         return cards;
     }

@@ -1,8 +1,6 @@
 package gr.athtech.balas.klondikesolitaireminigame;
 
 import gr.athtech.balas.klondikesolitaireminigame.board.*;
-import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.InvalidTakeCardsException;
-import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.IncorrNumOfCardsRemovalException;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Card;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Deck;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Suit;
@@ -12,12 +10,12 @@ import java.util.ArrayList;
 import static gr.athtech.balas.klondikesolitaireminigame.thedeck.Suit.*;
 
 public class KlondikeSolitaireProgram {
-    private Deck deck;
-    private DeckSlot deckSlot;
-    private WasteSlot wasteSlot;
+    private final MoveCardsSlotTypeValidator moveCardsSlotTypeValidator;
+    private final Deck deck;
+    private final DeckSlot deckSlot;
+    private final WasteSlot wasteSlot;
     private ArrayList<FoundationSlot> foundationSlots;
     private TableSlot[] tableSlots;
-    private MoveCardsSlotTypeValidator moveCardsSlotTypeValidator;
 
     public KlondikeSolitaireProgram(){
         deck=new Deck();
@@ -28,6 +26,43 @@ public class KlondikeSolitaireProgram {
         createTableSlots();
     }
 
+    //Api
+    public void setUpTheGame(){
+        if (deck.isEmpty()){
+            return;
+        }
+        deck.removeTheJokers();
+        deck.shuffle();
+        setUpTableSlots();
+        addRemainingCardsIntoDeckslot();
+    }
+
+    public boolean moveCards(BoardCardsSlot from, BoardCardsSlot to, int numberOfCards){
+        return true;
+    }
+
+    public void removeTheJokers(){//in case you need removal before setUp
+        deck.removeTheJokers();
+    }
+
+    public void addCardFromDeckToWaste(int numberOfCards){
+
+    }
+
+    public boolean isTheGameWon(){
+        return foundationSlots.stream().allMatch(FoundationSlot::isFoundationSuitSetComplete);
+    }
+
+    public void revealBoardsSlotLastCard(BoardCardsSlot b){
+        b.revealLastCard();
+    }
+
+
+
+
+
+
+    // Privates
     private void createFoundationSlotPerSuit(){
         foundationSlots=new ArrayList<>();
         Suit[] f={CLUBS,DIAMONDS,HEARTS,SPADES};
@@ -43,6 +78,26 @@ public class KlondikeSolitaireProgram {
         }
     }
 
+    private void setUpTableSlots(){
+        for (int i = 0; i < tableSlots.length; i++) {
+            giveSettingUpCardsToTableSlots(i);
+            tableSlots[i].revealLastCard();
+        }
+    }
+
+    private void giveSettingUpCardsToTableSlots(int i){
+        tableSlots[i].addCardsNoRestrictions(deck.takeNumberOfDeckCards(i+1));
+    }
+
+    private void addRemainingCardsIntoDeckslot(){
+        deckSlot.addCardsNoRestrictions(deck.takeAllDeckCards());
+    }
+
+    private boolean isTransferAmongSlotsTypesAllowed(BoardCardsSlot from,BoardCardsSlot to){
+        return moveCardsSlotTypeValidator.isMoveToCardSlotValid(from,to);
+    }
+
+    // Getters
     public FoundationSlot getClubsFoundationSlot(){
         FoundationSlot theClubOne=null;
         for(FoundationSlot f:foundationSlots){
@@ -109,71 +164,6 @@ public class KlondikeSolitaireProgram {
 
     public TableSlot getATableSlot(int index) {
         return tableSlots[index];
-    }
-
-    public void setUpTheGame(){
-        if (deck.isEmpty()){
-            return;
-        }
-        deck.removeTheJokers();
-        deck.shuffle();
-        setUpTableSlots();
-        addRemainingCardsIntoDeckslot();
-    }
-
-    private void setUpTableSlots(){
-        for (int i = 0; i < tableSlots.length; i++) {
-            giveSettingUpCardsToTableSlots(i);
-            tableSlots[i].revealLastCard();
-        }
-    }
-
-    private void giveSettingUpCardsToTableSlots(int i){
-        tableSlots[i].addCardsNoRestrictions(deck.takeNumberOfDeckCards(i+1));
-    }
-
-    private void addRemainingCardsIntoDeckslot(){
-        deckSlot.addCardsNoRestrictions(deck.takeAllDeckCards());
-    }
-
-    public void addCardFromDeckToWaste(int numberOfCards){
-        try {
-            ArrayList<Card> cardsFromDeck=deckSlot.takeCards(numberOfCards);
-            for(Card c:cardsFromDeck){
-                c.setIsFaceUp(true);
-            }
-            wasteSlot.addCards(cardsFromDeck);
-        } catch (IncorrNumOfCardsRemovalException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void moveCardsFromWasteToDeckSlot(){
-        deckSlot.addCardsNoRestrictions(wasteSlot.getCards());
-        wasteSlot.getCards().clear();
-    }
-
-    public void turnToHiddenAllCardsDeckSlot(){
-        for (Card s:deckSlot.getCards()){
-            s.setIsFaceUp(false);
-        }
-    }
-
-    public boolean isTheGameWon(){
-        for (int i = 0; i < foundationSlots.size(); i++) {
-            if (!foundationSlots.get(i).isFoundationSuitSetComplete()){
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public void revealLastCardOfACardSlot(BoardCardsSlot b){
-        b.revealLastCard();
-    }
-
-    private boolean isTransferAmongSlotsTypesAllowed(BoardCardsSlot from,BoardCardsSlot to){
-        return moveCardsSlotTypeValidator.isMoveToCardSlotValid(from,to);
     }
 
 }
