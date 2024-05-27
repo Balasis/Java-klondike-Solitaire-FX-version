@@ -132,7 +132,7 @@ public class KlondikeSolitaireProgram {
             return;
         }
         deck.removeTheJokers();
-        deck.shuffle(10);
+        deck.shuffle();
         setUpTableSlots();
         addRemainingCardsIntoDeckslot();
     }

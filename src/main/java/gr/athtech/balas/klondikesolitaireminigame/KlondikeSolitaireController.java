@@ -20,34 +20,20 @@ import java.util.Map;
 
 public class KlondikeSolitaireController {
     //Card Slots
-    @FXML
-    private StackPane deckSlot;
-    @FXML
-    private StackPane wasteSlot;
-    @FXML
-    private StackPane clubsFoundation;
-    @FXML
-    private StackPane diamondsFoundation;
-    @FXML
-    private StackPane heartsFoundation;
-    @FXML
-    private StackPane spadesFoundation;
-    @FXML
-    private StackPane tableSlot1;
-    @FXML
-    private StackPane tableSlot2;
-    @FXML
-    private StackPane tableSlot3;
-    @FXML
-    private StackPane tableSlot4;
-    @FXML
-    private StackPane tableSlot5;
-    @FXML
-    private StackPane tableSlot6;
-    @FXML
-    private StackPane tableSlot7;
-    @FXML
-    private AnchorPane containerAnchor;
+    @FXML private StackPane deckSlot;
+    @FXML private StackPane wasteSlot;
+    @FXML private StackPane clubsFoundation;
+    @FXML private StackPane diamondsFoundation;
+    @FXML private StackPane heartsFoundation;
+    @FXML private StackPane spadesFoundation;
+    @FXML private StackPane tableSlot1;
+    @FXML private StackPane tableSlot2;
+    @FXML private StackPane tableSlot3;
+    @FXML private StackPane tableSlot4;
+    @FXML private StackPane tableSlot5;
+    @FXML private StackPane tableSlot6;
+    @FXML private StackPane tableSlot7;
+    @FXML private AnchorPane containerAnchor;
     //+52 Dynamically created ImageViews, as superclasses of CardViews.( Cardview extends ImageView)
 
     //Each CardView has a "Card"(model class) field to have info on updating its image.

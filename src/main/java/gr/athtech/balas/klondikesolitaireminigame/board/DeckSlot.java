@@ -39,6 +39,10 @@ public class DeckSlot extends CardsSlot implements BoardCardsSlot{
         return c;
     }
 
+   // @Override
+    public boolean isTakeCardsValid(int numberOfCards) {
+        return false;
+    }
 
 
     @Override

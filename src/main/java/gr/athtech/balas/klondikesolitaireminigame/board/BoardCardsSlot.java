@@ -9,17 +9,24 @@ import gr.athtech.balas.klondikesolitaireminigame.thedeck.Card;
 import java.util.ArrayList;
 
 public interface BoardCardsSlot {
+
     Card getLastCard();
     Card getFirstCard();
     ArrayList<Card> getMultipleCardsFromTop(int numOfCards);
     ArrayList<Card> getMultipleCardsFromBottom(int numberOfCards);
-    ArrayList<Card> takeCards(int numberOfCards) throws MultipleInvalidRemoval, ColorsBlocksRemoval, RanksBlocksRemoval, HiddenCardBlocksRemoval;
     ArrayList<Card> getCards();
-    void addCards(ArrayList<Card> cards);
+
     void addCardsNoRestrictions(ArrayList<Card> cards);
     void revealLastCard();
+
+    void addCards(ArrayList<Card> cards);
     boolean isAddCardsValid(ArrayList<Card> cards);
-    //boolean isDragFeaseable;
+
+    ArrayList<Card> takeCards(int numberOfCards) throws MultipleInvalidRemoval, ColorsBlocksRemoval, RanksBlocksRemoval, HiddenCardBlocksRemoval;
+   // boolean isTakeCardsValid(int numberOfCards);
+
+
+
     boolean isCardsSlotEmpty();
     SlotType getSlotType();
 }
