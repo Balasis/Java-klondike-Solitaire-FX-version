@@ -353,7 +353,13 @@ public class KlondikeSolitaireController {
             }
             ImageView lastImageViewOfStack = (ImageView) stacksPanelChildren.getLast();
             double actualHeightOfTheLastCard = lastImageViewOfStack.getBoundsInLocal().getHeight();
-            double marginPerCard = actualHeightOfTheLastCard * 0.23;
+            double marginPerCard;
+            if (stacksPanelChildren.size()>=14){
+                marginPerCard = actualHeightOfTheLastCard * 0.20;
+            }else{
+                marginPerCard = actualHeightOfTheLastCard * 0.24;
+            }
+
 
             for (int i = 0; i < stacksPanelChildren.size(); i++) {
                 Node currentChild = stacksPanelChildren.get(i);
