@@ -59,15 +59,16 @@ public class TableSlot extends CardsSlot implements BoardCardsSlot{
         if(getCards().size()<numberOfCards){
             throw new NoCardsToTakeException("there aren't so many cards to pick from");
         }
+        if(!areAllTheCardsRevealed(listForTakeabilityCheck)){
+            throw new HiddenCardRemovalException("Hidden Cards block removal");
+        }
         if (!areTheColorsCorrect(listForTakeabilityCheck)){
             throw new ColorsOutOfOrderException("Incorrect combination of colors");
         }
         if(!areTheRanksCorrect(listForTakeabilityCheck)){
             throw new RanksOutOfOrderException("Incorrect combination of Ranks");
         }
-        if(!areAllTheCardsRevealed(listForTakeabilityCheck)){
-            throw new HiddenCardRemovalException("Hidden Cards block removal");
-        }
+
         populateCardsToBeReturned(cardsToBeReturned,numberOfCards);
         return cardsToBeReturned;
     }
