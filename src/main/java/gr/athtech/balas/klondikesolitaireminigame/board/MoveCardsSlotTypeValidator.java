@@ -10,7 +10,7 @@ public class MoveCardsSlotTypeValidator {
 
     public MoveCardsSlotTypeValidator() {
         validMovesMap = new EnumMap<>(SlotType.class);//enumMap requires enumType..
-        validMovesMap.put(SlotType.DECK, EnumSet.of(SlotType.WASTE));
+        validMovesMap.put(SlotType.DECK, null);
         validMovesMap.put(SlotType.WASTE, EnumSet.of(SlotType.DECK));
         validMovesMap.put(SlotType.FOUNDATION, EnumSet.of(SlotType.WASTE, SlotType.TABLE));
         validMovesMap.put(SlotType.TABLE, EnumSet.of(SlotType.WASTE, SlotType.TABLE, SlotType.FOUNDATION));

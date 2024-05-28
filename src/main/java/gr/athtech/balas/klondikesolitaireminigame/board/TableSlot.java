@@ -27,13 +27,14 @@ public class TableSlot extends CardsSlot implements BoardCardsSlot{
 
     @Override
     public void addCards(ArrayList<Card> cards) throws NoCardsToAddException, NoKingOnEmptyTSException, WrongColorOrRankAddException {
-        if (cards.isEmpty()){
+        if (cards.isEmpty()) {
             throw new NoCardsToAddException("No cards to take");
         }
-        if (isCardsSlotEmpty() && !isAKingOnEmptySlot(cards)){
-            throw new NoKingOnEmptyTSException("Empty table slots take only Kings");
-        }
-        if ( !(isTheFirstCardColorCorrect(cards) && isTheFirstCardRankCorrect(cards)) ){
+        if (isCardsSlotEmpty()) {
+            if (!isAKingOnEmptySlot(cards)) {
+                throw new NoKingOnEmptyTSException("Empty table slots take only Kings");
+            }
+        } else if (!isTheFirstCardColorCorrect(cards) || !isTheFirstCardRankCorrect(cards)) {
             throw new WrongColorOrRankAddException("Incorrect Color or Rank");
         }
         this.getCards().addAll(cards);
@@ -76,6 +77,19 @@ public class TableSlot extends CardsSlot implements BoardCardsSlot{
     @Override
     public boolean isTakeCardsValid(int numberOfCards) {
         ArrayList<Card> listForTakeabilityCheck=formAListToBeChecked(numberOfCards);
+        if (!getCards().isEmpty()){
+            System.out.println("empty slot");
+        }
+        if(getCards().size()<numberOfCards){
+            System.out.println("no that many cards" + getCards().size());
+        }
+        if(!areTheColorsCorrect(listForTakeabilityCheck)){
+            System.out.println("not correctColors");
+        }
+        if (!areTheRanksCorrect(listForTakeabilityCheck)){
+            System.out.println("rank issue");
+        }
+
         return  !getCards().isEmpty() && getCards().size()>=numberOfCards &&
                 areTheColorsCorrect(listForTakeabilityCheck) &&
                 areTheRanksCorrect(listForTakeabilityCheck) &&
@@ -114,7 +128,7 @@ public class TableSlot extends CardsSlot implements BoardCardsSlot{
             if(i>=numberOfCards){
                 break;
             }
-            listToBeChecked.addFirst(getCards().get( (getCards().size()-i) -1 ));
+            listToBeChecked.addLast(getCards().get( (getCards().size()-i) -1 ));
         }
         return listToBeChecked;
     }
@@ -134,18 +148,20 @@ public class TableSlot extends CardsSlot implements BoardCardsSlot{
         return true;
     }
 
-    private boolean areTheRanksCorrect(ArrayList<Card> cards){
+    private boolean areTheRanksCorrect(ArrayList<Card> cards) {
         if (cards.size() <= 1) {
             return true;
         }
         for (int i = 0; i < cards.size() - 1; i++) {
-            int curCardRankVal=cards.get(i).getRank().getValue();
-            int validRankValueForNextCard=curCardRankVal-1;
-            int nextCardRankVal=cards.get(i+1).getRank().getValue() ;
-            if (!(validRankValueForNextCard==nextCardRankVal)) {
+            int curCardRankVal = cards.get(i).getRank().getValue();
+            int nextCardRankVal = cards.get(i + 1).getRank().getValue();
+
+            // Check if the current card's rank is exactly one greater than the next card's rank
+            if (curCardRankVal == nextCardRankVal + 1) {
                 return false;
             }
         }
+
         return true;
     }
 

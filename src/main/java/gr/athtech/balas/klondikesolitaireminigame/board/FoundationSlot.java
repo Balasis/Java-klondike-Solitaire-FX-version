@@ -37,7 +37,7 @@ public class FoundationSlot extends CardsSlot implements BoardCardsSlot {
         if (cards.isEmpty()){
             throw new NoCardsToAddException("No Cards in the list to be added");
         }
-        if (cards.size()==1){
+        if (cards.size()!=1){
             throw new IncorrNumOfCardsAdditionException("Foundation slot can have only 1 card added per time");
         }
         checkingFoundationCritiria(cards);//throws a critiria exception with the according message depending on violation
@@ -83,10 +83,10 @@ public class FoundationSlot extends CardsSlot implements BoardCardsSlot {
             wasThereAThrow=true;
             theErrorMessage="Incorrect suit for specific foundation Slot";
         }else if (getCards().isEmpty()){
-            wasThereAThrow= isFirstCardAnAceIfEmpty(cards.getFirst());
+            wasThereAThrow= !isFirstCardAnAceIfEmpty(cards.getFirst());
             theErrorMessage="First Card needs to be an Ace";
         }else{
-            wasThereAThrow= isTheRankLowerThanLast(cards.getFirst());
+            wasThereAThrow= !isTheRankLowerThanLast(cards.getFirst());
             theErrorMessage="Rank not in the right order";
         }
         if(wasThereAThrow){
@@ -99,11 +99,11 @@ public class FoundationSlot extends CardsSlot implements BoardCardsSlot {
     }
 
     private boolean isFirstCardAnAceIfEmpty(Card card){
-        return !getCards().isEmpty() || card.getRank() == Rank.ACE;
+        return card.getRank() == Rank.ACE;
     }
 
     private boolean isTheRankLowerThanLast(Card card){
-        return getCards().getLast().getRank().getValue() < card.getRank().getValue();
+        return getCards().getLast().getRank().getValue()+1== card.getRank().getValue();
     }
 
     // Getters

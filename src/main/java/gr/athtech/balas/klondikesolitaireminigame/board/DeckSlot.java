@@ -1,5 +1,6 @@
 package gr.athtech.balas.klondikesolitaireminigame.board;
 
+import gr.athtech.balas.klondikesolitaireminigame.exceptions.addcardsexceptions.InvalidAddCardsException;
 import gr.athtech.balas.klondikesolitaireminigame.exceptions.addcardsexceptions.RequiredEmptyListException;
 import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.IncorrNumOfCardsRemovalException;
 import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.NoCardsToTakeException;
@@ -21,16 +22,15 @@ public class DeckSlot extends CardsSlot implements BoardCardsSlot{
     }
 
     @Override
-    public void addCards(ArrayList<Card> cards) throws RequiredEmptyListException{
+    public void addCards(ArrayList<Card> cards) throws InvalidAddCardsException {
         if (isAddCardsValid(cards)){
-            throw new RequiredEmptyListException("DeckSlot needs to be empty to receive cards");
+            throw new InvalidAddCardsException("DeckSlot accepts only No Restricted additions");
         }
-        getCards().addAll(cards);
     }
 
     @Override
     public boolean isAddCardsValid(ArrayList<Card> cards) {
-        return getCards().isEmpty();
+        return false;
     }
 
     @Override

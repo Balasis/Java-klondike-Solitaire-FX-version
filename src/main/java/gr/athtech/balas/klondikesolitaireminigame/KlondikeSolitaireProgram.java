@@ -1,6 +1,7 @@
 package gr.athtech.balas.klondikesolitaireminigame;
 
 import gr.athtech.balas.klondikesolitaireminigame.board.*;
+import gr.athtech.balas.klondikesolitaireminigame.exceptions.InvalidCardSlotTypeException;
 import gr.athtech.balas.klondikesolitaireminigame.exceptions.addcardsexceptions.InvalidAddCardsException;
 import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.InvalidTakeCardsException;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Card;
@@ -41,10 +42,20 @@ public class KlondikeSolitaireProgram {
     }
 
     public boolean moveCards(BoardCardsSlot from, BoardCardsSlot to, int numberOfCards){
+
         ArrayList<Card> cardsToBeMoved=new ArrayList<>();
         try {
+            if(!isTransferAmongSlotsTypesAllowed(from,to)){
+                throw new InvalidCardSlotTypeException("Can't Transfer Among Slots");
+            }
             cardsToBeMoved=from.takeCards(numberOfCards);
             to.addCards(cardsToBeMoved);
+            if ( !(from instanceof DeckSlot)){
+                from.revealLastCard();
+            }
+        } catch (InvalidCardSlotTypeException e) {
+            System.out.println(e.getMessage());
+            return false;
         } catch (InvalidTakeCardsException e) {
             System.out.println(e.getMessage());
             return false;
@@ -53,7 +64,7 @@ public class KlondikeSolitaireProgram {
            System.out.println(e.getMessage());
             return false;
         }
-            return true;
+        return true;
     }
 
     public boolean isTakeCardsPossible(BoardCardsSlot theBoardCardSlot, int numOfCards){
