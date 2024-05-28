@@ -88,10 +88,8 @@ public class KlondikeSolitaireProgram {
         deckSlot.addCardsNoRestrictions(wasteSlot.takeAllCardsNoRestrictions());
         Collections.reverse(deckSlot.getCards());
         for (Card c : getDeckSlot().getCards()) {
-            System.out.println(c);
             c.setIsFaceUp(false);//hide back cards...
         }
-        System.out.println(deckSlot.getCards());
     }
 
     public boolean isTheGameWon(){

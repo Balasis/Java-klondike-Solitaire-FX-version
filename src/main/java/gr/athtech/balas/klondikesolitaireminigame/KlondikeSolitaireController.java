@@ -106,12 +106,6 @@ public class KlondikeSolitaireController {
             for (int i = stackPaneChosenAsSource.getChildren().size() - numberOfCardsToDrag; i < stackPaneChosenAsSource.getChildren().size() ; i++) {
                 draggedNodes.add(stackPaneChosenAsSource.getChildren().get(i));
             }
-            for (Node n:draggedNodes){
-                if (n instanceof CardView){
-                    CardView cardView=(CardView) n;
-                    System.out.println(cardView.getCard());
-                }
-            }
             setMouseCurrentLocation(event);
             event.consume();
         });
@@ -186,7 +180,6 @@ public class KlondikeSolitaireController {
         wasteSlot.getChildren().add(deckSlot.getChildren().getLast());
         CardView lastCvInWaste=(CardView) wasteSlot.getChildren().getLast();
         lastCvInWaste.updateImage();
-        System.out.println(lastCvInWaste.getCard());
     }
 
     private void moveAllCvFromWasteToDeck() {
@@ -298,7 +291,6 @@ public class KlondikeSolitaireController {
         stackPaneChosenAsSource.getChildren().removeAll(draggedNodes);
         for(Node n : draggedNodes){
             if (n instanceof CardView){
-                System.out.println(((CardView) n).getCard());
                 stackPane.getChildren().add(n);
             }
         }
@@ -330,7 +322,6 @@ public class KlondikeSolitaireController {
                             Bounds bounds = lastImageView.localToScene(lastImageView.getBoundsInLocal());
                             dropBountryOfEachStackPanelMap.put(stackPane, bounds);
                         } else {
-//                            System.out.println("The" +stackPane.getId()+" is empty !!!");
                             Bounds bounds = stackPane.localToScene(stackPane.getBoundsInLocal());
                             dropBountryOfEachStackPanelMap.put(stackPane, bounds);
                         }

@@ -77,18 +77,6 @@ public class TableSlot extends CardsSlot implements BoardCardsSlot{
     @Override
     public boolean isTakeCardsValid(int numberOfCards) {
         ArrayList<Card> listForTakeabilityCheck=formAListToBeChecked(numberOfCards);
-        if (!getCards().isEmpty()){
-            System.out.println("empty slot");
-        }
-        if(getCards().size()<numberOfCards){
-            System.out.println("no that many cards" + getCards().size());
-        }
-        if(!areTheColorsCorrect(listForTakeabilityCheck)){
-            System.out.println("not correctColors");
-        }
-        if (!areTheRanksCorrect(listForTakeabilityCheck)){
-            System.out.println("rank issue");
-        }
 
         return  !getCards().isEmpty() && getCards().size()>=numberOfCards &&
                 areTheColorsCorrect(listForTakeabilityCheck) &&
