@@ -35,8 +35,8 @@ public class DeckSlot extends CardsSlot implements BoardCardsSlot{
 
     @Override
     public ArrayList<Card> takeCards(int numberOfCards) throws IncorrNumOfCardsRemovalException, NoCardsToTakeException {
-        if(getCards().isEmpty()){
-            throw new NoCardsToTakeException("No cards to take");
+        if(getCards().size()<numberOfCards){
+            throw new NoCardsToTakeException("there aren't so many cards to pick from");
         }
         if(numberOfCards>1){
             throw new IncorrNumOfCardsRemovalException("Specific type of BoardCardSlot doesnt support multiRemoval");
@@ -46,7 +46,7 @@ public class DeckSlot extends CardsSlot implements BoardCardsSlot{
 
     @Override
     public boolean isTakeCardsValid(int numberOfCards) {
-        return numberOfCards==1;
+        return numberOfCards==1 && !getCards().isEmpty();
     }
 
     @Override

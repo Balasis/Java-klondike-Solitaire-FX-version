@@ -56,8 +56,8 @@ public class TableSlot extends CardsSlot implements BoardCardsSlot{
 
         ArrayList<Card> listForTakeabilityCheck=formAListToBeChecked(numberOfCards);
         ArrayList<Card> cardsToBeReturned=new ArrayList<>();
-        if(getCards().isEmpty()){
-            throw new NoCardsToTakeException("No cards to take");
+        if(getCards().size()<numberOfCards){
+            throw new NoCardsToTakeException("there aren't so many cards to pick from");
         }
         if (!areTheColorsCorrect(listForTakeabilityCheck)){
             throw new ColorsOutOfOrderException("Incorrect combination of colors");
@@ -75,7 +75,8 @@ public class TableSlot extends CardsSlot implements BoardCardsSlot{
     @Override
     public boolean isTakeCardsValid(int numberOfCards) {
         ArrayList<Card> listForTakeabilityCheck=formAListToBeChecked(numberOfCards);
-        return areTheColorsCorrect(listForTakeabilityCheck) &&
+        return  !getCards().isEmpty() && getCards().size()>=numberOfCards &&
+                areTheColorsCorrect(listForTakeabilityCheck) &&
                 areTheRanksCorrect(listForTakeabilityCheck) &&
                 areAllTheCardsRevealed(listForTakeabilityCheck);
     }
@@ -94,10 +95,6 @@ public class TableSlot extends CardsSlot implements BoardCardsSlot{
     private boolean isTheFirstCardRankCorrect(ArrayList<Card> cards){
         int rankValueOfFirstIncomingCard=cards.getFirst().getRank().getValue();
         int rankValueOfLastCardInSlot=getCards().getLast().getRank().getValue();
-
-        System.out.println(rankValueOfFirstIncomingCard);
-        System.out.println(rankValueOfLastCardInSlot);
-
         return  rankValueOfFirstIncomingCard+1 == rankValueOfLastCardInSlot;
     }
 

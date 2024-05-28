@@ -49,7 +49,7 @@ public class KlondikeSolitaireProgram {
             return false;
         } catch (InvalidAddCardsException e) {
             from.addCardsNoRestrictions(cardsToBeMoved);
-            System.out.println(e.getMessage());
+           System.out.println(e.getMessage());
             return false;
         }
             return true;

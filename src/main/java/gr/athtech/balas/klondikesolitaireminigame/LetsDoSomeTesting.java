@@ -16,7 +16,7 @@ public class LetsDoSomeTesting {
         for (int i = 0; i < tablesSlots.length; i++) {
             System.out.println(tablesSlots[i].getCards().getLast());
         }
-        if(theGame.moveCards(tablesSlots[myScanObj.nextInt()-1] ,tablesSlots[myScanObj.nextInt()-1] ,1)){
+        if(theGame.moveCards(tablesSlots[myScanObj.nextInt()-1] ,tablesSlots[myScanObj.nextInt()-1] ,2)){
             System.out.println("done");
         }else{
             System.out.println("not Done");
