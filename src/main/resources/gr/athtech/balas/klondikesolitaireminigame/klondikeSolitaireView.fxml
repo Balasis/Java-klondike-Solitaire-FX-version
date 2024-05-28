@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
@@ -82,5 +83,6 @@
             </VBox>
          </children>
       </AnchorPane>
+      <Region maxHeight="204.0" maxWidth="150.0" minHeight="160.0" minWidth="110.0" onMouseClicked="#deckToWasteInteraction" prefHeight="204.0" prefWidth="150.0" style="-fx-background-color: transparent;" />
    </children>
 </Pane>

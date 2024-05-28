@@ -57,7 +57,7 @@ public class FoundationSlot extends CardsSlot implements BoardCardsSlot {
         if(numberOfCards>1){
             throw new IncorrNumOfCardsRemovalException("Specific Card Slot doesnt support multi-removal");
         }
-        return new ArrayList<Card>(Collections.singletonList(getCards().getFirst()));
+        return new ArrayList<Card>(Collections.singletonList(getCards().removeLast()));
     }
 
     @Override

@@ -27,6 +27,7 @@ public interface BoardCardsSlot {
 
     void revealLastCard();
     void addCardsNoRestrictions(ArrayList<Card> cards);
+    ArrayList<Card> takeAllCardsNoRestrictions();
     SlotType getSlotType();
 
 }

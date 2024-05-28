@@ -3,6 +3,7 @@ package gr.athtech.balas.klondikesolitaireminigame;
 import gr.athtech.balas.klondikesolitaireminigame.board.BoardCardsSlot;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Card;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
@@ -12,10 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class KlondikeSolitaireController {
     //Card Slots
@@ -47,6 +45,7 @@ public class KlondikeSolitaireController {
     private ArrayList<StackPane> tableStacks;
     int numberOfCardsWeTryToPick = 0;
     StackPane stackPaneChosenAsSource;
+    boolean isReloadMethodRunning=false;
 
 
 
@@ -66,6 +65,40 @@ public class KlondikeSolitaireController {
         theViewSetUpTheGame();
         Platform.runLater(this::updateStackPaneBounds);//creates bountry for each Stackpane(droppable areas up to interception)DragAndDrop
     }
+
+    @FXML
+    public void deckToWasteInteraction(){
+        if(!theGame.isTheDeckSlotEmptyOfCards()){
+            if(theGame.moveCardFromDeckToWaste()){
+                moveAVcFromDeckToWaste();
+            }
+        }else{//cV=CardViews.
+            theGame.returnWasteCardsToDeck();
+            moveAllCvFromWasteToDeck();
+        }
+    }
+
+    private void moveAVcFromDeckToWaste(){
+        wasteSlot.getChildren().add(deckSlot.getChildren().getLast());
+        CardView lastCvInWaste=(CardView) wasteSlot.getChildren().getLast();
+        lastCvInWaste.updateImage();
+        System.out.println(lastCvInWaste.getCard());
+    }
+
+    private void moveAllCvFromWasteToDeck() {
+        ObservableList<Node> childrenCopy=createAReversedCopy();
+        wasteSlot.getChildren().clear();
+        deckSlot.getChildren().addAll(childrenCopy);
+        updateCardRevealsStatus();
+    }
+
+    private ObservableList<Node> createAReversedCopy(){
+        ObservableList<Node> childrenCopy = FXCollections.observableArrayList(wasteSlot.getChildren());
+        Collections.reverse(childrenCopy);
+        return childrenCopy;
+    }
+
+
 
     private void theViewSetUpTheGame(){
         reloadCardViewsForAllStackPane();
@@ -119,16 +152,6 @@ public class KlondikeSolitaireController {
         }
     }
 
-    private void addListenerToDeckSlotOverlay(){
-//        cV.setOnMousePressed(event -> {
-//            StackPane parentOfcV=(StackPane) cV.getParent();
-//            theGame.addCardFromDeckToWaste(1);
-//            parentOfcV.getChildren().remove(cV);
-//            wasteSlot.getChildren().add(cV);
-//            updateCardRevealsStatus();
-//            event.consume();
-//        });
-    }
 
     private void addMouseListenersForDragAndDrop(CardView cV){
         addSetOnMouseClickListener(cV);
@@ -297,14 +320,19 @@ public class KlondikeSolitaireController {
 
     private void updateCardRevealsStatus() {
         for (Map.Entry<Card, CardView> e : cardsToCardViewsMap.entrySet()) {
-            CardView cardView = e.getValue();
-            cardView.updateImage();
+            e.getValue().updateImage();
         }
     }
 
     private void reloadCardViewsForAllStackPane(){
+        if (isReloadMethodRunning){
+            return;
+        }
+        isReloadMethodRunning=true;
         clearAllStackPane();
         populateAllStackPane();
+        updateCardRevealsStatus();
+        isReloadMethodRunning=false;//reset reload
     }
 
     private void clearAllStackPane(){
@@ -321,6 +349,7 @@ public class KlondikeSolitaireController {
             for (Card c:boardCardsSlot.getCards()){
                 stackPane.getChildren().add( cardsToCardViewsMap.get(c) );
             }
+
         }
     }
 

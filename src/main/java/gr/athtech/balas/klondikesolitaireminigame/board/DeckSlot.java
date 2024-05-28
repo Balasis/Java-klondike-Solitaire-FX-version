@@ -41,7 +41,7 @@ public class DeckSlot extends CardsSlot implements BoardCardsSlot{
         if(numberOfCards>1){
             throw new IncorrNumOfCardsRemovalException("Specific type of BoardCardSlot doesnt support multiRemoval");
         }
-        return new ArrayList<Card>(Collections.singletonList(getCards().getFirst()));
+        return new ArrayList<Card>(Collections.singletonList(getCards().removeLast()));
     }
 
     @Override

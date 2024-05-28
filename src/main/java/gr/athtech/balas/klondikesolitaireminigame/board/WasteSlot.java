@@ -24,11 +24,11 @@ public class WasteSlot extends CardsSlot implements BoardCardsSlot{
     @Override
     public void addCards(ArrayList<Card> cards) throws IncorrNumOfCardsAdditionException {
         if (isAddCardsValid(cards)){
-            if (cards.size()==1){
-                throw new IncorrNumOfCardsAdditionException("Foundation slot can have only 1 card added per time");
+            if (cards.size()!=1){
+                throw new IncorrNumOfCardsAdditionException("waste slot can have only 1 card added per time");
             }
         }
-        getCards().add(cards.getFirst());
+        getCards().addLast(cards.getFirst());
     }
 
     @Override
@@ -44,7 +44,7 @@ public class WasteSlot extends CardsSlot implements BoardCardsSlot{
         if(numberOfCards>1){
             throw new IncorrNumOfCardsRemovalException("Specific Card Slot doesnt support multi-removal");
         }
-        return new ArrayList<Card>(Collections.singletonList(getCards().getFirst()));
+        return new ArrayList<Card>(Collections.singletonList(getCards().removeLast()));
     }
 
     @Override

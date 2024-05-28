@@ -8,6 +8,7 @@ import gr.athtech.balas.klondikesolitaireminigame.thedeck.Deck;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Suit;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import static gr.athtech.balas.klondikesolitaireminigame.thedeck.Suit.*;
 
@@ -59,8 +60,23 @@ public class KlondikeSolitaireProgram {
         deck.removeTheJokers();
     }
 
-    public void addCardFromDeckToWaste(int numberOfCards){
+    public boolean moveCardFromDeckToWaste(){
+       if( moveCards(getDeckSlot(),getWasteSlot(),1) ){
+           wasteSlot.revealLastCard();
+           return true;
+       }
+        return false;
+    }
 
+    public void returnWasteCardsToDeck(){
+
+        deckSlot.addCardsNoRestrictions(wasteSlot.takeAllCardsNoRestrictions());
+        Collections.reverse(deckSlot.getCards());
+        for (Card c : getDeckSlot().getCards()) {
+            System.out.println(c);
+            c.setIsFaceUp(false);//hide back cards...
+        }
+        System.out.println(deckSlot.getCards());
     }
 
     public boolean isTheGameWon(){
@@ -178,6 +194,10 @@ public class KlondikeSolitaireProgram {
 
     public TableSlot getATableSlot(int index) {
         return tableSlots[index];
+    }
+
+    public boolean isTheDeckSlotEmptyOfCards(){
+        return getDeckSlot().getCards().isEmpty();
     }
 
 }
