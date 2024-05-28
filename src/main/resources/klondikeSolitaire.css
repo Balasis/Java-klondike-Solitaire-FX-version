@@ -4,10 +4,30 @@
 
 }
 
+#deckydeck{
+    -fx-background-image: url('images/deckBG.png');
+    -fx-background-size: cover;
+
+}
+
+#idRegion{
+    -fx-border-color: lightblue;
+    -fx-cursor: HAND;
+}
+
+#idRegion:hover{
+
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 3 5 3 5;
+    -fx-border-color: lightgreen;
+    -fx-border-width: 5px;
+}
+
 #clubsF{
     -fx-background-image: url('images/clubBG.png');
     -fx-background-size: cover;
-    -fx-prompt-text-fill: derive(-fx-control-inner-background, -30%);
     -fx-background-color: transparent;
     -fx-background-insets: 0;
     -fx-background-radius: 0;
@@ -23,7 +43,6 @@
 #diamondsF{
     -fx-background-image: url('images/diamondBG.png');
     -fx-background-size: cover;
-    -fx-prompt-text-fill: derive(-fx-control-inner-background, -30%);
     -fx-background-color: transparent;
     -fx-background-insets: 0;
     -fx-background-radius: 0;
@@ -39,7 +58,6 @@
 #heartsF{
     -fx-background-image: url('images/heartsBG.png');
     -fx-background-size: cover;
-    -fx-prompt-text-fill: derive(-fx-control-inner-background, -30%);
     -fx-background-color: transparent;
     -fx-background-insets: 0;
     -fx-background-radius: 0;
@@ -55,7 +73,6 @@
 #spadesF{
     -fx-background-image: url('images/spadesBG.png');
     -fx-background-size: cover;
-    -fx-prompt-text-fill: derive(-fx-control-inner-background, -30%);
     -fx-background-color: transparent;
     -fx-background-insets: 0;
     -fx-background-radius: 0;
