@@ -43,8 +43,8 @@ public class Card{
     @Override
     public String toString() {
         return " Rank: " + this.rank + ", Suit: " + this.suit
-                + (isFaceUp ? " Revealed" : " Hidden" +" Card color: "
-                + this.cardColor);
+                + (isFaceUp ? " Revealed " : " Hidden" +" Card color: ")
+                + this.cardColor;
     }
 
 }

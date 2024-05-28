@@ -52,9 +52,7 @@ public class CardsSlot {
 
     @Override
     public String toString() {
-        return "CardsSlot{" +
-                "cards=" + cards +
-                '}';
+        return "" + cards;
     }
 
 }

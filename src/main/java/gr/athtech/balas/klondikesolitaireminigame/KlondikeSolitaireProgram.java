@@ -1,6 +1,8 @@
 package gr.athtech.balas.klondikesolitaireminigame;
 
 import gr.athtech.balas.klondikesolitaireminigame.board.*;
+import gr.athtech.balas.klondikesolitaireminigame.exceptions.addcardsexceptions.InvalidAddCardsException;
+import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.InvalidTakeCardsException;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Card;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Deck;
 import gr.athtech.balas.klondikesolitaireminigame.thedeck.Suit;
@@ -38,7 +40,19 @@ public class KlondikeSolitaireProgram {
     }
 
     public boolean moveCards(BoardCardsSlot from, BoardCardsSlot to, int numberOfCards){
-        return true;
+        ArrayList<Card> cardsToBeMoved=new ArrayList<>();
+        try {
+            cardsToBeMoved=from.takeCards(numberOfCards);
+            to.addCards(cardsToBeMoved);
+        } catch (InvalidTakeCardsException e) {
+            System.out.println(e.getMessage());
+            return false;
+        } catch (InvalidAddCardsException e) {
+            from.addCardsNoRestrictions(cardsToBeMoved);
+            System.out.println(e.getMessage());
+            return false;
+        }
+            return true;
     }
 
     public void removeTheJokers(){//in case you need removal before setUp

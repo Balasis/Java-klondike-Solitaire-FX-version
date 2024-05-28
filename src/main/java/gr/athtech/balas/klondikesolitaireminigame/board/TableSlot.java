@@ -1,5 +1,8 @@
 package gr.athtech.balas.klondikesolitaireminigame.board;
 
+import gr.athtech.balas.klondikesolitaireminigame.exceptions.addcardsexceptions.NoCardsToAddException;
+import gr.athtech.balas.klondikesolitaireminigame.exceptions.addcardsexceptions.NoKingOnEmptyTSException;
+import gr.athtech.balas.klondikesolitaireminigame.exceptions.addcardsexceptions.WrongColorOrRankAddException;
 import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.ColorsOutOfOrderException;
 import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.HiddenCardRemovalException;
 import gr.athtech.balas.klondikesolitaireminigame.exceptions.takecardsexceptions.NoCardsToTakeException;
@@ -23,10 +26,17 @@ public class TableSlot extends CardsSlot implements BoardCardsSlot{
     }
 
     @Override
-    public void addCards(ArrayList<Card> cards){
-        if (isAddCardsValid(cards)){
-            this.getCards().addAll(cards);
+    public void addCards(ArrayList<Card> cards) throws NoCardsToAddException, NoKingOnEmptyTSException, WrongColorOrRankAddException {
+        if (cards.isEmpty()){
+            throw new NoCardsToAddException("No cards to take");
         }
+        if (isCardsSlotEmpty() && !isAKingOnEmptySlot(cards)){
+            throw new NoKingOnEmptyTSException("Empty table slots take only Kings");
+        }
+        if ( !(isTheFirstCardColorCorrect(cards) && isTheFirstCardRankCorrect(cards)) ){
+            throw new WrongColorOrRankAddException("Incorrect Color or Rank");
+        }
+        this.getCards().addAll(cards);
     }
 
     @Override
@@ -35,7 +45,6 @@ public class TableSlot extends CardsSlot implements BoardCardsSlot{
             return false;
         }
         if(isCardsSlotEmpty()){
-            System.out.println("inhere");
             return isAKingOnEmptySlot(cards);
         }
         return isTheFirstCardColorCorrect(cards) && isTheFirstCardRankCorrect(cards);
