@@ -96,9 +96,8 @@ public class KlondikeSolitaireController {
     //
     private void addSetOnMouseClickListener(CardView cV){
         cV.setOnMousePressed(event -> {
-            StackPane sp=(StackPane) cV.getParent();
             if (!isTheSetUnderCardViewDragable(cV)){
-                resetDraggingProperties(cV);
+                resetDraggingProperties();
                 return;
             }//to not get a blocked view by other StackPane, AnchorPane used for no visible reorder.
             cardViewParentOfParentInFront(event);
@@ -146,7 +145,7 @@ public class KlondikeSolitaireController {
             //the boundary is set on the last cardView of each StackPane related to localScene;
             loopThroughMapToFindInterceptedArea(imageViewBoundsInScene,parentOfMoveable);
             //restore drag and drop properties and check if the game is over.
-            resetDraggingProperties(theDragger);
+            resetDraggingProperties();
             updateBoardProperties();
             if (theGame.isTheGameWon()){
                 showCongratulatoryPopup();
@@ -241,7 +240,7 @@ public class KlondikeSolitaireController {
         }
     }
 
-    private void resetDraggingProperties(CardView cV){
+    private void resetDraggingProperties(){
         resetOnMouseClickProperties();
         resetOnMouseDragProperties();
     }
