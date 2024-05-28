@@ -1,0 +1,69 @@
+#AnchorParentOfAll{
+    -fx-background-image: url('images/klondikeBGt.png');
+    -fx-background-size: cover;
+
+}
+
+#clubsF{
+    -fx-background-image: url('images/clubBG.png');
+    -fx-background-size: cover;
+    -fx-prompt-text-fill: derive(-fx-control-inner-background, -30%);
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 3 5 3 5;
+    -fx-border-color: lightgreen;
+    -fx-border-width: 5px;
+}
+
+#clubsF:hover {
+    -fx-border-color: dodgerblue;
+}
+
+#diamondsF{
+    -fx-background-image: url('images/diamondBG.png');
+    -fx-background-size: cover;
+    -fx-prompt-text-fill: derive(-fx-control-inner-background, -30%);
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 3 5 3 5;
+    -fx-border-color: lightgreen;
+    -fx-border-width: 5px;
+}
+
+#diamondsF:hover {
+    -fx-border-color: dodgerblue;
+}
+
+#heartsF{
+    -fx-background-image: url('images/heartsBG.png');
+    -fx-background-size: cover;
+    -fx-prompt-text-fill: derive(-fx-control-inner-background, -30%);
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 3 5 3 5;
+    -fx-border-color: lightgreen;
+    -fx-border-width: 5px;
+}
+
+#heartsF:hover {
+    -fx-border-color: dodgerblue;
+}
+
+#spadesF{
+    -fx-background-image: url('images/spadesBG.png');
+    -fx-background-size: cover;
+    -fx-prompt-text-fill: derive(-fx-control-inner-background, -30%);
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 3 5 3 5;
+    -fx-border-color: lightgreen;
+    -fx-border-width: 5px;
+}
+
+#spadesF:hover {
+    -fx-border-color: dodgerblue;
+}
