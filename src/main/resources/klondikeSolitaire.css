@@ -67,3 +67,44 @@
 #spadesF:hover {
     -fx-border-color: lightblue;
 }
+
+#tb1{
+    -fx-background-image: url('images/tableBgSlots.png');
+    -fx-background-size: cover;
+}
+
+
+#tb2{
+    -fx-background-image: url('images/tableBgSlots.png');
+    -fx-background-size: cover;
+}
+
+
+#tb3{
+    -fx-background-image: url('images/tableBgSlots.png');
+    -fx-background-size: cover;
+}
+
+
+#tb4{
+    -fx-background-image: url('images/tableBgSlots.png');
+    -fx-background-size: cover;
+}
+
+
+#tb5{
+    -fx-background-image: url('images/tableBgSlots.png');
+    -fx-background-size: cover;
+}
+
+
+#tb6{
+    -fx-background-image: url('images/tableBgSlots.png');
+    -fx-background-size: cover;
+}
+
+
+#tb7{
+    -fx-background-image: url('images/tableBgSlots.png');
+    -fx-background-size: cover;
+}
