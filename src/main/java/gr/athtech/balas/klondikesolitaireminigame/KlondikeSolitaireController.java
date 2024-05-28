@@ -313,9 +313,8 @@ public class KlondikeSolitaireController {
             if (vboxNode instanceof VBox) {
                 for (Node stackPaneNode : ((VBox) vboxNode).getChildren()) {
 
-                    if (stackPaneNode instanceof StackPane) {
+                    if (stackPaneNode instanceof StackPane stackPane) {
 
-                        StackPane stackPane = (StackPane) stackPaneNode;
                         if (!stackPane.getChildren().isEmpty()) {
                             Node lastImageView = stackPane.getChildren().getLast();
                             Bounds bounds = lastImageView.localToScene(lastImageView.getBoundsInLocal());
@@ -331,13 +330,12 @@ public class KlondikeSolitaireController {
     }
 
     private void setMarginOnStackPaneChildrens(StackPane stackPane) {
+        ObservableList<Node> stacksPanelChildren = stackPane.getChildren();
         if (!tableStacks.contains(stackPane)){
-            ObservableList<Node> stacksPanelChildren = stackPane.getChildren();
             for (Node child : stacksPanelChildren) {
                 StackPane.setMargin(child, new Insets(0, 0, 0, 0));
             }
         }else{
-            ObservableList<Node> stacksPanelChildren = stackPane.getChildren();
             if (stacksPanelChildren.isEmpty()) {
                 return;
             }
@@ -417,7 +415,7 @@ public class KlondikeSolitaireController {
             try {
                 newApp.start(new Stage());
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
         });
     }
