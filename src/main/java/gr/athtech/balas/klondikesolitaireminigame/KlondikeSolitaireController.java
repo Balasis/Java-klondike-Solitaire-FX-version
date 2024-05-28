@@ -35,19 +35,19 @@ public class KlondikeSolitaireController {
 
     //Each CardView has a "Card"(model class) field to have info on updating its image.
 
-    //Main game program, Maps to for info from model to view, mouse X|Y for drag and drop info, an array for loop convenience.
+
     private KlondikeSolitaireProgram theGame;
     private final Map<Card, CardView> cardsToCardViewsMap;
     private final Map<StackPane,BoardCardsSlot > stackPaneToBoardCardsSlotMap;
     private final Map<StackPane, Bounds> dropBountryOfEachStackPanelMap;
-
-    private double mouseX, mouseY;
     private ArrayList<StackPane> tableStacks;
-    int numberOfCardsWeTryToPick = 0;
-    StackPane stackPaneChosenAsSource;
     boolean isReloadMethodRunning=false;
-
-
+    //drag and drop fields.
+    private StackPane stackPaneChosenAsSource;
+    private double mouseX, mouseY;
+    private boolean isDragAvailable=false;
+    private int numberOfCardsToDrag = 0;
+    private ObservableList<Node> draggedNodes;
 
     public KlondikeSolitaireController() {
         //Init the gameProgram, get cards from a deck, removing the jokers cards, populate "cardMaps".
@@ -60,6 +60,7 @@ public class KlondikeSolitaireController {
 
     public void initialize() {
         tableStacks = new ArrayList<>(Arrays.asList(tableSlot1, tableSlot2, tableSlot3, tableSlot4, tableSlot5, tableSlot6, tableSlot7));
+        draggedNodes= FXCollections.observableArrayList();
         populateMaps();
         theGame.setUpTheGame();
         theViewSetUpTheGame();
@@ -152,7 +153,6 @@ public class KlondikeSolitaireController {
         }
     }
 
-
     private void addMouseListenersForDragAndDrop(CardView cV){
         addSetOnMouseClickListener(cV);
         addSetOnMouseDraggedListener(cV);
@@ -165,12 +165,42 @@ public class KlondikeSolitaireController {
     //(AnchorPane->Vbox->StackPane->CardView)
     private void addSetOnMouseClickListener(CardView cV){
         cV.setOnMousePressed(event -> {
-            numberOfCardsWeTryToPick =getNumberOfCardViewsUnderIt(cV);
-            stackPaneChosenAsSource =(StackPane) cV.getParent();
-            setMouseCurrentLocation(event);
+            if (!isTheSetUnderCardViewDragable(cV)){
+               // resetDraggingProperties(cV);
+                return;
+            }//to not get a blocked view by other StackPane, AnchorPane used for no visible reorder.
             cardViewParentOfParentInFront(event);
+            isDragAvailable=true;
+            for (int i = stackPaneChosenAsSource.getChildren().size(); i > stackPaneChosenAsSource.getChildren().size() - numberOfCardsToDrag ; i--) {
+                draggedNodes.add(stackPaneChosenAsSource.getChildren().get(i-1));
+            }
+
+            setMouseCurrentLocation(event);
             event.consume();
         });
+    }
+
+    private void resetDraggingProperties(CardView cV){
+        mouseX = 0;
+        mouseY = 0;
+        numberOfCardsToDrag =0;
+        stackPaneChosenAsSource=null;
+        isDragAvailable=false;
+        for (Node n:draggedNodes){
+            if(n instanceof CardView){
+                n.setTranslateX(0);
+                n.setTranslateY(0);
+            }
+        }
+        draggedNodes.clear();
+
+    }
+
+    private boolean isTheSetUnderCardViewDragable(CardView cV){
+        numberOfCardsToDrag =getNumberOfCardViewsUnderIt(cV);
+        stackPaneChosenAsSource =(StackPane) cV.getParent();
+        BoardCardsSlot bOfcardView=stackPaneToBoardCardsSlotMap.get(stackPaneChosenAsSource);
+        return theGame.isTakeCardsPossible(bOfcardView, numberOfCardsToDrag);
     }
 
     private int getNumberOfCardViewsUnderIt(CardView cV){
@@ -193,23 +223,40 @@ public class KlondikeSolitaireController {
     //update and sum to x|y mouse loc, changes translate x|y (fake drag)
     private void addSetOnMouseDraggedListener(CardView cV){
         cV.setOnMouseDragged(event -> {
-
+            if(!isDragAvailable){
+                return;
+            }
+            updateTranslateXYtoCardViewSet(event);
             event.consume();
         });
     }
 
-    private void updateTranslateXYtoCardView(MouseEvent e){
-        CardView cV=(CardView) e.getSource();
+
+
+    private void updateTranslateXYtoCardViewSet(MouseEvent e){
+//        CardView cV=(CardView) e.getSource();
         double offsetX = e.getSceneX() - mouseX;
         double offsetY = e.getSceneY() - mouseY;
-        cV.setTranslateX(cV.getTranslateX() + offsetX);
-        cV.setTranslateY(cV.getTranslateY() + offsetY);
+
+        for(Node n:draggedNodes){
+            if (n instanceof ImageView){
+                n.setTranslateX(n.getTranslateX() + offsetX);
+                n.setTranslateY(n.getTranslateY() + offsetY);
+            }
+        }
+
+//        for (int i = draggedNodes.size(); i > draggedNodes.size()-numberOfCardsToDrag; i--) {
+//            draggedNodes.get(i-1).setTranslateX(draggedNodes.get(i-1).getTranslateX() + offsetX);
+//            draggedNodes.get(i-1).setTranslateY(draggedNodes.get(i-1).getTranslateY() + offsetY);
+//        }
     }
 
     //...release the mouse
     private void addSetOnMouseReleased(CardView cV){
         cV.setOnMouseReleased(event -> {
             updateStackPaneBounds();
+
+
             CardView theDragger = (CardView) event.getSource();
             Bounds imageViewBoundsInScene = theDragger.localToScene(theDragger.getBoundsInLocal());
             StackPane parentOfMoveable = (StackPane) theDragger.getParent();
@@ -250,15 +297,7 @@ public class KlondikeSolitaireController {
         setMarginOnStackPaneChildrens(target);
     }
 
-    private void resetDraggingProperties(CardView theDragger){
-        mouseX = 0;
-        mouseY = 0;
-        numberOfCardsWeTryToPick=0;
-        stackPaneChosenAsSource=null;
 
-        theDragger.setTranslateX(0);
-        theDragger.setTranslateY(0);
-    }
 
 
 

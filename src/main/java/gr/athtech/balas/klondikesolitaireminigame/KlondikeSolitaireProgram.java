@@ -56,6 +56,10 @@ public class KlondikeSolitaireProgram {
             return true;
     }
 
+    public boolean isTakeCardsPossible(BoardCardsSlot theBoardCardSlot, int numOfCards){
+         return  theBoardCardSlot.isTakeCardsValid(numOfCards);
+    }
+
     public void removeTheJokers(){//in case you need removal before setUp
         deck.removeTheJokers();
     }
