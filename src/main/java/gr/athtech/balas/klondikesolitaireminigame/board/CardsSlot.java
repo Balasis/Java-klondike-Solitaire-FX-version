@@ -18,19 +18,6 @@ public class CardsSlot {
         return c;
     }
 
-    //Overrides
-    public Card getLastCard() {
-        return cards.getLast();
-    }
-
-    public Card getFirstCard() {
-        return cards.getFirst();
-    }
-
-    public boolean isCardInSlot(Card card){
-        return cards.contains(card);
-    }
-
     public void addCardsNoRestrictions(ArrayList<Card> cards) {
         this.cards.addAll(cards);
     }

@@ -8,16 +8,7 @@ import java.util.ArrayList;
 
 public interface BoardCardsSlot {
 
- // On CardSlot superclass(shared cored)
-    Card getLastCard();
-    Card getFirstCard();
-//    ArrayList<Card> getMultipleCardsFromTop(int numOfCards);
-//    ArrayList<Card> getMultipleCardsFromBottom(int numberOfCards);
     ArrayList<Card> getCards();
-    boolean isCardInSlot(Card card);
-    boolean isCardsSlotEmpty();
-
- // On subclasses (different implementation)
 
     void addCards(ArrayList<Card> cards) throws InvalidAddCardsException;
     boolean isAddCardsValid(ArrayList<Card> cards);
@@ -27,7 +18,7 @@ public interface BoardCardsSlot {
 
     void revealLastCard();
     void addCardsNoRestrictions(ArrayList<Card> cards);
-    ArrayList<Card> takeAllCardsNoRestrictions();
+
     SlotType getSlotType();
 
 }
