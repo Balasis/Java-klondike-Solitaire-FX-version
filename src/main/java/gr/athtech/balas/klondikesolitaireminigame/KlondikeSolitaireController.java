@@ -9,10 +9,14 @@ import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.*;
 
 public class KlondikeSolitaireController {
@@ -34,30 +38,29 @@ public class KlondikeSolitaireController {
     //+52 Dynamically created ImageViews, as superclasses of CardViews.( Cardview extends ImageView)
 
     //Each CardView has a "Card"(model class) field to have info on updating its image.
-
-
-    private KlondikeSolitaireProgram theGame;
+    //Maps to help updating the view according to model
+    private final KlondikeSolitaireProgram theGame;
     private final Map<Card, CardView> cardsToCardViewsMap;
     private final Map<StackPane,BoardCardsSlot > stackPaneToBoardCardsSlotMap;
     private final Map<StackPane, Bounds> dropBountryOfEachStackPanelMap;
     private ArrayList<StackPane> tableStacks;
     boolean isReloadMethodRunning=false;
-    //drag and drop fields.
+    //Drag and drop properties...(faking it with translate x|Y
     private StackPane stackPaneChosenAsSource;
     private double mouseX, mouseY;
     private boolean isDragAvailable=false;
     private int numberOfCardsToDrag = 0;
     private ObservableList<Node> draggedNodes;
 
+    //Init the gameProgram, get cards from a deck, removing the jokers cards, populate "cardMaps".
     public KlondikeSolitaireController() {
-        //Init the gameProgram, get cards from a deck, removing the jokers cards, populate "cardMaps".
         theGame = new KlondikeSolitaireProgram();
         theGame.removeTheJokers();
         cardsToCardViewsMap = new HashMap<>();
         stackPaneToBoardCardsSlotMap = new HashMap<>();
         dropBountryOfEachStackPanelMap = new HashMap<>();
     }
-
+    //Setting up the Map lists, Setting up the game at front and back, Creating the first bountries(droppable areas)
     public void initialize() {
         tableStacks = new ArrayList<>(Arrays.asList(tableSlot1, tableSlot2, tableSlot3, tableSlot4, tableSlot5, tableSlot6, tableSlot7));
         draggedNodes= FXCollections.observableArrayList();
@@ -67,18 +70,18 @@ public class KlondikeSolitaireController {
         Platform.runLater(this::updateStackPaneBounds);//creates bountry for each Stackpane(droppable areas up to interception)DragAndDrop
     }
 
-    @FXML
+    @FXML //Listener for the deckSlot Transparent Layer(above deck slot to avoid having to swap listeners on cards)
     public void deckToWasteInteraction(){
         if(!theGame.isTheDeckSlotEmptyOfCards()){
             if(theGame.moveCardFromDeckToWaste()){
                 moveAVcFromDeckToWaste();
             }
-        }else{//cV=CardViews.
+        }else{//if empty, return cards to deck from waste using Unrestricted addition method(no exceptions applied)
             theGame.returnWasteCardsToDeck();
             moveAllCvFromWasteToDeck();
         }
     }
-
+    //Adding drag and drop listeners to cardViews
     private void addListenersToCardViews(){
         for(Map.Entry<Card,CardView> c: cardsToCardViewsMap.entrySet()){
             addMouseListenersForDragAndDrop(c.getValue());
@@ -90,22 +93,24 @@ public class KlondikeSolitaireController {
         addSetOnMouseDraggedListener(cV);
         addSetOnMouseReleased(cV);
     }
-
-    //gets x|y mouse location ,change z-order at Parent of parent so the upcoming
-    //"dragged" element won't get hidden by z-order issues.
-    // (Required AnchorPane use because z-order would change the position of it)
-    //(AnchorPane->Vbox->StackPane->CardView)
+    //
     private void addSetOnMouseClickListener(CardView cV){
         cV.setOnMousePressed(event -> {
-            System.out.println(cV.getCard());
+            StackPane sp=(StackPane) cV.getParent();
             if (!isTheSetUnderCardViewDragable(cV)){
                 resetDraggingProperties(cV);
                 return;
             }//to not get a blocked view by other StackPane, AnchorPane used for no visible reorder.
             cardViewParentOfParentInFront(event);
             isDragAvailable=true;
-            for (int i = stackPaneChosenAsSource.getChildren().size(); i > stackPaneChosenAsSource.getChildren().size() - numberOfCardsToDrag ; i--) {
-                draggedNodes.add(stackPaneChosenAsSource.getChildren().get(i-1));
+            for (int i = stackPaneChosenAsSource.getChildren().size() - numberOfCardsToDrag; i < stackPaneChosenAsSource.getChildren().size() ; i++) {
+                draggedNodes.add(stackPaneChosenAsSource.getChildren().get(i));
+            }
+            for (Node n:draggedNodes){
+                if (n instanceof CardView){
+                    CardView cardView=(CardView) n;
+                    System.out.println(cardView.getCard());
+                }
             }
             setMouseCurrentLocation(event);
             event.consume();
@@ -123,35 +128,56 @@ public class KlondikeSolitaireController {
         });
     }
 
-    //...release the mouse
+    private void updateTranslateXYtoCardViewSet(MouseEvent e){
+        double offsetX = e.getSceneX() - mouseX;
+        double offsetY = e.getSceneY() - mouseY;
+        for (Node n:draggedNodes){
+            n.setTranslateX(offsetX);
+            n.setTranslateY(offsetY);
+        }
+
+    }
+
+    // drop(fakedrop) : Updating the drop areas, check map to find intercepted StackPane,
+    //                  move cards on model,if success move corresponding CardViews,
+    //                  rest dragAndDrop properties, check if you won the game.
     private void addSetOnMouseReleased(CardView cV){
         cV.setOnMouseReleased(event -> {
             updateStackPaneBounds();
-
-
+            //getting info about the drager cardview,its parent Stackpane(container) and its boundary
             CardView theDragger = (CardView) event.getSource();
             Bounds imageViewBoundsInScene = theDragger.localToScene(theDragger.getBoundsInLocal());
             StackPane parentOfMoveable = (StackPane) theDragger.getParent();
-
-            for (Map.Entry<StackPane, Bounds> entry : dropBountryOfEachStackPanelMap.entrySet()) {
-                StackPane stackPane = entry.getKey();
-                Bounds bounds = entry.getValue();
-
-                // Check for intersection using the actual scene coordinates
-                if (bounds.intersects(imageViewBoundsInScene) && stackPane != parentOfMoveable) {
-                    if(!theGame.moveCards( stackPaneToBoardCardsSlotMap.get(parentOfMoveable),stackPaneToBoardCardsSlotMap.get(stackPane),1 )){
-                        System.out.println("wasn't Approved");
-                        break;
-                    }
-                    moveImageViewsBetweenPanels(parentOfMoveable,stackPane,theDragger);
-                    setMarginsOnAffectedPanels(parentOfMoveable,stackPane);
-                    break;
-                }
-            }
+            //loop through a map of potential boundaries to find where it dropped(dragger intercepted with stackPane)
+            //the boundary is set on the last cardView of each StackPane related to localScene;
+            loopThroughMapToFindInterceptedArea(imageViewBoundsInScene,parentOfMoveable);
+            //restore drag and drop properties and check if the game is over.
             resetDraggingProperties(theDragger);
             updateBoardProperties();
+            if (theGame.isTheGameWon()){
+                showCongratulatoryPopup();
+            }
             event.consume();
         });
+    }
+
+    private void loopThroughMapToFindInterceptedArea(Bounds imageViewBoundsInScene,StackPane parentOfMoveable){
+        for (Map.Entry<StackPane, Bounds> entry : dropBountryOfEachStackPanelMap.entrySet()) {
+            StackPane stackPane = entry.getKey();
+            Bounds bounds = entry.getValue();
+
+            if (bounds.intersects(imageViewBoundsInScene) && stackPane != parentOfMoveable) {
+                modifyAffectedStackPane(parentOfMoveable,stackPane);
+                break;
+            }
+        }
+    }
+
+
+    private void modifyAffectedStackPane(StackPane parentOfDragger, StackPane droppedAtStackPane){
+        theGame.moveCards( stackPaneToBoardCardsSlotMap.get(parentOfDragger),stackPaneToBoardCardsSlotMap.get(droppedAtStackPane),draggedNodes.size() );
+        moveImageViewsBetweenPanels(droppedAtStackPane);
+        setMarginsOnAffectedPanels(parentOfDragger,droppedAtStackPane);
     }
 
     private void moveAVcFromDeckToWaste(){
@@ -220,14 +246,20 @@ public class KlondikeSolitaireController {
         }
     }
 
-
-
     private void resetDraggingProperties(CardView cV){
+        resetOnMouseClickProperties();
+        resetOnMouseDragProperties();
+    }
+
+    private void resetOnMouseClickProperties(){
         mouseX = 0;
         mouseY = 0;
         numberOfCardsToDrag =0;
         stackPaneChosenAsSource=null;
         isDragAvailable=false;
+    }
+
+    private void resetOnMouseDragProperties(){
         for (Node n:draggedNodes){
             if(n instanceof CardView){
                 n.setTranslateX(0);
@@ -235,15 +267,9 @@ public class KlondikeSolitaireController {
             }
         }
         draggedNodes.clear();
-
     }
 
-    private boolean isTheSetUnderCardViewDragable(CardView cV){
-        numberOfCardsToDrag =getNumberOfCardViewsUnderIt(cV);
-        stackPaneChosenAsSource =(StackPane) cV.getParent();
-        BoardCardsSlot bOfcardView=stackPaneToBoardCardsSlotMap.get(stackPaneChosenAsSource);
-        return theGame.isTakeCardsPossible(bOfcardView, numberOfCardsToDrag);
-    }
+
 
     private int getNumberOfCardViewsUnderIt(CardView cV){
         StackPane theParent=(StackPane) cV.getParent();
@@ -264,12 +290,7 @@ public class KlondikeSolitaireController {
 
 
 
-    private void updateTranslateXYtoCardViewSet(MouseEvent e){
-        double offsetX = e.getSceneX() - mouseX;
-        double offsetY = e.getSceneY() - mouseY;
-        draggedNodes.getFirst().setTranslateX(offsetX);
-        draggedNodes.getFirst().setTranslateY( offsetY);
-    }
+
 
 
 
@@ -278,9 +299,15 @@ public class KlondikeSolitaireController {
         updateCardRevealsStatus();
     }
 
-    private void moveImageViewsBetweenPanels(StackPane source,StackPane target,ImageView imageView){
-        source.getChildren().remove(imageView);
-        target.getChildren().add(imageView);
+    private void moveImageViewsBetweenPanels(StackPane stackPane){
+        stackPaneChosenAsSource.getChildren().removeAll(draggedNodes);
+        for(Node n : draggedNodes){
+            if (n instanceof CardView){
+                System.out.println(((CardView) n).getCard());
+                stackPane.getChildren().add(n);
+            }
+        }
+
     }
 
     private void setMarginsOnAffectedPanels(StackPane source,StackPane target){
@@ -341,17 +368,6 @@ public class KlondikeSolitaireController {
                 }
             }
         }
-
-
-
-    }
-
-
-
-    private void updateCardRevealsStatus() {
-        for (Map.Entry<Card, CardView> e : cardsToCardViewsMap.entrySet()) {
-            e.getValue().updateImage();
-        }
     }
 
     private void reloadCardViewsForAllStackPane(){
@@ -383,6 +399,44 @@ public class KlondikeSolitaireController {
         }
     }
 
+    private void updateCardRevealsStatus() {
+        for (Map.Entry<Card, CardView> e : cardsToCardViewsMap.entrySet()) {
+            e.getValue().updateImage();
+        }
+    }
+
+    private void showCongratulatoryPopup() {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Congratulations!");
+            alert.setHeaderText(null);
+            alert.setContentText("Congratulations! You have won the game!");
+            Button restartButton = new Button("Restart");
+            restartButton.setOnAction(e -> restartGame());
+            alert.getDialogPane().setContent(restartButton);
+            alert.showAndWait();
+        });
+    }
+
+    private void restartGame() {
+        Platform.runLater(() -> {
+            Stage stage = (Stage) containerAnchor.getScene().getWindow();
+            stage.close();
+            KlondikeSolitaireApp newApp = new KlondikeSolitaireApp();
+            try {
+                newApp.start(new Stage());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private boolean isTheSetUnderCardViewDragable(CardView cV){
+        numberOfCardsToDrag =getNumberOfCardViewsUnderIt(cV);
+        stackPaneChosenAsSource =(StackPane) cV.getParent();
+        BoardCardsSlot bOfcardView=stackPaneToBoardCardsSlotMap.get(stackPaneChosenAsSource);
+        return theGame.isTakeCardsPossible(bOfcardView, numberOfCardsToDrag);
+    }
 
 }
 
