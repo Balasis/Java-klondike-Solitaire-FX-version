@@ -175,9 +175,11 @@ public class KlondikeSolitaireController {
 
 
     private void modifyAffectedStackPane(StackPane parentOfDragger, StackPane droppedAtStackPane){
-        theGame.moveCards( stackPaneToBoardCardsSlotMap.get(parentOfDragger),stackPaneToBoardCardsSlotMap.get(droppedAtStackPane),draggedNodes.size() );
-        moveImageViewsBetweenPanels(droppedAtStackPane);
-        setMarginsOnAffectedPanels(parentOfDragger,droppedAtStackPane);
+       if( theGame.moveCards( stackPaneToBoardCardsSlotMap.get(parentOfDragger),stackPaneToBoardCardsSlotMap.get(droppedAtStackPane),draggedNodes.size() ) ){
+           moveImageViewsBetweenPanels(droppedAtStackPane);
+           setMarginsOnAffectedPanels(parentOfDragger,droppedAtStackPane);
+       }
+
     }
 
     private void moveAVcFromDeckToWaste(){
@@ -286,13 +288,6 @@ public class KlondikeSolitaireController {
         VBox theDraggerParentsParent = (VBox) theDragger.getParent().getParent();
         theDraggerParentsParent.toFront();
     }
-
-
-
-
-
-
-
 
     private void updateBoardProperties(){
         updateStackPaneBounds();

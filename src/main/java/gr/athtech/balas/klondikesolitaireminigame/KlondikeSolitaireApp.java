@@ -13,6 +13,7 @@ public class KlondikeSolitaireApp extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(KlondikeSolitaireApp.class.getResource("klondikeSolitaireView.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Klondike Solitaire by John Balasis!");
+        stage.setResizable(false);
         stage.setScene(scene);
         stage.show();
     }
