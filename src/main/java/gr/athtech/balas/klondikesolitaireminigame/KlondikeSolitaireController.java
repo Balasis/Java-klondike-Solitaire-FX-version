@@ -79,6 +79,81 @@ public class KlondikeSolitaireController {
         }
     }
 
+    private void addListenersToCardViews(){
+        for(Map.Entry<Card,CardView> c: cardsToCardViewsMap.entrySet()){
+            addMouseListenersForDragAndDrop(c.getValue());
+        }
+    }
+
+    private void addMouseListenersForDragAndDrop(CardView cV){
+        addSetOnMouseClickListener(cV);
+        addSetOnMouseDraggedListener(cV);
+        addSetOnMouseReleased(cV);
+    }
+
+    //gets x|y mouse location ,change z-order at Parent of parent so the upcoming
+    //"dragged" element won't get hidden by z-order issues.
+    // (Required AnchorPane use because z-order would change the position of it)
+    //(AnchorPane->Vbox->StackPane->CardView)
+    private void addSetOnMouseClickListener(CardView cV){
+        cV.setOnMousePressed(event -> {
+            System.out.println(cV.getCard());
+            if (!isTheSetUnderCardViewDragable(cV)){
+                resetDraggingProperties(cV);
+                return;
+            }//to not get a blocked view by other StackPane, AnchorPane used for no visible reorder.
+            cardViewParentOfParentInFront(event);
+            isDragAvailable=true;
+            for (int i = stackPaneChosenAsSource.getChildren().size(); i > stackPaneChosenAsSource.getChildren().size() - numberOfCardsToDrag ; i--) {
+                draggedNodes.add(stackPaneChosenAsSource.getChildren().get(i-1));
+            }
+            setMouseCurrentLocation(event);
+            event.consume();
+        });
+    }
+
+    //update and sum to x|y mouse loc, changes translate x|y (fake drag)
+    private void addSetOnMouseDraggedListener(CardView cV){
+        cV.setOnMouseDragged(event -> {
+            if(!isDragAvailable){
+                return;
+            }
+            updateTranslateXYtoCardViewSet(event);
+            event.consume();
+        });
+    }
+
+    //...release the mouse
+    private void addSetOnMouseReleased(CardView cV){
+        cV.setOnMouseReleased(event -> {
+            updateStackPaneBounds();
+
+
+            CardView theDragger = (CardView) event.getSource();
+            Bounds imageViewBoundsInScene = theDragger.localToScene(theDragger.getBoundsInLocal());
+            StackPane parentOfMoveable = (StackPane) theDragger.getParent();
+
+            for (Map.Entry<StackPane, Bounds> entry : dropBountryOfEachStackPanelMap.entrySet()) {
+                StackPane stackPane = entry.getKey();
+                Bounds bounds = entry.getValue();
+
+                // Check for intersection using the actual scene coordinates
+                if (bounds.intersects(imageViewBoundsInScene) && stackPane != parentOfMoveable) {
+                    if(!theGame.moveCards( stackPaneToBoardCardsSlotMap.get(parentOfMoveable),stackPaneToBoardCardsSlotMap.get(stackPane),1 )){
+                        System.out.println("wasn't Approved");
+                        break;
+                    }
+                    moveImageViewsBetweenPanels(parentOfMoveable,stackPane,theDragger);
+                    setMarginsOnAffectedPanels(parentOfMoveable,stackPane);
+                    break;
+                }
+            }
+            resetDraggingProperties(theDragger);
+            updateBoardProperties();
+            event.consume();
+        });
+    }
+
     private void moveAVcFromDeckToWaste(){
         wasteSlot.getChildren().add(deckSlot.getChildren().getLast());
         CardView lastCvInWaste=(CardView) wasteSlot.getChildren().getLast();
@@ -98,8 +173,6 @@ public class KlondikeSolitaireController {
         Collections.reverse(childrenCopy);
         return childrenCopy;
     }
-
-
 
     private void theViewSetUpTheGame(){
         reloadCardViewsForAllStackPane();
@@ -147,38 +220,7 @@ public class KlondikeSolitaireController {
         }
     }
 
-    private void addListenersToCardViews(){
-        for(Map.Entry<Card,CardView> c: cardsToCardViewsMap.entrySet()){
-                addMouseListenersForDragAndDrop(c.getValue());
-        }
-    }
 
-    private void addMouseListenersForDragAndDrop(CardView cV){
-        addSetOnMouseClickListener(cV);
-        addSetOnMouseDraggedListener(cV);
-        addSetOnMouseReleased(cV);
-    }
-
-    //gets x|y mouse location ,change z-order at Parent of parent so the upcoming
-    //"dragged" element won't get hidden by z-order issues.
-    // (Required AnchorPane use because z-order would change the position of it)
-    //(AnchorPane->Vbox->StackPane->CardView)
-    private void addSetOnMouseClickListener(CardView cV){
-        cV.setOnMousePressed(event -> {
-            if (!isTheSetUnderCardViewDragable(cV)){
-               // resetDraggingProperties(cV);
-                return;
-            }//to not get a blocked view by other StackPane, AnchorPane used for no visible reorder.
-            cardViewParentOfParentInFront(event);
-            isDragAvailable=true;
-            for (int i = stackPaneChosenAsSource.getChildren().size(); i > stackPaneChosenAsSource.getChildren().size() - numberOfCardsToDrag ; i--) {
-                draggedNodes.add(stackPaneChosenAsSource.getChildren().get(i-1));
-            }
-
-            setMouseCurrentLocation(event);
-            event.consume();
-        });
-    }
 
     private void resetDraggingProperties(CardView cV){
         mouseX = 0;
@@ -220,67 +262,16 @@ public class KlondikeSolitaireController {
     }
 
 
-    //update and sum to x|y mouse loc, changes translate x|y (fake drag)
-    private void addSetOnMouseDraggedListener(CardView cV){
-        cV.setOnMouseDragged(event -> {
-            if(!isDragAvailable){
-                return;
-            }
-            updateTranslateXYtoCardViewSet(event);
-            event.consume();
-        });
-    }
-
 
 
     private void updateTranslateXYtoCardViewSet(MouseEvent e){
-//        CardView cV=(CardView) e.getSource();
         double offsetX = e.getSceneX() - mouseX;
         double offsetY = e.getSceneY() - mouseY;
-
-        for(Node n:draggedNodes){
-            if (n instanceof ImageView){
-                n.setTranslateX(n.getTranslateX() + offsetX);
-                n.setTranslateY(n.getTranslateY() + offsetY);
-            }
-        }
-
-//        for (int i = draggedNodes.size(); i > draggedNodes.size()-numberOfCardsToDrag; i--) {
-//            draggedNodes.get(i-1).setTranslateX(draggedNodes.get(i-1).getTranslateX() + offsetX);
-//            draggedNodes.get(i-1).setTranslateY(draggedNodes.get(i-1).getTranslateY() + offsetY);
-//        }
+        draggedNodes.getFirst().setTranslateX(offsetX);
+        draggedNodes.getFirst().setTranslateY( offsetY);
     }
 
-    //...release the mouse
-    private void addSetOnMouseReleased(CardView cV){
-        cV.setOnMouseReleased(event -> {
-            updateStackPaneBounds();
 
-
-            CardView theDragger = (CardView) event.getSource();
-            Bounds imageViewBoundsInScene = theDragger.localToScene(theDragger.getBoundsInLocal());
-            StackPane parentOfMoveable = (StackPane) theDragger.getParent();
-
-            for (Map.Entry<StackPane, Bounds> entry : dropBountryOfEachStackPanelMap.entrySet()) {
-                StackPane stackPane = entry.getKey();
-                Bounds bounds = entry.getValue();
-
-                // Check for intersection using the actual scene coordinates
-                if (bounds.intersects(imageViewBoundsInScene) && stackPane != parentOfMoveable) {
-                    if(!theGame.moveCards( stackPaneToBoardCardsSlotMap.get(parentOfMoveable),stackPaneToBoardCardsSlotMap.get(stackPane),1 )){
-                        System.out.println("wasn't Approved");
-                        break;
-                    }
-                    moveImageViewsBetweenPanels(parentOfMoveable,stackPane,theDragger);
-                    setMarginsOnAffectedPanels(parentOfMoveable,stackPane);
-                    break;
-                }
-            }
-            resetDraggingProperties(theDragger);
-            updateBoardProperties();
-            event.consume();
-        });
-    }
 
     private void updateBoardProperties(){
         updateStackPaneBounds();
