@@ -17,13 +17,6 @@ public class Deck {
 
     // API s
     public void removeTheJokers() {
-//        Iterator<Card> iterator = cards.iterator();
-//        while (iterator.hasNext()) {
-//            Card card = iterator.next();
-//            if (card.getSuit() == Suit.JOKER) {
-//                iterator.remove();
-//            }
-//        }
         for (int i = 0; i < cards.size();) {
             Card currentCard=cards.get(i);
             if (currentCard.getSuit() == Suit.JOKER) {
