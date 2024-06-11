@@ -18,7 +18,7 @@ public class KlondikeSolitaireApp extends Application {
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/forIco.png"))));
         stage.setResizable(false);
         stage.setScene(scene);
-        stage.show();
+        stage.show();//checking buggy behaviour of github on commit
     }
 
     public static void main(String[] args) {
