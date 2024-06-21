@@ -7,13 +7,13 @@ import java.util.ArrayList;
 public class CardsSlot {
     private final ArrayList<Card> cards;
 
-    public CardsSlot(){
-        cards=new ArrayList<>();
+    public CardsSlot() {
+        cards = new ArrayList<>();
     }
 
     //API
-    public ArrayList<Card> takeAllCardsNoRestrictions(){
-        ArrayList<Card> c=new ArrayList<>(cards);
+    public ArrayList<Card> takeAllCardsNoRestrictions() {
+        ArrayList<Card> c = new ArrayList<>(cards);
         cards.clear();
         return c;
     }
@@ -22,12 +22,12 @@ public class CardsSlot {
         this.cards.addAll(cards);
     }
 
-    public boolean isCardsSlotEmpty(){
+    public boolean isCardsSlotEmpty() {
         return cards.isEmpty();
     }
 
-    public void revealLastCard(){
-        if (!cards.isEmpty()){
+    public void revealLastCard() {
+        if (!cards.isEmpty()) {
             cards.getLast().setIsFaceUp(true);
         }
     }

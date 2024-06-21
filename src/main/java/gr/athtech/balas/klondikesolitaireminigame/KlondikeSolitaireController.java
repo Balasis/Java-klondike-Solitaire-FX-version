@@ -21,34 +21,48 @@ import java.util.*;
 
 public class KlondikeSolitaireController {
     //Card Slots
-    @FXML private StackPane deckSlot;
-    @FXML private StackPane wasteSlot;
-    @FXML private StackPane clubsFoundation;
-    @FXML private StackPane diamondsFoundation;
-    @FXML private StackPane heartsFoundation;
-    @FXML private StackPane spadesFoundation;
-    @FXML private StackPane tableSlot1;
-    @FXML private StackPane tableSlot2;
-    @FXML private StackPane tableSlot3;
-    @FXML private StackPane tableSlot4;
-    @FXML private StackPane tableSlot5;
-    @FXML private StackPane tableSlot6;
-    @FXML private StackPane tableSlot7;
-    @FXML private AnchorPane containerAnchor;
+    @FXML
+    private StackPane deckSlot;
+    @FXML
+    private StackPane wasteSlot;
+    @FXML
+    private StackPane clubsFoundation;
+    @FXML
+    private StackPane diamondsFoundation;
+    @FXML
+    private StackPane heartsFoundation;
+    @FXML
+    private StackPane spadesFoundation;
+    @FXML
+    private StackPane tableSlot1;
+    @FXML
+    private StackPane tableSlot2;
+    @FXML
+    private StackPane tableSlot3;
+    @FXML
+    private StackPane tableSlot4;
+    @FXML
+    private StackPane tableSlot5;
+    @FXML
+    private StackPane tableSlot6;
+    @FXML
+    private StackPane tableSlot7;
+    @FXML
+    private AnchorPane containerAnchor;
     //+52 Dynamically created ImageViews, as superclasses of CardViews.( Cardview extends ImageView)
 
     //Each CardView has a "Card"(model class) field to have info on updating its image.
     //Maps to help updating the view according to model
     private final KlondikeSolitaireProgram theGame;
     private final Map<Card, CardView> cardsToCardViewsMap;
-    private final Map<StackPane,BoardCardsSlot > stackPaneToBoardCardsSlotMap;
+    private final Map<StackPane, BoardCardsSlot> stackPaneToBoardCardsSlotMap;
     private final Map<StackPane, Bounds> dropBountryOfEachStackPanelMap;
     private ArrayList<StackPane> tableStacks;
-    boolean isReloadMethodRunning=false;
+    boolean isReloadMethodRunning = false;
     //Drag and drop properties...(faking it with translate x|Y
     private StackPane stackPaneChosenAsSource;
     private double mouseX, mouseY;
-    private boolean isDragAvailable=false;
+    private boolean isDragAvailable = false;
     private int numberOfCardsToDrag = 0;
     private ObservableList<Node> draggedNodes;
 
@@ -60,10 +74,11 @@ public class KlondikeSolitaireController {
         stackPaneToBoardCardsSlotMap = new HashMap<>();
         dropBountryOfEachStackPanelMap = new HashMap<>();
     }
+
     //Setting up the Map lists, Setting up the game at front and back, Creating the first bountries(droppable areas)
     public void initialize() {
         tableStacks = new ArrayList<>(Arrays.asList(tableSlot1, tableSlot2, tableSlot3, tableSlot4, tableSlot5, tableSlot6, tableSlot7));
-        draggedNodes= FXCollections.observableArrayList();
+        draggedNodes = FXCollections.observableArrayList();
         populateMaps();
         theGame.setUpTheGame();
         theViewSetUpTheGame();
@@ -71,38 +86,40 @@ public class KlondikeSolitaireController {
     }
 
     @FXML //Listener for the deckSlot Transparent Layer(above deck slot to avoid having to swap listeners on cards)
-    public void deckToWasteInteraction(){
-        if(!theGame.isTheDeckSlotEmptyOfCards()){
-            if(theGame.moveCardFromDeckToWaste()){
+    public void deckToWasteInteraction() {
+        if (!theGame.isTheDeckSlotEmptyOfCards()) {
+            if (theGame.moveCardFromDeckToWaste()) {
                 moveAVcFromDeckToWaste();
             }
-        }else{//if empty, return cards to deck from waste using Unrestricted addition method(no exceptions applied)
+        } else {//if empty, return cards to deck from waste using Unrestricted addition method(no exceptions applied)
             theGame.returnWasteCardsToDeck();
             moveAllCvFromWasteToDeck();
         }
     }
+
     //Adding drag and drop listeners to cardViews
-    private void addListenersToCardViews(){
-        for(Map.Entry<Card,CardView> c: cardsToCardViewsMap.entrySet()){
+    private void addListenersToCardViews() {
+        for (Map.Entry<Card, CardView> c : cardsToCardViewsMap.entrySet()) {
             addMouseListenersForDragAndDrop(c.getValue());
         }
     }
 
-    private void addMouseListenersForDragAndDrop(CardView cV){
+    private void addMouseListenersForDragAndDrop(CardView cV) {
         addSetOnMouseClickListener(cV);
         addSetOnMouseDraggedListener(cV);
         addSetOnMouseReleased(cV);
     }
+
     //
-    private void addSetOnMouseClickListener(CardView cV){
+    private void addSetOnMouseClickListener(CardView cV) {
         cV.setOnMousePressed(event -> {
-            if (!isTheSetUnderCardViewDragable(cV)){
+            if (!isTheSetUnderCardViewDragable(cV)) {
                 resetDraggingProperties();
                 return;
             }//to not get a blocked view by other StackPane, AnchorPane used for no visible reorder.
             cardViewParentOfParentInFront(event);
-            isDragAvailable=true;
-            for (int i = stackPaneChosenAsSource.getChildren().size() - numberOfCardsToDrag; i < stackPaneChosenAsSource.getChildren().size() ; i++) {
+            isDragAvailable = true;
+            for (int i = stackPaneChosenAsSource.getChildren().size() - numberOfCardsToDrag; i < stackPaneChosenAsSource.getChildren().size(); i++) {
                 draggedNodes.add(stackPaneChosenAsSource.getChildren().get(i));
             }
             setMouseCurrentLocation(event);
@@ -111,9 +128,9 @@ public class KlondikeSolitaireController {
     }
 
     //update and sum to x|y mouse loc, changes translate x|y (fake drag)
-    private void addSetOnMouseDraggedListener(CardView cV){
+    private void addSetOnMouseDraggedListener(CardView cV) {
         cV.setOnMouseDragged(event -> {
-            if(!isDragAvailable){
+            if (!isDragAvailable) {
                 return;
             }
             updateTranslateXYtoCardViewSet(event);
@@ -121,10 +138,10 @@ public class KlondikeSolitaireController {
         });
     }
 
-    private void updateTranslateXYtoCardViewSet(MouseEvent e){
+    private void updateTranslateXYtoCardViewSet(MouseEvent e) {
         double offsetX = e.getSceneX() - mouseX;
         double offsetY = e.getSceneY() - mouseY;
-        for (Node n:draggedNodes){
+        for (Node n : draggedNodes) {
             n.setTranslateX(offsetX);
             n.setTranslateY(offsetY);
         }
@@ -134,7 +151,7 @@ public class KlondikeSolitaireController {
     // drop(fakedrop) : Updating the drop areas, check map to find intercepted StackPane,
     //                  move cards on model,if success move corresponding CardViews,
     //                  rest dragAndDrop properties, check if you won the game.
-    private void addSetOnMouseReleased(CardView cV){
+    private void addSetOnMouseReleased(CardView cV) {
         cV.setOnMouseReleased(event -> {
             updateStackPaneBounds();
             //getting info about the drager cardview,its parent Stackpane(container) and its boundary
@@ -143,119 +160,119 @@ public class KlondikeSolitaireController {
             StackPane parentOfMoveable = (StackPane) theDragger.getParent();
             //loop through a map of potential boundaries to find where it dropped(dragger intercepted with stackPane)
             //the boundary is set on the last cardView of each StackPane related to localScene;
-            loopThroughMapToFindInterceptedArea(imageViewBoundsInScene,parentOfMoveable);
+            loopThroughMapToFindInterceptedArea(imageViewBoundsInScene, parentOfMoveable);
             //restore drag and drop properties and check if the game is over.
             resetDraggingProperties();
             updateBoardProperties();
-            if (theGame.isTheGameWon()){
+            if (theGame.isTheGameWon()) {
                 showCongratulatoryPopup();
             }
             event.consume();
         });
     }
 
-    private void loopThroughMapToFindInterceptedArea(Bounds imageViewBoundsInScene,StackPane parentOfMoveable){
+    private void loopThroughMapToFindInterceptedArea(Bounds imageViewBoundsInScene, StackPane parentOfMoveable) {
         for (Map.Entry<StackPane, Bounds> entry : dropBountryOfEachStackPanelMap.entrySet()) {
             StackPane stackPane = entry.getKey();
             Bounds bounds = entry.getValue();
 
             if (bounds.intersects(imageViewBoundsInScene) && stackPane != parentOfMoveable) {
-                modifyAffectedStackPane(parentOfMoveable,stackPane);
+                modifyAffectedStackPane(parentOfMoveable, stackPane);
                 break;
             }
         }
     }
 
 
-    private void modifyAffectedStackPane(StackPane parentOfDragger, StackPane droppedAtStackPane){
-       if( theGame.moveCards( stackPaneToBoardCardsSlotMap.get(parentOfDragger),stackPaneToBoardCardsSlotMap.get(droppedAtStackPane),draggedNodes.size() ) ){
-           moveImageViewsBetweenPanels(droppedAtStackPane);
-           setMarginsOnAffectedPanels(parentOfDragger,droppedAtStackPane);
-       }
+    private void modifyAffectedStackPane(StackPane parentOfDragger, StackPane droppedAtStackPane) {
+        if (theGame.moveCards(stackPaneToBoardCardsSlotMap.get(parentOfDragger), stackPaneToBoardCardsSlotMap.get(droppedAtStackPane), draggedNodes.size())) {
+            moveImageViewsBetweenPanels(droppedAtStackPane);
+            setMarginsOnAffectedPanels(parentOfDragger, droppedAtStackPane);
+        }
 
     }
 
-    private void moveAVcFromDeckToWaste(){
+    private void moveAVcFromDeckToWaste() {
         wasteSlot.getChildren().add(deckSlot.getChildren().getLast());
-        CardView lastCvInWaste=(CardView) wasteSlot.getChildren().getLast();
+        CardView lastCvInWaste = (CardView) wasteSlot.getChildren().getLast();
         lastCvInWaste.updateImage();
     }
 
     private void moveAllCvFromWasteToDeck() {
-        ObservableList<Node> childrenCopy=createAReversedCopy();
+        ObservableList<Node> childrenCopy = createAReversedCopy();
         wasteSlot.getChildren().clear();
         deckSlot.getChildren().addAll(childrenCopy);
         updateCardRevealsStatus();
     }
 
-    private ObservableList<Node> createAReversedCopy(){
+    private ObservableList<Node> createAReversedCopy() {
         ObservableList<Node> childrenCopy = FXCollections.observableArrayList(wasteSlot.getChildren());
         Collections.reverse(childrenCopy);
         return childrenCopy;
     }
 
-    private void theViewSetUpTheGame(){
+    private void theViewSetUpTheGame() {
         reloadCardViewsForAllStackPane();
         addListenersToCardViews();
         updateMarginsOfCardsViews();
         updateCardRevealsStatus();
     }
 
-    private void populateMaps(){
+    private void populateMaps() {
         populateCardsToCardViewsMap();
         populateTheBoardSlotMap();
     }
 
-    private void populateCardsToCardViewsMap(){
-        for (Card c : theGame.getTheDecksCards() ) {
+    private void populateCardsToCardViewsMap() {
+        for (Card c : theGame.getTheDecksCards()) {
             cardsToCardViewsMap.put(c, createCardView(c));
         }
     }
 
-    private void populateTheBoardSlotMap(){
+    private void populateTheBoardSlotMap() {
         //(sadly couldn't think of a shortcut or a loop due to many differences)
         //population of "boardSlotMap". Maps BoardCardsSlot to StackPane elements.
-        stackPaneToBoardCardsSlotMap.put(deckSlot,theGame.getDeckSlot() );
-        stackPaneToBoardCardsSlotMap.put(wasteSlot,theGame.getWasteSlot() );
-        stackPaneToBoardCardsSlotMap.put(clubsFoundation,theGame.getClubsFoundationSlot() );
-        stackPaneToBoardCardsSlotMap.put(diamondsFoundation,theGame.getDiamondsFoundationSlot());
-        stackPaneToBoardCardsSlotMap.put( heartsFoundation,theGame.getHeartsFoundationSlot());
-        stackPaneToBoardCardsSlotMap.put(spadesFoundation,theGame.getSpadesFoundationSlot());
+        stackPaneToBoardCardsSlotMap.put(deckSlot, theGame.getDeckSlot());
+        stackPaneToBoardCardsSlotMap.put(wasteSlot, theGame.getWasteSlot());
+        stackPaneToBoardCardsSlotMap.put(clubsFoundation, theGame.getClubsFoundationSlot());
+        stackPaneToBoardCardsSlotMap.put(diamondsFoundation, theGame.getDiamondsFoundationSlot());
+        stackPaneToBoardCardsSlotMap.put(heartsFoundation, theGame.getHeartsFoundationSlot());
+        stackPaneToBoardCardsSlotMap.put(spadesFoundation, theGame.getSpadesFoundationSlot());
         for (int i = 0; i < tableStacks.size(); i++) {
-            stackPaneToBoardCardsSlotMap.put(tableStacks.get(i) ,theGame.getATableSlot(i));
+            stackPaneToBoardCardsSlotMap.put(tableStacks.get(i), theGame.getATableSlot(i));
         }
     }
 
-    private CardView createCardView(Card c){
-        CardView cV=new CardView(c);
+    private CardView createCardView(Card c) {
+        CardView cV = new CardView(c);
         cV.setFitWidth(95);
         cV.setFitHeight(150);
         cV.setPreserveRatio(false);
         return cV;
     }
 
-    private void updateMarginsOfCardsViews(){
-        for(StackPane s:tableStacks){
+    private void updateMarginsOfCardsViews() {
+        for (StackPane s : tableStacks) {
             setMarginOnStackPaneChildrens(s);
         }
     }
 
-    private void resetDraggingProperties(){
+    private void resetDraggingProperties() {
         resetOnMouseClickProperties();
         resetOnMouseDragProperties();
     }
 
-    private void resetOnMouseClickProperties(){
+    private void resetOnMouseClickProperties() {
         mouseX = 0;
         mouseY = 0;
-        numberOfCardsToDrag =0;
-        stackPaneChosenAsSource=null;
-        isDragAvailable=false;
+        numberOfCardsToDrag = 0;
+        stackPaneChosenAsSource = null;
+        isDragAvailable = false;
     }
 
-    private void resetOnMouseDragProperties(){
-        for (Node n:draggedNodes){
-            if(n instanceof CardView){
+    private void resetOnMouseDragProperties() {
+        for (Node n : draggedNodes) {
+            if (n instanceof CardView) {
                 n.setTranslateX(0);
                 n.setTranslateY(0);
             }
@@ -264,45 +281,41 @@ public class KlondikeSolitaireController {
     }
 
 
-
-    private int getNumberOfCardViewsUnderIt(CardView cV){
-        StackPane theParent=(StackPane) cV.getParent();
-        return  theParent.getChildren().size()-theParent.getChildren().indexOf(cV);
+    private int getNumberOfCardViewsUnderIt(CardView cV) {
+        StackPane theParent = (StackPane) cV.getParent();
+        return theParent.getChildren().size() - theParent.getChildren().indexOf(cV);
     }
 
-    private void setMouseCurrentLocation(MouseEvent e){
+    private void setMouseCurrentLocation(MouseEvent e) {
         mouseX = e.getSceneX();
         mouseY = e.getSceneY();
     }
 
-    private void cardViewParentOfParentInFront(MouseEvent e){
+    private void cardViewParentOfParentInFront(MouseEvent e) {
         ImageView theDragger = (ImageView) e.getSource();
         VBox theDraggerParentsParent = (VBox) theDragger.getParent().getParent();
         theDraggerParentsParent.toFront();
     }
 
-    private void updateBoardProperties(){
+    private void updateBoardProperties() {
         updateStackPaneBounds();
         updateCardRevealsStatus();
     }
 
-    private void moveImageViewsBetweenPanels(StackPane stackPane){
+    private void moveImageViewsBetweenPanels(StackPane stackPane) {
         stackPaneChosenAsSource.getChildren().removeAll(draggedNodes);
-        for(Node n : draggedNodes){
-            if (n instanceof CardView){
+        for (Node n : draggedNodes) {
+            if (n instanceof CardView) {
                 stackPane.getChildren().add(n);
             }
         }
 
     }
 
-    private void setMarginsOnAffectedPanels(StackPane source,StackPane target){
+    private void setMarginsOnAffectedPanels(StackPane source, StackPane target) {
         setMarginOnStackPaneChildrens(source);
         setMarginOnStackPaneChildrens(target);
     }
-
-
-
 
 
     //record the bounds of the last card of each stack and reforms a full Map of them. (used for interception comparison)
@@ -331,20 +344,20 @@ public class KlondikeSolitaireController {
 
     private void setMarginOnStackPaneChildrens(StackPane stackPane) {
         ObservableList<Node> stacksPanelChildren = stackPane.getChildren();
-        if (!tableStacks.contains(stackPane)){
+        if (!tableStacks.contains(stackPane)) {
             for (Node child : stacksPanelChildren) {
                 StackPane.setMargin(child, new Insets(0, 0, 0, 0));
             }
-        }else{
+        } else {
             if (stacksPanelChildren.isEmpty()) {
                 return;
             }
             ImageView lastImageViewOfStack = (ImageView) stacksPanelChildren.getLast();
             double actualHeightOfTheLastCard = lastImageViewOfStack.getBoundsInLocal().getHeight();
             double marginPerCard;
-            if (stacksPanelChildren.size()>=14){
+            if (stacksPanelChildren.size() >= 14) {
                 marginPerCard = actualHeightOfTheLastCard * 0.20;
-            }else{
+            } else {
                 marginPerCard = actualHeightOfTheLastCard * 0.24;
             }
 
@@ -359,30 +372,30 @@ public class KlondikeSolitaireController {
         }
     }
 
-    private void reloadCardViewsForAllStackPane(){
-        if (isReloadMethodRunning){
+    private void reloadCardViewsForAllStackPane() {
+        if (isReloadMethodRunning) {
             return;
         }
-        isReloadMethodRunning=true;
+        isReloadMethodRunning = true;
         clearAllStackPane();
         populateAllStackPane();
         updateCardRevealsStatus();
-        isReloadMethodRunning=false;//reset reload
+        isReloadMethodRunning = false;//reset reload
     }
 
-    private void clearAllStackPane(){
-        for (Map.Entry<StackPane,BoardCardsSlot> r : stackPaneToBoardCardsSlotMap.entrySet()) {
-            StackPane s= r.getKey();
+    private void clearAllStackPane() {
+        for (Map.Entry<StackPane, BoardCardsSlot> r : stackPaneToBoardCardsSlotMap.entrySet()) {
+            StackPane s = r.getKey();
             s.getChildren().clear();
         }
     }
 
-    private void populateAllStackPane(){
-        for (Map.Entry<StackPane,BoardCardsSlot> e : stackPaneToBoardCardsSlotMap.entrySet()) {
-            StackPane stackPane =e.getKey();
-            BoardCardsSlot boardCardsSlot= e.getValue();
-            for (Card c:boardCardsSlot.getCards()){
-                stackPane.getChildren().add( cardsToCardViewsMap.get(c) );
+    private void populateAllStackPane() {
+        for (Map.Entry<StackPane, BoardCardsSlot> e : stackPaneToBoardCardsSlotMap.entrySet()) {
+            StackPane stackPane = e.getKey();
+            BoardCardsSlot boardCardsSlot = e.getValue();
+            for (Card c : boardCardsSlot.getCards()) {
+                stackPane.getChildren().add(cardsToCardViewsMap.get(c));
             }
 
         }
@@ -420,10 +433,10 @@ public class KlondikeSolitaireController {
         });
     }
 
-    private boolean isTheSetUnderCardViewDragable(CardView cV){
-        numberOfCardsToDrag =getNumberOfCardViewsUnderIt(cV);
-        stackPaneChosenAsSource =(StackPane) cV.getParent();
-        BoardCardsSlot bOfcardView=stackPaneToBoardCardsSlotMap.get(stackPaneChosenAsSource);
+    private boolean isTheSetUnderCardViewDragable(CardView cV) {
+        numberOfCardsToDrag = getNumberOfCardViewsUnderIt(cV);
+        stackPaneChosenAsSource = (StackPane) cV.getParent();
+        BoardCardsSlot bOfcardView = stackPaneToBoardCardsSlotMap.get(stackPaneChosenAsSource);
         return theGame.isTakeCardsPossible(bOfcardView, numberOfCardsToDrag);
     }
 

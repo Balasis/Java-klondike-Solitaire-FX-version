@@ -7,75 +7,75 @@ import java.util.Random;
 public class Deck {
     private final Random random;
     private final ArrayList<Card> cards;
-    private int jokersCounter=0;
+    private int jokersCounter = 0;
 
-    public Deck(){
-        random=new Random();
-        cards =new ArrayList<>();
+    public Deck() {
+        random = new Random();
+        cards = new ArrayList<>();
         populateDeck();
     }
 
     // API s
     public void removeTheJokers() {
-        for (int i = 0; i < cards.size();) {
-            Card currentCard=cards.get(i);
+        for (int i = 0; i < cards.size(); ) {
+            Card currentCard = cards.get(i);
             if (currentCard.getSuit() == Suit.JOKER) {
                 cards.remove(currentCard);
-            }else{
+            } else {
                 i++;
             }
         }
     }
 
-    public void shuffle(){
-        if (cards.size() < 2){
+    public void shuffle() {
+        if (cards.size() < 2) {
             return;
         }// We grab each card of the deck( remove it from deck ), and reEnter into it in a random index
         for (int i = 0; i < 10; i++) {// Increase i<Counter if you want better shuffle
-            for (int k = 0; k < cards.size(); k++){
-                Card grabbedCard= cards.remove( random.nextInt(cards.size()) );
-                cards.add( random.nextInt( cards.size() ) , grabbedCard);
+            for (int k = 0; k < cards.size(); k++) {
+                Card grabbedCard = cards.remove(random.nextInt(cards.size()));
+                cards.add(random.nextInt(cards.size()), grabbedCard);
             }
         }
     }
 
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return cards.isEmpty();
     }
 
-    public boolean isThereAJokerInDeck(){// Ok need to study more about streams...but seems a nice simple way.
+    public boolean isThereAJokerInDeck() {// Ok need to study more about streams...but seems a nice simple way.
         return cards.stream().anyMatch(card -> card.getSuit() == Suit.JOKER);
     }
 
-    public ArrayList<Card> takeAllDeckCards(){
-        ArrayList<Card> cardsToBeReturned=new ArrayList<>(cards);
+    public ArrayList<Card> takeAllDeckCards() {
+        ArrayList<Card> cardsToBeReturned = new ArrayList<>(cards);
         cards.clear();
         return cardsToBeReturned;
     }
 
-    public ArrayList<Card> takeNumberOfDeckCards(int numberOfCards){
-        ArrayList<Card> cardsToBeGiven=new ArrayList<>();
+    public ArrayList<Card> takeNumberOfDeckCards(int numberOfCards) {
+        ArrayList<Card> cardsToBeGiven = new ArrayList<>();
         for (int i = 0; i < cards.size(); i++) {
-            if (i>=numberOfCards){// Counters starts from 0...
+            if (i >= numberOfCards) {// Counters starts from 0...
                 break;
             }
-            cardsToBeGiven.addFirst(cards.remove( (cards.size()-i)-1) );
+            cardsToBeGiven.addFirst(cards.remove((cards.size() - i) - 1));
         }
         return cardsToBeGiven;
     }
 
-    public Card takeSpecificCard(Suit s, Rank r){
+    public Card takeSpecificCard(Suit s, Rank r) {
         for (int i = 0; i < cards.size(); i++) {
-            if (cards.get(i).getSuit() == s && cards.get(i).getRank() == r){
+            if (cards.get(i).getSuit() == s && cards.get(i).getRank() == r) {
                 return cards.remove(i);
             }
         }
         return null;
     }
 
-    public Card takeAnUnrankedJokerCard(){
+    public Card takeAnUnrankedJokerCard() {
         for (int i = 0; i < cards.size(); i++) {
-            if (cards.get(i).getSuit() == Suit.JOKER && cards.get(i).getRank() == null){
+            if (cards.get(i).getSuit() == Suit.JOKER && cards.get(i).getRank() == null) {
                 return cards.remove(i);
             }
         }
@@ -84,45 +84,45 @@ public class Deck {
 
 
     // Privates
-    private void populateDeck(){
+    private void populateDeck() {
         // For each suit put according number of cards and values into deck.
-        for(Suit suit:Suit.values()){
-            for(Rank rank:Rank.values()){
-                createDeckCard(rank,suit);
+        for (Suit suit : Suit.values()) {
+            for (Rank rank : Rank.values()) {
+                createDeckCard(rank, suit);
             }
         }
     }
 
-    private void createDeckCard(Rank rank, Suit suit){
-        if(suit==Suit.JOKER){
+    private void createDeckCard(Rank rank, Suit suit) {
+        if (suit == Suit.JOKER) {
             jokersCounter++;
-            if (areAllJokerCardsLoadedIntoDeck()){
+            if (areAllJokerCardsLoadedIntoDeck()) {
                 return;
             }
-            cards.add(new Card(null,suit));
-        }else{
-            cards.add(new Card(rank,suit));
+            cards.add(new Card(null, suit));
+        } else {
+            cards.add(new Card(rank, suit));
         }
     }
 
-    private boolean areAllJokerCardsLoadedIntoDeck(){
+    private boolean areAllJokerCardsLoadedIntoDeck() {
         int jokersCapacity = 2;
         return jokersCounter > jokersCapacity;
     }
 
     //  Getters
-    public ArrayList<Card> getCards(){
+    public ArrayList<Card> getCards() {
         return this.cards;
     }
 
     // //Overrides
-    public String toString(){
-        StringBuilder s= new StringBuilder();
+    public String toString() {
+        StringBuilder s = new StringBuilder();
         if (!cards.isEmpty()) {
             for (Card c : cards) {
                 s.append(cards.indexOf(c)).append(")Rank: ").append(c.getRank()).append(" Suit: ").append(c.getSuit()).append("\n");
             }
-        }else{
+        } else {
             s.append("Deck is empty");
         }
         return s.toString();

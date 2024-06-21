@@ -21,18 +21,18 @@ public class KlondikeSolitaireProgram {
     private ArrayList<FoundationSlot> foundationSlots;
     private TableSlot[] tableSlots;
 
-    public KlondikeSolitaireProgram(){
-        deck=new Deck();
-        deckSlot=new DeckSlot();
-        wasteSlot=new WasteSlot();
-        moveCardsSlotTypeValidator=new MoveCardsSlotTypeValidator();
+    public KlondikeSolitaireProgram() {
+        deck = new Deck();
+        deckSlot = new DeckSlot();
+        wasteSlot = new WasteSlot();
+        moveCardsSlotTypeValidator = new MoveCardsSlotTypeValidator();
         createFoundationSlotPerSuit();
         createTableSlots();
     }
 
     //Api
-    public void setUpTheGame(){
-        if (deck.isEmpty()){
+    public void setUpTheGame() {
+        if (deck.isEmpty()) {
             return;
         }
         deck.removeTheJokers();
@@ -41,16 +41,16 @@ public class KlondikeSolitaireProgram {
         addRemainingCardsIntoDeckslot();
     }
 
-    public boolean moveCards(BoardCardsSlot from, BoardCardsSlot to, int numberOfCards){
+    public boolean moveCards(BoardCardsSlot from, BoardCardsSlot to, int numberOfCards) {
 
-        ArrayList<Card> cardsToBeMoved=new ArrayList<>();
+        ArrayList<Card> cardsToBeMoved = new ArrayList<>();
         try {
-            if(!isTransferAmongSlotsTypesAllowed(from,to)){
+            if (!isTransferAmongSlotsTypesAllowed(from, to)) {
                 throw new InvalidCardSlotTypeException("Can't Transfer Among Slots");
             }
-            cardsToBeMoved=from.takeCards(numberOfCards);
+            cardsToBeMoved = from.takeCards(numberOfCards);
             to.addCards(cardsToBeMoved);
-            if ( !(from instanceof DeckSlot)){
+            if (!(from instanceof DeckSlot)) {
                 from.revealLastCard();
             }
         } catch (InvalidCardSlotTypeException e) {
@@ -61,29 +61,29 @@ public class KlondikeSolitaireProgram {
             return false;
         } catch (InvalidAddCardsException e) {
             from.addCardsNoRestrictions(cardsToBeMoved);
-           System.out.println(e.getMessage());
+            System.out.println(e.getMessage());
             return false;
         }
         return true;
     }
 
-    public boolean isTakeCardsPossible(BoardCardsSlot theBoardCardSlot, int numOfCards){
-         return  theBoardCardSlot.isTakeCardsValid(numOfCards);
+    public boolean isTakeCardsPossible(BoardCardsSlot theBoardCardSlot, int numOfCards) {
+        return theBoardCardSlot.isTakeCardsValid(numOfCards);
     }
 
-    public void removeTheJokers(){//in case you need removal before setUp
+    public void removeTheJokers() {//in case you need removal before setUp
         deck.removeTheJokers();
     }
 
-    public boolean moveCardFromDeckToWaste(){
-       if( moveCards(getDeckSlot(),getWasteSlot(),1) ){
-           wasteSlot.revealLastCard();
-           return true;
-       }
+    public boolean moveCardFromDeckToWaste() {
+        if (moveCards(getDeckSlot(), getWasteSlot(), 1)) {
+            wasteSlot.revealLastCard();
+            return true;
+        }
         return false;
     }
 
-    public void returnWasteCardsToDeck(){
+    public void returnWasteCardsToDeck() {
 
         deckSlot.addCardsNoRestrictions(wasteSlot.takeAllCardsNoRestrictions());
         Collections.reverse(deckSlot.getCards());
@@ -92,90 +92,86 @@ public class KlondikeSolitaireProgram {
         }
     }
 
-    public boolean isTheGameWon(){
+    public boolean isTheGameWon() {
         return foundationSlots.stream().allMatch(FoundationSlot::isFoundationSuitSetComplete);
     }
 
-    public void revealBoardsSlotLastCard(BoardCardsSlot b){
+    public void revealBoardsSlotLastCard(BoardCardsSlot b) {
         b.revealLastCard();
     }
 
 
-
-
-
-
     // Privates
-    private void createFoundationSlotPerSuit(){
-        foundationSlots=new ArrayList<>();
-        Suit[] f={CLUBS,DIAMONDS,HEARTS,SPADES};
-        for(Suit s:f){
+    private void createFoundationSlotPerSuit() {
+        foundationSlots = new ArrayList<>();
+        Suit[] f = {CLUBS, DIAMONDS, HEARTS, SPADES};
+        for (Suit s : f) {
             foundationSlots.add(new FoundationSlot(s));
         }
     }
 
-    private void createTableSlots(){
-        tableSlots=new TableSlot[7];
+    private void createTableSlots() {
+        tableSlots = new TableSlot[7];
         for (int i = 0; i < 7; i++) {
-            tableSlots[i]= new TableSlot();
+            tableSlots[i] = new TableSlot();
         }
     }
 
-    private void setUpTableSlots(){
+    private void setUpTableSlots() {
         for (int i = 0; i < tableSlots.length; i++) {
             giveSettingUpCardsToTableSlots(i);
             tableSlots[i].revealLastCard();
         }
     }
 
-    private void giveSettingUpCardsToTableSlots(int i){
-        tableSlots[i].addCardsNoRestrictions(deck.takeNumberOfDeckCards(i+1));
+    private void giveSettingUpCardsToTableSlots(int i) {
+        tableSlots[i].addCardsNoRestrictions(deck.takeNumberOfDeckCards(i + 1));
     }
 
-    private void addRemainingCardsIntoDeckslot(){
+    private void addRemainingCardsIntoDeckslot() {
         deckSlot.addCardsNoRestrictions(deck.takeAllDeckCards());
     }
 
-    private boolean isTransferAmongSlotsTypesAllowed(BoardCardsSlot from,BoardCardsSlot to){
-        return moveCardsSlotTypeValidator.isMoveToCardSlotValid(from,to);
+    private boolean isTransferAmongSlotsTypesAllowed(BoardCardsSlot from, BoardCardsSlot to) {
+        return moveCardsSlotTypeValidator.isMoveToCardSlotValid(from, to);
     }
 
     // Getters
-    public FoundationSlot getClubsFoundationSlot(){
-        FoundationSlot theClubOne=null;
-        for(FoundationSlot f:foundationSlots){
-            if(f.getFoundationSuit()== CLUBS){
-                theClubOne=f;
+    public FoundationSlot getClubsFoundationSlot() {
+        FoundationSlot theClubOne = null;
+        for (FoundationSlot f : foundationSlots) {
+            if (f.getFoundationSuit() == CLUBS) {
+                theClubOne = f;
             }
         }
         return theClubOne;
     }
 
-    public FoundationSlot getDiamondsFoundationSlot(){
-        FoundationSlot theDiamondsOne=null;
-        for(FoundationSlot f:foundationSlots){
-            if(f.getFoundationSuit()== DIAMONDS){
-                theDiamondsOne=f;
+    public FoundationSlot getDiamondsFoundationSlot() {
+        FoundationSlot theDiamondsOne = null;
+        for (FoundationSlot f : foundationSlots) {
+            if (f.getFoundationSuit() == DIAMONDS) {
+                theDiamondsOne = f;
             }
         }
         return theDiamondsOne;
     }
 
-    public FoundationSlot getHeartsFoundationSlot(){
-        FoundationSlot theHeartsOne=null;
-        for(FoundationSlot f:foundationSlots){
-            if(f.getFoundationSuit()== HEARTS){
-                theHeartsOne=f;
+    public FoundationSlot getHeartsFoundationSlot() {
+        FoundationSlot theHeartsOne = null;
+        for (FoundationSlot f : foundationSlots) {
+            if (f.getFoundationSuit() == HEARTS) {
+                theHeartsOne = f;
             }
         }
         return theHeartsOne;
     }
 
-    public FoundationSlot getSpadesFoundationSlot(){
-        FoundationSlot theSpadesOne=null;
-        for(FoundationSlot f:foundationSlots){
-            if(f.getFoundationSuit()== SPADES){
-                theSpadesOne=f;
+    public FoundationSlot getSpadesFoundationSlot() {
+        FoundationSlot theSpadesOne = null;
+        for (FoundationSlot f : foundationSlots) {
+            if (f.getFoundationSuit() == SPADES) {
+                theSpadesOne = f;
             }
         }
         return theSpadesOne;
@@ -185,7 +181,7 @@ public class KlondikeSolitaireProgram {
         return deck;
     }
 
-    public ArrayList<Card> getTheDecksCards(){
+    public ArrayList<Card> getTheDecksCards() {
         return deck.getCards();
     }
 
@@ -209,7 +205,7 @@ public class KlondikeSolitaireProgram {
         return tableSlots[index];
     }
 
-    public boolean isTheDeckSlotEmptyOfCards(){
+    public boolean isTheDeckSlotEmptyOfCards() {
         return getDeckSlot().getCards().isEmpty();
     }
 

@@ -8,7 +8,7 @@ import gr.athtech.balas.klondikesolitaireminigame.thedeck.Card;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class WasteSlot extends CardsSlot implements BoardCardsSlot{
+public class WasteSlot extends CardsSlot implements BoardCardsSlot {
     private final SlotType slotType;
 
     public WasteSlot() {
@@ -23,8 +23,8 @@ public class WasteSlot extends CardsSlot implements BoardCardsSlot{
 
     @Override
     public void addCards(ArrayList<Card> cards) throws IncorrNumOfCardsAdditionException {
-        if (isAddCardsValid(cards)){
-            if (cards.size()!=1){
+        if (isAddCardsValid(cards)) {
+            if (cards.size() != 1) {
                 throw new IncorrNumOfCardsAdditionException("waste slot can have only 1 card added per time");
             }
         }
@@ -33,15 +33,15 @@ public class WasteSlot extends CardsSlot implements BoardCardsSlot{
 
     @Override
     public boolean isAddCardsValid(ArrayList<Card> cards) {
-        return cards.size()==1;
+        return cards.size() == 1;
     }
 
     @Override
     public ArrayList<Card> takeCards(int numberOfCards) throws IncorrNumOfCardsRemovalException, NoCardsToTakeException {
-        if(getCards().size()<numberOfCards){
+        if (getCards().size() < numberOfCards) {
             throw new NoCardsToTakeException("there aren't so many cards to pick from");
         }
-        if(numberOfCards>1){
+        if (numberOfCards > 1) {
             throw new IncorrNumOfCardsRemovalException("Specific Card Slot doesnt support multi-removal");
         }
         return new ArrayList<Card>(Collections.singletonList(getCards().removeLast()));
@@ -49,7 +49,7 @@ public class WasteSlot extends CardsSlot implements BoardCardsSlot{
 
     @Override
     public boolean isTakeCardsValid(int numberOfCards) {
-        return !getCards().isEmpty() && numberOfCards==1 ;
+        return !getCards().isEmpty() && numberOfCards == 1;
     }
 
     @Override

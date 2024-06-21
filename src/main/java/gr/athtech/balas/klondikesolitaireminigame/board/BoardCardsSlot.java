@@ -11,12 +11,15 @@ public interface BoardCardsSlot {
     ArrayList<Card> getCards();
 
     void addCards(ArrayList<Card> cards) throws InvalidAddCardsException;
+
     boolean isAddCardsValid(ArrayList<Card> cards);
 
     ArrayList<Card> takeCards(int numberOfCards) throws InvalidTakeCardsException;
+
     boolean isTakeCardsValid(int numberOfCards);
 
     void revealLastCard();
+
     void addCardsNoRestrictions(ArrayList<Card> cards);
 
     SlotType getSlotType();

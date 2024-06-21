@@ -1,6 +1,6 @@
 package gr.athtech.balas.klondikesolitaireminigame.thedeck;
 
-public class Card{
+public class Card {
     private Rank rank;
     private final Suit suit;
     private Boolean isFaceUp;
@@ -9,8 +9,8 @@ public class Card{
     public Card(Rank rank, Suit suit) {
         this.rank = rank;
         this.suit = suit;
-        this.isFaceUp =false;
-        this.cardColor=(this.suit==Suit.HEARTS || this.suit==Suit.DIAMONDS) ? CardColor.RED : CardColor.BLACK;
+        this.isFaceUp = false;
+        this.cardColor = (this.suit == Suit.HEARTS || this.suit == Suit.DIAMONDS) ? CardColor.RED : CardColor.BLACK;
     }
 
     // Getters
@@ -26,7 +26,7 @@ public class Card{
         return isFaceUp;
     }
 
-    public CardColor getCardColor(){
+    public CardColor getCardColor() {
         return cardColor;
     }
 
@@ -43,7 +43,7 @@ public class Card{
     @Override
     public String toString() {
         return " Rank: " + this.rank + ", Suit: " + this.suit
-                + (isFaceUp ? " Revealed " : " Hidden" +" Card color: ")
+                + (isFaceUp ? " Revealed " : " Hidden" + " Card color: ")
                 + this.cardColor;
     }
 

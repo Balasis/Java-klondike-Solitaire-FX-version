@@ -17,14 +17,14 @@ public class FoundationSlot extends CardsSlot implements BoardCardsSlot {
     private final SlotType slotType;
     private final Suit foundationSuit;
 
-    public FoundationSlot(Suit s){
-        foundationSuit=s;
-        slotType=SlotType.FOUNDATION;
+    public FoundationSlot(Suit s) {
+        foundationSuit = s;
+        slotType = SlotType.FOUNDATION;
     }
 
     // API
-    public boolean isFoundationSuitSetComplete(){
-        return getCards().size()==13;
+    public boolean isFoundationSuitSetComplete() {
+        return getCards().size() == 13;
     }
 
     @Override
@@ -34,10 +34,10 @@ public class FoundationSlot extends CardsSlot implements BoardCardsSlot {
 
     @Override
     public void addCards(ArrayList<Card> cards) throws IncorrNumOfCardsAdditionException, NoCardsToAddException, FoundationAdditionCriteriaException {
-        if (cards.isEmpty()){
+        if (cards.isEmpty()) {
             throw new NoCardsToAddException("No Cards in the list to be added");
         }
-        if (cards.size()!=1){
+        if (cards.size() != 1) {
             throw new IncorrNumOfCardsAdditionException("Foundation slot can have only 1 card added per time");
         }
         checkingFoundationCritiria(cards);//throws a critiria exception with the according message depending on violation
@@ -46,15 +46,15 @@ public class FoundationSlot extends CardsSlot implements BoardCardsSlot {
 
     @Override
     public boolean isAddCardsValid(ArrayList<Card> cards) {
-            return (cards.size()==1) && (isAddCardAcceptable(cards.getFirst()) );
+        return (cards.size() == 1) && (isAddCardAcceptable(cards.getFirst()));
     }
 
     @Override
     public ArrayList<Card> takeCards(int numberOfCards) throws IncorrNumOfCardsRemovalException, NoCardsToTakeException {
-        if(getCards().size()<numberOfCards){
+        if (getCards().size() < numberOfCards) {
             throw new NoCardsToTakeException("there aren't so many cards to pick from");
         }
-        if(numberOfCards>1){
+        if (numberOfCards > 1) {
             throw new IncorrNumOfCardsRemovalException("Specific Card Slot doesnt support multi-removal");
         }
         return new ArrayList<Card>(Collections.singletonList(getCards().removeLast()));
@@ -62,48 +62,48 @@ public class FoundationSlot extends CardsSlot implements BoardCardsSlot {
 
     @Override
     public boolean isTakeCardsValid(int numberOfCards) {
-        return numberOfCards==1 && !getCards().isEmpty();
+        return numberOfCards == 1 && !getCards().isEmpty();
     }
 
     // Privates
     private boolean isAddCardAcceptable(Card card) {
-        if (!isItTheRightSuit(card)){
+        if (!isItTheRightSuit(card)) {
             return false;
-        }else if (getCards().isEmpty()){
+        } else if (getCards().isEmpty()) {
             return isFirstCardAnAceIfEmpty(card);
-        }else{
+        } else {
             return isTheRankLowerThanLast(card);
         }
     }
 
     private void checkingFoundationCritiria(ArrayList<Card> cards) throws FoundationAdditionCriteriaException {
-        String theErrorMessage="";
-        Boolean wasThereAThrow=false;
-        if (!isItTheRightSuit(cards.getFirst())){
-            wasThereAThrow=true;
-            theErrorMessage="Incorrect suit for specific foundation Slot";
-        }else if (getCards().isEmpty()){
-            wasThereAThrow= !isFirstCardAnAceIfEmpty(cards.getFirst());
-            theErrorMessage="First Card needs to be an Ace";
-        }else{
-            wasThereAThrow= !isTheRankLowerThanLast(cards.getFirst());
-            theErrorMessage="Rank not in the right order";
+        String theErrorMessage = "";
+        Boolean wasThereAThrow = false;
+        if (!isItTheRightSuit(cards.getFirst())) {
+            wasThereAThrow = true;
+            theErrorMessage = "Incorrect suit for specific foundation Slot";
+        } else if (getCards().isEmpty()) {
+            wasThereAThrow = !isFirstCardAnAceIfEmpty(cards.getFirst());
+            theErrorMessage = "First Card needs to be an Ace";
+        } else {
+            wasThereAThrow = !isTheRankLowerThanLast(cards.getFirst());
+            theErrorMessage = "Rank not in the right order";
         }
-        if(wasThereAThrow){
+        if (wasThereAThrow) {
             throw new FoundationAdditionCriteriaException(theErrorMessage);
         }
     }
 
-    private boolean isItTheRightSuit(Card card){
-        return card.getSuit()==foundationSuit;
+    private boolean isItTheRightSuit(Card card) {
+        return card.getSuit() == foundationSuit;
     }
 
-    private boolean isFirstCardAnAceIfEmpty(Card card){
+    private boolean isFirstCardAnAceIfEmpty(Card card) {
         return card.getRank() == Rank.ACE;
     }
 
-    private boolean isTheRankLowerThanLast(Card card){
-        return getCards().getLast().getRank().getValue()+1== card.getRank().getValue();
+    private boolean isTheRankLowerThanLast(Card card) {
+        return getCards().getLast().getRank().getValue() + 1 == card.getRank().getValue();
     }
 
     // Getters

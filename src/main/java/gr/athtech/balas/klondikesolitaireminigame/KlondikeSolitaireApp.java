@@ -13,7 +13,7 @@ public class KlondikeSolitaireApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(KlondikeSolitaireApp.class.getResource("klondikeSolitaireView.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(),1300,800);
+        Scene scene = new Scene(fxmlLoader.load(), 1300, 800);
         stage.setTitle("Klondike Solitaire by John Balasis!");
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/forIco.png"))));
         stage.setResizable(false);
